@@ -2,5 +2,5 @@ package Server;
 
 public class LOESCHMICH {
 	
-	//JETZT STEHT HIER EIN DOOFER KOMMENTAR
+	//JETZT STEHT HIER EIN 
 }
