@@ -2,6 +2,8 @@ package Server;
 
 public class LOESCHMICH {
 	
-	//JETZT STEHT HIER EIN 
+	public static void main (String [] args){
+		System.out.println("MONGOOO!");
+	}
 	
 }
