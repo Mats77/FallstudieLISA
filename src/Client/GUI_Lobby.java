@@ -25,8 +25,8 @@ public class GUI_Lobby extends JFrame implements ActionListener{
 	private JScrollPane scrollPane;
 	private JLabel lblPlayer;
 	private JLabel lblIcon;
-	private ImageIcon irdy = new ImageIcon(new ImageIcon(Main.class.getResource("images/check.gif")).getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH));
-	private ImageIcon urdy = new ImageIcon(new ImageIcon(Main.class.getResource("images/cross.gif")).getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH));
+	private ImageIcon irdy = new ImageIcon(new ImageIcon(Main.class.getResource("check.gif")).getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH));
+	private ImageIcon urdy = new ImageIcon(new ImageIcon(Main.class.getResource("cross.gif")).getImage().getScaledInstance(30, 30, java.awt.Image.SCALE_SMOOTH));
 	private JLabel[] playerLabels = new JLabel[12];
 	private JButton btnSpielStarten;
 	private JButton btnSenden = new JButton("Senden");
