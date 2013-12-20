@@ -1,8 +1,12 @@
 package DBConnection;
 
 import java.sql.*;
+import java.util.Properties;
+
 import javax.sql.*;
 import javax.naming.*;
+
+import com.mysql.jdbc.Driver;
 
 public abstract class JDBCConnection {
 
@@ -10,6 +14,7 @@ public abstract class JDBCConnection {
 	private Statement statement = null;
 	private String dbTable = null;
 	private String[] condition = null;
+	private String url = "";
 	
 	public JDBCConnection() {
 		/* Select XXX From dbtable...
@@ -20,18 +25,15 @@ public abstract class JDBCConnection {
 	public void createConnection(){
 		// load jdbc driver
 		try {
-			Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+			Driver driver = new com.mysql.jdbc.Driver();
+			Properties prop = new Properties();
+			prop.setProperty("user", "root");
+			prop.setProperty("password", "");
+			Connection con = driver.connect(url, prop);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		catch(ClassNotFoundException ex) {
-		   System.err.println("Error: unable to load driver class!");
-		}
-		try {
-			dbConnection = new DriverManager.getConnection("jdbc:mysql://localhost/dhbw", "root", "");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-
 	}
 	
 	public void createStatement(){
