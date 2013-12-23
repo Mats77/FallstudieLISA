@@ -14,7 +14,7 @@ public abstract class JDBCConnection {
 	private Statement statement = null;
 	private String dbTable = null;
 	private String[] condition = null;
-	private String url = "";
+	private String url = "/localhost/planspiel/orders";
 	
 	public JDBCConnection() {
 		/* Select XXX From dbtable...
@@ -27,8 +27,7 @@ public abstract class JDBCConnection {
 		try {
 			Driver driver = new com.mysql.jdbc.Driver();
 			Properties prop = new Properties();
-			prop.setProperty("user", "root");
-			prop.setProperty("password", "");
+			prop.setProperty("reader", "1234");
 			Connection con = driver.connect(url, prop);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
