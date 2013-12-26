@@ -3,31 +3,25 @@ package Server;
 public class Market {
 
 	private OrderHistory orderHistory;
-	
+	private OrderPool orderPool;
 	
 	public Market() {
 		orderHistory = new OrderHistory();
+		orderPool = new OrderPool();
 	}
 
 	public void calcMarketShare(){
 		calcDev();
 		calcMarketing();
-		// Zus‰tzlich Zugriff auf GameHistory notwendig
+		// Zus√§tzlich Zugriff auf GameHistory notwendig
 	}
 	
-	public Order getOrdersForNewRound(){
-		orderSuccess();
-		genOrders();
-		splitOrders();
-		return null;
+	public void getOrdersForNewRound(){
+		orderPool.ordersForNewRound();
 	}
 	
 	private void splitOrders(){
-		
-	}
-	
-	private void genOrders(){
-		
+		Order bestOrder = orderPool.getBestOrder();
 	}
 		
 	private void calcDev(){
@@ -38,9 +32,6 @@ public class Market {
 		
 	}
 	
-	private void orderSuccess(){
-		
-	}
 	
 
 }

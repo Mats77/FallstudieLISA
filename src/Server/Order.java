@@ -1,62 +1,41 @@
 package Server;
 
-
 public class Order {
 
-	private int playerID;
-	private int roundNumber;
-	private int overAllOrders;
-	private int ordersForPlayer;
-	private int smallOrders;
-	private int smallPrice;
-	private int smallTime;
-	private int medOrders;
-	private int medPrice;
-	private int medTime;
-	private int largeOrders;
-	private int largePrice;
-	private int largeTime;
-	
-	
-	public Order(int playerID, int roundNumber, int overAllOrders, int ordersForPlayer) {
-		this.playerID = playerID;
-		this.roundNumber = roundNumber;
-		this.overAllOrders = overAllOrders;
-		this.ordersForPlayer = ordersForPlayer;
-		calcOrders();
+	private int quantity;
+	private int quartalValidTo;
+	private int fixedOrders;
+	private int optionalOrders;
+	private int price = 300*10^6;
+	private int deliveryTimeinQuart;
+
+
+	public Order(int quantity, int quartal) {
+		this.quantity = quantity;		
+		this.quartalValidTo = quartal + 1 + (int) (Math.random() * 2.2); // Aufträge sollen max. 3 Quartale gültig sein.
+		this.deliveryTimeinQuart = 1 + (int)(Math.random()*4.1); 
+		
+		optionalOrders = (int)(quantity/4);
+		fixedOrders= quantity-optionalOrders;
+		
+		calcPrice();
 	}
-	
-	public int getOrdersForPlayer(int playerID, int category){
-		if (category == 0) { // small Orders
-			return smallOrders;
-		}else if (category == 1) { // medium Orders
-			return medOrders; 
-		}else if (category == 2) { // large Orders
-			return largeOrders;
-		}else{
-			return 99;
+
+	private void calcPrice() { //Preis mit Preisstaffeln neu berechnen
+		
+		switch (quantity) {
+		case 10:
+			price = (int) (price*0.9);
+			break;
+		case 20:
+			price = (int) (price*0.8);
+			break;
+		case 30:
+			price = (int) (price*0.75);
+			break;
 		}
 
 	}
-	
-	private void calcOrders(){
-		calcSmallOrders();
-		calcMidOrder();
-		calcLargeOrder();
-	}
-	
-	private void calcSmallOrders(){
-		
-	}
-	
-	private void calcMidOrder(){
-		
-	}
-	
-	private void calcLargeOrder(){
-		
-	}
-	
-	
-	
+
+
 }

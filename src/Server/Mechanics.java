@@ -15,6 +15,10 @@ public class Mechanics {
 	public void setPlayerValues (String values, int playerNumber){
 		playerValues[playerNumber] = values;
 	}
+	
+	public void newRound(){
+		market.getOrdersForNewRound();
+	}
 
 	
 }
