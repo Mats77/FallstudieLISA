@@ -1,15 +1,36 @@
 package Server;
 
-import java.lang.*;
-import java.io.*;
-import java.net.*;
+import org.webbitserver.*;
+import org.webbitserver.handler.StaticFileHandler;
 
-class Server {
-	private static ServerSocket server;
+class Server extends BaseWebSocketHandler {
+	private static int connectionCount;
+	private static WebServer webServer;
+	private static Handler handler;
 
+	public void onOpen(WebSocketConnection connection){
+		Conn conn = new Conn(connection, handler);
+		handler.addPlayer(conn);
+	}
+	
+    public void onClose(WebSocketConnection connection) {
+        connectionCount--;
+    }
+
+    public void onMessage(WebSocketConnection connection, String message) {
+    	handler.handleString(message, connection); // verbindung und Nachricht wird an den Handler übertragen
+        //connection.send(message.toUpperCase()); // echo back message in upper case
+    }
+	
 	public static void main(String args[]) {
 		Handler handler = new Handler();
-		try {
+        webServer = WebServers.createWebServer(8080).add("/hellowebsocket", new Server()).add(new StaticFileHandler("index.html"));
+        webServer.start();
+        System.out.println("Server running at " + webServer.getUri());
+        System.out.println(connectionCount);
+		
+		
+/*		try {
 			server = new ServerSocket(56557);
 			System.out.print(server.getLocalPort());
 			while (true) {
@@ -19,17 +40,6 @@ class Server {
 			}
 		} catch (Exception e) {
 			System.out.print("Whoops! It didn't work!\n");
-		}
-	}
-
-	// test 1jdsajdiowpahida
-	public static void close() {
-		try {
-			server.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		}*/
 	}
 }

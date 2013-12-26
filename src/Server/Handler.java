@@ -1,19 +1,22 @@
 package Server;
+
+import org.webbitserver.WebSocketConnection;
+
 public class Handler {
 
-	private Conn[] players = new Conn[6];
+	private Conn[] player = new Conn[4];
 	private Mechanics mechanics;
+	private Conn sender;
 	
 	
-	public Handler()
-	{
+	public Handler(){
 		//mechanics = new Mechanics(this);
 	}
 
-	public void addPlayer(Conn player) {
-		for (int i = 0; i < players.length; i++) {
-			if (players[i] == null) {
-				players[i] = player;
+	public void addPlayer(Conn play) {
+		for (int i = 0; i < player.length; i++) {
+			if (player[i] == null) {
+				player[i] = play;
 				break;
 			}
 		}
@@ -22,14 +25,28 @@ public class Handler {
 	
 	
 	public void spread(String txt) { //sendet an alle
-		for (int i = 0; i < players.length; i++) {
-			if (players[i] != null) {
-				players[i].send(txt);
+		for (int i = 0; i < player.length; i++) {
+			if (player[i] != null) {
+				player[i].send(txt);
 			}
 		}
 	}
 	
-	public void handleString(String txt, Conn sender) {
+	public void handleString(String txt, WebSocketConnection connection) {
+		for (int i = 0; i < player.length; i++) {				// Sender der Nachricht wird ermittelt (Über die Verbindung/WebSocketConnection)
+			if (player[i].getConnection().equals(connection)) {
+				sender = player[i];
+				break;
+			}else{
+				sender = null;
+			}
+		}
+		if (sender == null) {
+			//get player ID
+			// txt Datei nach Spieler-ID durchsuchen, wenn eine gefunden wurde: 
+			// player[i] mit Spieler-ID wird ausgelesen und die WebSocketConnection neu gesetzt
+			
+		}
 		if (txt.startsWith("CHAT ")) {
 			String s = "CHAT " +  getPlayerID(sender) + " "
 					+ sender.getNick() + ": " + txt.substring(5);
@@ -46,19 +63,21 @@ public class Handler {
 			System.out.println(txt.substring(7).split(";"));
 			System.out.println(sender.getId());
 			System.out.println(sender.getName());
+		} else if (txt.startsWith("PLAYERNAME ")){
+			
 		}
 	}
 	
 	private boolean areAllReady() { //teste in der Lobby ob alle fertig sind. Evtl markieren wer fertig ist usw.
 		boolean toReturn = true;
 		
-		for(int i=0; i<players.length; i++)
+		for(int i=0; i<player.length; i++)
 		{
-			if(players[i]==null)
+			if(player[i]==null)
 			{
 				break;
 			} else {
-				if(players[i].isReady() == false) 
+				if(player[i].isReady() == false) 
 				{
 					toReturn = false;
 				}
@@ -67,9 +86,9 @@ public class Handler {
 		return toReturn;
 	}
 
-	public int getPlayerID(Conn player) { // fuer den Chat
-		for (int i = 0; i < players.length; i++) {
-			if (players[i] == player) {
+	public int getPlayerID(Conn play) { // fuer den Chat
+		for (int i = 0; i < player.length; i++) {
+			if (player[i] == play) {
 				return i;
 			}
 		}
@@ -80,8 +99,8 @@ public class Handler {
 
 	public int getID(Conn con) {
 		int toReturn = -1;
-		for (int i=0; i<players.length; i++){
-			if(players[i]==con) {
+		for (int i=0; i<player.length; i++){
+			if(player[i]==con) {
 				toReturn = i;
 			}
 		}
