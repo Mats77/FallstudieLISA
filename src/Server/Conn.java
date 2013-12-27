@@ -4,7 +4,8 @@ package Server;
 import java.net.*;
 import java.io.*;
 
-//Test Kommentar! gdff
+//Test Kommentar! gdffasd
+//testest
 public class Conn extends Thread{
 
 	private long id;
