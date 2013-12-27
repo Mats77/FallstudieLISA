@@ -7,10 +7,9 @@ import java.io.*;
 //Test Kommentar! gdff
 public class Conn extends Thread{
 
-	private int id;
+	private long id;
 	private String nick;
-	private boolean ready;	//raus und in Mechanics
-
+	private boolean ready = false;
 
 	public boolean isReady() {
 		return ready;
@@ -28,9 +27,6 @@ public class Conn extends Thread{
 	private boolean active = true;
 	private Handler handler;
 		
-
-
-
 public Conn (Socket socket,  Handler handler) {
 	this.socket = socket;
 	this.handler = handler;
@@ -38,10 +34,8 @@ public Conn (Socket socket,  Handler handler) {
 		out = new PrintWriter(socket.getOutputStream(), true);
 		in = new BufferedReader(new InputStreamReader( socket.getInputStream()));
 	} catch (IOException e) {
-		// TODO Auto-generated catch block
 		close();
 		e.printStackTrace();
-		
 	}
 	
 	start();
@@ -51,7 +45,7 @@ public Conn (Socket socket,  Handler handler) {
 public void run() {
 	send("CONNECTED "); //damit Client-Thread beginnt
 	System.out.print("Run gestartet...Server");
-	int tmp = this.handler.getPlayerID(this);
+	int tmp = handler.getID(this);
 	if(tmp!=-1){
 		this.id = tmp;
 	} else {
@@ -62,7 +56,7 @@ public void run() {
 			String txt;
 			try {
 				if ((txt = in.readLine()) != null) {
-					System.out.println("Server bekommt: " + txt + ";" + this.nick);
+					System.out.println("Server bekommt: " + txt + ";");
 					handler.handleString(txt, this);
 				}
 			} catch (IOException e) {
@@ -78,9 +72,13 @@ public void send (String txt){
 	out.println(txt);	
 }
 
+public long getId() {
+	return id;
+}
+
 public void close(){
 	active = false;
-	handler.spread("CHAT " + handler.getPlayerID(this)+ " " + nick + " hat das Spiel verlassen.");
+	handler.spread("CHAT " + handler.getID(this)+ " " + nick + " hat das Spiel verlassen.");
 	//socket.close();
 }
 
@@ -93,6 +91,4 @@ public String getNick() {
 public void setNick(String nick) {
 	this.nick = nick;
 }
-
-
 }

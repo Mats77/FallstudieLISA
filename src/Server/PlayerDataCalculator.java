@@ -8,10 +8,13 @@ public class PlayerDataCalculator {
 		this.mechanics = m;
 	}
 	
-	public double calcCostPerAirplane()
+	public double calcCostPerAirplane(int[] values) //Array: Produktion;Marketing;Entwicklung;Preis
 	{
 		double toReturn = 0;
 		//TODO
+		
+		toReturn = (values[0]+values[1]+values[2])/30;
+		
 		return toReturn;
 	}//calcCostPerAirplane
 	
