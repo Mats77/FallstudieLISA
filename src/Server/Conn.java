@@ -1,8 +1,5 @@
 package Server;
-
-
-import java.net.*;
-import java.io.*;
+import org.webbitserver.WebSocketConnection;
 
 //Test Kommentar! gdffasd
 //testest
@@ -11,6 +8,9 @@ public class Conn extends Thread{
 	private long id;
 	private String nick;
 	private boolean ready = false;
+	private WebSocketConnection socket;
+	private boolean active = true;
+	private Handler handler;
 
 	public boolean isReady() {
 		return ready;
@@ -20,25 +20,25 @@ public class Conn extends Thread{
 	public void setReady(boolean ready) {
 		this.ready = ready;
 	}
-
-
-	private Socket socket;
-	private PrintWriter out = null;
-	private BufferedReader in = null;
-	private boolean active = true;
-	private Handler handler;
 		
-public Conn (Socket socket,  Handler handler) {
+//public Conn (Socket socket,  Handler handler) {
+//	this.socket = socket;
+//	this.handler = handler;
+//	try {
+//		out = new PrintWriter(socket.getOutputStream(), true);
+//		in = new BufferedReader(new InputStreamReader( socket.getInputStream()));
+//	} catch (IOException e) {
+//		close();
+//		e.printStackTrace();
+//	}
+//	
+//	start();
+//}
+
+public Conn (WebSocketConnection socket,  Handler handler) {
 	this.socket = socket;
 	this.handler = handler;
-	try {
-		out = new PrintWriter(socket.getOutputStream(), true);
-		in = new BufferedReader(new InputStreamReader( socket.getInputStream()));
-	} catch (IOException e) {
-		close();
-		e.printStackTrace();
-	}
-	
+	id = handler.getID(this);
 	start();
 }
 
@@ -65,12 +65,11 @@ public void run() {
 				close();
 			}
 	}
-}
 
 
 public void send (String txt){
 	System.out.println("Server sendet: " + txt);
-	out.println(txt);	
+	socket.send(txt);	
 }
 
 public long getId() {
@@ -92,4 +91,10 @@ public String getNick() {
 public void setNick(String nick) {
 	this.nick = nick;
 }
+
+
+public WebSocketConnection getConnection(){
+	return socket;
+}
+
 }

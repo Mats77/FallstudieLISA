@@ -1,17 +1,38 @@
 package Server;
 
-import java.lang.*;
-import java.io.*;
-import java.net.*;
+import org.webbitserver.*;
+import org.webbitserver.handler.StaticFileHandler;
 
-class Server {
-	private static ServerSocket server;
+class Server extends BaseWebSocketHandler {
+	private static int connectionCount;
+	private static WebServer webServer;
+	private static Handler handler;
 
+	public void onOpen(WebSocketConnection connection){
+		Conn conn = new Conn(connection, handler);
+		handler.addPlayer(conn);
+	}
+	
+    public void onClose(WebSocketConnection connection) {
+        connectionCount--;
+    }
+
+    public void onMessage(WebSocketConnection connection, String message) {
+    	handler.handleString(message, connection); // verbindung und Nachricht wird an den Handler übertragen
+        //connection.send(message.toUpperCase()); // echo back message in upper case
+    }
+	
 	public static void main(String args[]) {
 		
 		//Server erstellt ein Handlerobjekt, öffnet den Server-Socket und beginnt Deamon Prozess
 		Handler handler = new Handler();
-		try {
+        webServer = WebServers.createWebServer(8080).add("/hellowebsocket", new Server()).add(new StaticFileHandler("index.html"));
+        webServer.start();
+        System.out.println("Server running at " + webServer.getUri());
+        System.out.println(connectionCount);
+		
+		
+/*		try {
 			server = new ServerSocket(56557);
 			System.out.print(server.getLocalPort());
 			while (true) {
@@ -23,6 +44,7 @@ class Server {
 			}//Deamon-Schleife
 		} catch (Exception e) {
 			System.out.print("Whoops! It didn't work!\n");
+<<<<<<< HEAD
 			e.printStackTrace();
 		}
 	}//main
@@ -35,5 +57,7 @@ class Server {
 			e.printStackTrace();
 		}
 
+=======
+		}*/
 	}
 }

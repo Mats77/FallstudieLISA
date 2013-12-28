@@ -1,11 +1,14 @@
 package Server;
 
 import java.util.Vector;
+import org.webbitserver.WebSocketConnection;
+
 
 public class Handler {
 
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
+	private Conn sender;
 	
 	//Konstruktor, erstellt direkt Mechanics
 	public Handler()
@@ -27,9 +30,23 @@ public class Handler {
 	}
 	
 	//überprüft, was der Client gesendet hat und veranlasst Reaktion
-	public void handleString(String txt, Conn sender) {
+	public void handleString(String txt, WebSocketConnection connection) {
 		
-		//Chat Nachricht an alle weiterleiten
+		for (Conn con : connections) {
+			if(con.getConnection().equals(connection)){
+				sender = con;
+				break;
+			} else {
+				sender = null;
+			}
+		}
+		if (sender == null) {
+			//get player ID
+			// txt Datei nach Spieler-ID durchsuchen, wenn eine gefunden wurde: 
+			// player[i] mit Spieler-ID wird ausgelesen und die WebSocketConnection neu gesetzt
+			
+		}
+		
 		if (txt.startsWith("CHAT ")) {
 			String s = "CHAT " +  getID(sender) + " "
 					+ sender.getNick() + ": " + txt.substring(5);
@@ -52,6 +69,8 @@ public class Handler {
 		//Ein Client hat seine Rundenwerte abgegeben
 		} else if (txt.startsWith("VALUES")){
 			mechanics.valuesInserted(txt.substring(7), sender.getNick());
+		} else if (txt.startsWith("PLAYERNAME ")){
+			
 		}
 	}
 	
@@ -63,14 +82,14 @@ public class Handler {
 		return toReturn;
 	}
 	
-	public boolean areAllReady() {
+	public boolean areAllReady() {//teste in der Lobby ob alle fertig sind. Evtl markieren wer fertig ist usw.
 		boolean toReturn = true;
 		for (Conn con : connections) {
 			if(!con.isReady()) toReturn = false;
 		}
-		
 		return toReturn;
 	}
+
 
 	public void newRoundStarted() {
 		spread("NEWROUND");
