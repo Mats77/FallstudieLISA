@@ -67,10 +67,12 @@ public class Handler {
 			sender.setNick(txt.substring(11));
 			
 		//Ein Client hat seine Rundenwerte abgegeben
-		} else if (txt.startsWith("VALUES")){
+		} else if (txt.startsWith("VALUES")){ //String: Produktion;Marketing;Entwicklung;Anzahl Flgzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), sender.getNick());
 		} else if (txt.startsWith("PLAYERNAME ")){
 			
+		} else if(txt.startsWith("CREDIT")) {
+			mechanics.newCredit(txt.substring(7), sender.getNick());	//Höhe, Zins, Laufzeit
 		}
 	}
 	

@@ -53,17 +53,17 @@ public void run() {
 		System.out.println("Error while asking for Player ID");
 	}
 	
-	while(active){		//horchen
-			String txt;
-			try {
-				if ((txt = in.readLine()) != null) {
-					System.out.println("Server bekommt: " + txt + ";");
-					handler.handleString(txt, this);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				close();
-			}
+//	while(active){		//horchen
+//			String txt;
+//			try {
+//				if ((txt = in.readLine()) != null) {
+//					System.out.println("Server bekommt: " + txt + ";");
+//					handler.handleString(txt, this);
+//				}
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				close();
+//			}
 	}
 
 

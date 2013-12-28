@@ -8,6 +8,7 @@ public class Mechanics {
 	private Player[] players;
 	private Handler handler;
 	private PlayerDataCalculator playerDataCalculator;
+	private Bank bank = new Bank();
 	
 	
 	public Mechanics(Handler h) {
@@ -55,6 +56,7 @@ public class Mechanics {
 			players[i].setReadyForNextRound(false);
 			players[i].calculateRoundValues();
 		}
+		playerDataCalculator.generateNewCompanyValues(players);
 		handler.newRoundStarted();
 	}
 
@@ -71,8 +73,21 @@ public class Mechanics {
 		players = new Player[playersCon.size()];
 		int ctr = 0;
 		for (Conn conn : playersCon) {
-			players[ctr] = new Player(conn.getId(), conn.getNick(), playerDataCalculator);
+			players[ctr] = new Player(conn.getId(), conn.getNick(), playerDataCalculator, this);
 			ctr++;
 		}
+	}
+
+
+
+	public Bank getBank() {
+		return bank;
+	}
+
+
+
+	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit
+		// TODO Kreditaufnahme (langfristig)
+		
 	}
 }

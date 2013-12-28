@@ -30,9 +30,8 @@ class Server extends BaseWebSocketHandler {
         webServer.start();
         System.out.println("Server running at " + webServer.getUri());
         System.out.println(connectionCount);
-		
-		
-/*		try {
+	
+        /*		try {
 			server = new ServerSocket(56557);
 			System.out.print(server.getLocalPort());
 			while (true) {
