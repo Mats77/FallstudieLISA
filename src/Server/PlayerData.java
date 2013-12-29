@@ -5,26 +5,34 @@ public class PlayerData {
 	private int round;
 	private double money;
 	private double marketshare; // TODO im Klassendiagramm aendern
-	private int produktion;
-	private int forschung;
-	private int marketing;
-	private double umsatz;
-	private int flugzeuge;
-	private double flugzeugpreis;
+	private double production;
+	private double research;
+	private double marketing;
+	private double turnover;
+	private int airplanes;
+	private double pricePerAirplane;
 
-	public PlayerData(int pid, int r, double m, double ms, int p, int f,
-			int mg, double u, int fg, double fp) {
+	public PlayerData(int pid, int round, double money, double marketshare, double production, double research,
+			double marketing, double turnover, int airplanes, double pricePerAirplane) {
 		this.playerID = pid;
-		this.round = r;
-		this.money = m;
-		this.marketshare = ms;
-		this.produktion = p;
-		this.forschung = f;
-		this.marketing = mg;
-		this.umsatz = u;
-		this.flugzeuge = fg;
-		this.flugzeugpreis = fp;
+		this.round = round;
+		this.money = money;
+		this.marketshare = marketshare;
+		this.production = production;
+		this.research = research;
+		this.marketing = marketing;
+		this.turnover = turnover;
+		this.airplanes = airplanes;
+		this.pricePerAirplane = pricePerAirplane;
 	}//Konstruktor
+
+	public PlayerData(int id, int production, int marketing, int research, int airplanes) {
+		this.playerID = id;
+		this.production = production;
+		this.research = research;
+		this.marketing = marketing;
+		this.airplanes = airplanes;
+	}
 
 	public int getPlayerID() {
 		return playerID;
@@ -42,28 +50,28 @@ public class PlayerData {
 		return marketshare;
 	}
 
-	public int getProduktion() {
-		return produktion;
+	public double getProduction() {
+		return production;
 	}
 
-	public int getForschung() {
-		return forschung;
+	public double getResearch() {
+		return research;
 	}
 
-	public int getMarketing() {
+	public double getMarketing() {
 		return marketing;
 	}
 
-	public double getUmsatz() {
-		return umsatz;
+	public double getTurnover() {
+		return turnover;
 	}
 
-	public int getFlugzeuge() {
-		return flugzeuge;
+	public int getAirplanes() {
+		return airplanes;
 	}
 
-	public double getFlugzeugpreis() {
-		return flugzeugpreis;
+	public double getPricePerAirplane() {
+		return pricePerAirplane;
 	}
 
 	

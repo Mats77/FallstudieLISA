@@ -38,12 +38,12 @@ public class Handler {
 		conn.send("CHAT " + txt);
 	}
 	
-	public void sendReady(){	//Ÿbermittelt dem server, dass der Spieler rdy ist und button in der Lobby gedrŸckt hat
+	public void sendReady(){	//ï¿½bermittelt dem server, dass der Spieler rdy ist und button in der Lobby gedrï¿½ckt hat
 		conn.send("READY ");
 	}
 	
 	public void handleString(String txt){
-		if(txt.startsWith("CONNECTED")){	//verŠndert das GUI
+		if(txt.startsWith("CONNECTED")){	//verï¿½ndert das GUI
 			gui.connected();
 		} else if(txt.startsWith("CHAT"))	
 		{
