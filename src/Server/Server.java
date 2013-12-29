@@ -43,7 +43,6 @@ class Server extends BaseWebSocketHandler {
 			}//Deamon-Schleife
 		} catch (Exception e) {
 			System.out.print("Whoops! It didn't work!\n");
-<<<<<<< HEAD
 			e.printStackTrace();
 		}
 	}//main
@@ -56,7 +55,6 @@ class Server extends BaseWebSocketHandler {
 			e.printStackTrace();
 		}
 
-=======
 		}*/
 	}
 }

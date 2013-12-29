@@ -52,12 +52,19 @@ public class Mechanics {
 	}
 	
 	private void startNewRound() {
-		for (int i = 0; i < players.length; i++) {
+		//Spieler erhalten Geld für erfüllte Aufträge
+		//Periodenabschluss	(Bilanz, GuV, Berichte)
+		for (int i = 0; i < players.length; i++) {	//Ausgabe für neue Investitionen, ggf. decken durch kurzfristige Kredite
 			players[i].setReadyForNextRound(false);
 			players[i].calculateRoundValues();
 		}
-		playerDataCalculator.generateNewCompanyValues(players);
-		handler.newRoundStarted();
+		double[] values = playerDataCalculator.generateNewCompanyValues(players);	//neue Werte berechnen für die neuen Aufträge
+		for(int i=0; i<players.length; i++)
+		{
+			players[i].setCompanyValue(values[i]);
+		}
+		//Verteilung neue Aufträge
+		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 	}
 
 
@@ -89,5 +96,11 @@ public class Mechanics {
 	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit
 		// TODO Kreditaufnahme (langfristig)
 		
+	}
+	
+	//NUR FÜRS TESTEN
+	
+	public Player[] getPlayers(){
+		return players;
 	}
 }

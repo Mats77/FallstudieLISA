@@ -1,5 +1,7 @@
 package Server;
 
+import java.util.Vector;
+
 public class PlayerDataCalculator {
 	private Mechanics mechanics;	//vllt statt der Beziehung zu den Playerdata eher eine zu GameHistory?!
 	
@@ -41,27 +43,70 @@ public class PlayerDataCalculator {
 	
 	
 	//Die Kosten der Investitionen werden von dem alten Cash-Betrag abgezogen
-	public double calcCashFlow(int[] tmpValues, PlayerData[] data) {
+	public double calcCashFlow(int[] tmpValues, Vector<PlayerData> data) {
 		double cashOld = 0;
-		for (int i = 0; i < data.length; i++) {
-			if(data[i] != null)
-			{
-				cashOld = data[i].getMoney();
-			} else {
-				break;
-			}
-		}
+		cashOld = data.get(data.size()-1).getMoney();
 		double cashNew = cashOld - tmpValues[0] - tmpValues[1] - tmpValues[2];
 		return cashNew;
 	}
 
-	public void generateNewCompanyValues(Player[] players) {
+	public double[] generateNewCompanyValues(Player[] players) {
+		//ermitteln der Daten
+		double[] researchData = new double[players.length];
+		double[] marketingData = new double[players.length];
+		double researchOverall = 0;
+		double marketingOverall = 0;
+		int playerCtr = 0;
 		for (Player player : players) {
-			PlayerData[] playerData = player.getData();
+			Vector<PlayerData> playerData = player.getData();
 			double research = 0;
-			double marketing = 0;
-			System.out.println(playerData.length);
-			//TODO hier passiert leider noch nichts
+			double marketing = calculateMarketing(playerData);
+			marketingOverall += marketing;
+			
+			research = calculateResearch(playerData);
+			researchOverall+= research;
+			
+			researchData[playerCtr] = research;
+			marketingData[playerCtr] = marketing;
+			playerCtr++;
+		}//äußere Schleife Spieler
+		
+		//Berechnen der Werte
+		double[] companyValues = new double[players.length];
+		for(int i=0; i<companyValues.length; i++)
+		{
+			companyValues[i] += researchData[i]/researchOverall;
+			companyValues[i] += marketingData[i]/marketingOverall;
+			companyValues[i]/=2;
+			//companyValues[i] += players[i].getReputation();
+			// muss noch mit dem Preis in Verbindung gebracht werden;
+		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
+		return companyValues;
+	}//generateNewCompanyValues
+
+	
+	//PRIVATE!!!!!!!
+	public double calculateResearch(Vector<PlayerData> playerData) {
+		double research =0;
+		
+		for (PlayerData playerDataItem : playerData) {
+			research+= playerDataItem.getResearch();
 		}
+		
+		return research;
 	}
-}
+	
+	//PRIVATE!!!!!!!
+	public double calculateMarketing(Vector<PlayerData> playerData) {
+		double marketing =0;
+		if(playerData.size()>=3)
+		{
+			marketing = playerData.get(playerData.size()-1).getMarketing()+playerData.get(playerData.size()-2).getMarketing()+playerData.get(playerData.size()-3).getMarketing();
+		} else if(playerData.size()==2){
+			marketing = playerData.get(playerData.size()-1).getMarketing()+playerData.get(playerData.size()-2).getMarketing();
+		} else if(playerData.size()==1) {
+			marketing = playerData.get(playerData.size()-1).getMarketing();
+		}
+		return marketing;
+	}
+}//Class

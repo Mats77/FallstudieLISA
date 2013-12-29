@@ -26,6 +26,14 @@ public class PlayerData {
 		this.pricePerAirplane = pricePerAirplane;
 	}//Konstruktor
 
+	public PlayerData(int id, int production, int marketing, int research, int airplanes) {
+		this.playerID = id;
+		this.production = production;
+		this.research = research;
+		this.marketing = marketing;
+		this.airplanes = airplanes;
+	}
+
 	public int getPlayerID() {
 		return playerID;
 	}
