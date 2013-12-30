@@ -39,16 +39,16 @@ public class CompanyValueTest {
 	@Test
 	public void testCompanyValues(){
 		testGeneratePlayers();
-		mechanics.valuesInserted("1000;1000;1000;30;2", "Mats1");
-		mechanics.valuesInserted("1000;1000;1000;30;2", "Mats2");
-		mechanics.valuesInserted("1000;1000;1000;30;2", "Mats3");
-		mechanics.valuesInserted("1000;1000;1000;30;2", "Mats4");
+		mechanics.valuesInserted("1000;500;9500;30;2", "Mats1");
+		mechanics.valuesInserted("1000;4000;6000;30;2", "Mats2");
+		mechanics.valuesInserted("1000;5000;5000;30;2", "Mats3");
+		mechanics.valuesInserted("1000;5500;4500;30;2", "Mats4");
 		
 		Player[] players= mechanics.getPlayers();
-		assertEquals(0.25, players[0].getCompanyValue(),1e-8);
-		assertEquals(0.25, players[1].getCompanyValue(),1e-8);
-		assertEquals(0.25, players[2].getCompanyValue(),1e-8);
-		assertEquals(0.25, players[3].getCompanyValue(),1e-8);
+		assertEquals(11240, players[0].getCompanyValue(),1);
+		assertEquals(12619.2857, players[1].getCompanyValue(),1);
+		assertEquals(10714, players[2].getCompanyValue(),1);
+		assertEquals(10000, players[3].getCompanyValue(),1);
 	}
 	
 	@Test

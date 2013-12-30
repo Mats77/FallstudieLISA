@@ -75,9 +75,24 @@ public class PlayerDataCalculator {
 		double[] companyValues = new double[players.length];
 		for(int i=0; i<companyValues.length; i++)
 		{
-			companyValues[i] += researchData[i]/researchOverall;
-			companyValues[i] += marketingData[i]/marketingOverall;
-			companyValues[i]/=2;
+			double research = researchData[i];
+			double marketing = marketingData[i];
+			double erg;
+			if(marketing < research)
+			{
+				if(marketing/research < 0.3/0.7)
+				{
+					erg = (marketing+research)*(1.5 + ((marketing/research)-(0.3/0.7)));
+				} else {
+					erg = (marketing+research)*(1.5 - ((marketing/research)-(0.3/0.7)));
+				}
+			} else {
+				erg = (research+marketing)*(1.5-(1-(research/marketing-0.3/0.7)));
+			}
+			if(erg < marketing + research){
+				erg = marketing+research;
+			}
+			companyValues[i]=erg;
 			//companyValues[i] += players[i].getReputation();
 			// muss noch mit dem Preis in Verbindung gebracht werden;
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
