@@ -3,7 +3,6 @@ package Server;
 import java.util.Vector;
 
 public class Mechanics {
-	private String[] playerValues;
 	private Market market;
 	private Player[] players;
 	private Handler handler;
@@ -15,12 +14,6 @@ public class Mechanics {
 		market = new Market();
 		playerDataCalculator = new PlayerDataCalculator(this);
 		this.handler = h;
-	}
-
-
-
-	public void setPlayerValues (String values, int playerNumber){
-		playerValues[playerNumber] = values;
 	}
 
 	//wird vom Handler aufgerufen, sobald ein Spieler seine Werte eingegeben hat
