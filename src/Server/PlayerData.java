@@ -2,7 +2,7 @@ package Server;
 
 public class PlayerData {
 	private int playerID;
-	private int round;
+	private int quartal;
 	private double money;
 	private double marketshare; // TODO im Klassendiagramm aendern
 	private double production;
@@ -12,10 +12,10 @@ public class PlayerData {
 	private int airplanes;
 	private double pricePerAirplane;
 
-	public PlayerData(int pid, int round, double money, double marketshare, double production, double research,
+	public PlayerData(int pid, int quartal, double money, double marketshare, double production, double research,
 			double marketing, double turnover, int airplanes, double pricePerAirplane) {
 		this.playerID = pid;
-		this.round = round;
+		this.quartal = quartal;
 		this.money = money;
 		this.marketshare = marketshare;
 		this.production = production;
@@ -26,20 +26,21 @@ public class PlayerData {
 		this.pricePerAirplane = pricePerAirplane;
 	}//Konstruktor
 
-	public PlayerData(int id, int production, int marketing, int research, int airplanes) {
+	public PlayerData(int id, int production, int marketing, int research, int airplanes, int quartal) {
 		this.playerID = id;
 		this.production = production;
 		this.research = research;
 		this.marketing = marketing;
 		this.airplanes = airplanes;
+		this.quartal = quartal;
 	}
 
 	public int getPlayerID() {
 		return playerID;
 	}
 
-	public int getRound() {
-		return round;
+	public int getQuartal() {
+		return quartal;
 	}
 
 	public double getMoney() {
@@ -72,6 +73,10 @@ public class PlayerData {
 
 	public double getPricePerAirplane() {
 		return pricePerAirplane;
+	}
+	
+	public void setMoney(int money) {
+		this.money = money;
 	}
 
 	
