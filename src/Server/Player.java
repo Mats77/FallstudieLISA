@@ -1,5 +1,6 @@
 package Server;
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Player {
@@ -12,18 +13,24 @@ public class Player {
 	private Mechanics mechanics;
 	private Vector<Credit> credits = new Vector<Credit>();
 	private double companyValue;
+	private PlayerOrderPool orderPool = new PlayerOrderPool(null);
 
 	//Konstruktor
 	public Player(long id, String name, PlayerDataCalculator pdc, Mechanics m) {
 		this.playerDataCalculator = pdc;
 		this.id = (int)id;
 		this.nick = name;
-		data.add(new PlayerData((int)id, 0, 7500, 25, 0, 0, 0, 7500, 25, 300));
+		data.add(new PlayerData((int)id, 0
+				, 7500, 25, 0, 0, 0, 7500, 25, 300));
 		mechanics = m;
+	}
+	
+	public void endRound(){
+		
 	}
 
 	
-	public void saveNextRoundValues(String values) {	//String: Produktion;Marketing;Entwicklung;Anzahl Flugzeuge;Materialstufe;Preis
+	public void saveNextRoundValues(String values, int quartal) {	//String: Produktion;Marketing;Entwicklung;Anzahl Flugzeuge;Materialstufe;Preis
 		readyForNextRound = true;
 		int[] insertedValues = new int[values.split(";").length];
 		for(int i=0; i< insertedValues.length; i++)
@@ -31,7 +38,7 @@ public class Player {
 			insertedValues[i]=Integer.parseInt(values.split(";")[i]);
 		}
 		tmpValues = insertedValues;
-		data.add(new PlayerData(id, tmpValues[0], tmpValues[1], tmpValues[2], tmpValues[3]));
+		data.add(new PlayerData(id, tmpValues[0], tmpValues[1], tmpValues[2], tmpValues[3], quartal));
 	}
 
 
@@ -79,6 +86,14 @@ public class Player {
 
 	public void setCompanyValue(double d) {
 		companyValue = d;
+	}
+	
+	public void setMoney(){
+		
+	}
+	
+	public void addNewOrder(Order order){
+		orderPool.addNewOrder(order);
 	}
 	
 	public double getCompanyValue(){

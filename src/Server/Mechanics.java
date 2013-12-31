@@ -9,6 +9,7 @@ public class Mechanics {
 	private Handler handler;
 	private PlayerDataCalculator playerDataCalculator;
 	private Bank bank = new Bank();
+	private static int quartal = 0;
 	
 	
 	public Mechanics(Handler h) {
@@ -22,10 +23,6 @@ public class Mechanics {
 	public void setPlayerValues (String values, int playerNumber){
 		playerValues[playerNumber] = values;
 	}
-	
-	public void newRound(){
-		market.getOrdersForNewRound();
-	}
 
 	//wird vom Handler aufgerufen, sobald ein Spieler seine Werte eingegeben hat
 	public void valuesInserted(String values, String nick) {
@@ -34,12 +31,12 @@ public class Mechanics {
 			String tmp = players[i].getNick();
 			if(tmp.equalsIgnoreCase(nick))
 			{
-				players[i].saveNextRoundValues(values);
+				players[i].saveNextRoundValues(values, quartal);
 				break;
 			}
 		}
 		if(areAllReadyForNextRound())
-		{
+		{	endRound();
 			startNewRound();
 		}
 	}
@@ -55,7 +52,12 @@ public class Mechanics {
 		return allReadyForNextRound;
 	}
 	
+	private void endRound(){
+		
+	}
+	
 	private void startNewRound() {
+		quartal ++; //auf nächstes Quartal gehen.
 		//Spieler erhalten Geld für erfüllte Aufträge
 		//Periodenabschluss	(Bilanz, GuV, Berichte)
 		for (int i = 0; i < players.length; i++) {	//Ausgabe für neue Investitionen, ggf. decken durch kurzfristige Kredite
@@ -67,6 +69,10 @@ public class Mechanics {
 		{
 			players[i].setCompanyValue(values[i]);
 		}
+		
+		market.genOrdersForNewRound(); 
+		market.splitOrders(players);
+		
 		//Verteilung neue Aufträge
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 	}
@@ -102,6 +108,9 @@ public class Mechanics {
 		
 	}
 	
+	public static int getQuartal(){
+		return quartal;
+	}
 	//NUR FÜRS TESTEN
 	
 	public Player[] getPlayers(){

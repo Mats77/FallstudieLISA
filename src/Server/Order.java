@@ -1,13 +1,20 @@
 package Server;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
+
 public class Order {
 
 	private int quantity;
 	private int quartalValidTo;
 	private int fixedOrders;
 	private int optionalOrders;
-	private int price = 300*10^6;
+	private int price = 300;
 	private int deliveryTimeinQuart;
+	private String  clientName;
 
 
 	public Order(int quantity, int quartal) {
@@ -17,7 +24,7 @@ public class Order {
 		
 		optionalOrders = (int)(quantity/4);
 		fixedOrders= quantity-optionalOrders;
-		
+		setClient();
 		calcPrice();
 	}
 
@@ -36,6 +43,30 @@ public class Order {
 		}
 
 	}
+	
+	private void setClient(){
+		File file = new File("/Users/Christian/Desktop/airlines.txt"); // File mit den top 10 Airline Name 
+		try {
+			BufferedReader reader= new BufferedReader(new FileReader(file));
+			int rnd =(int) (Math.random()*10);
+			for (int i = 0; i < rnd; i++) {
+				reader.readLine();
+			}
+			clientName= reader.readLine();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public int getQuartalValidTo(){
+		return quartalValidTo;
+	}
 
-
+	public int getQuantity() {
+		return quantity;
+	}
+	
+	
 }

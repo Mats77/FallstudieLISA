@@ -5,33 +5,27 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class OrderPool {
-	private ArrayList<Order> orderList;
-	private static int quartal = 0;
-	/* Ist das aktuelle Spielquartal. Das Spiel beginnt mit Q0 und wird nach
-	 * erstellung der neuen Orders auf Q1 angehoben.
-	 */
+	private ArrayList<Order> orderList = new ArrayList<Order>();
+	private int quartal;
+
 
 	public OrderPool() {
-		orderList = new ArrayList<Order>();
-
 		// Zu Spielbeginn soll die Methode genNewOrders 2 mal durchgeführt
 		// werden um für Runde 1 genügend Aufträge zu erstellen.
 		for (int i = 0; i < 2; i++) {
-			quartal = 0;
 			genNewOrders();
 		}
-		quartal = 1; // stellt sicher, dass biede Durchläufe in Q0 und zu Ende
-						// auf quartal auf 1 steht.
 		sortOrderList(); // Liste nach Qty Höhe sortieren
 	}
 
-	public void ordersForNewRound() {
+	public void genOrdersForNewRound() {
+		quartal = Mechanics.getQuartal(); // aktualisiert jede Runde das Quartal mit dem aktuellen Quartal 
 		removeInvalidOrders();
 		genNewOrders();
 		sortOrderList();
 	}
 
-	public void genNewOrders() { // Generiert neue Bestellungen für Quartal
+	public void genNewOrders() { // Generiert neue Bestellungen für Quartal		
 		int qtyQuartal = 0; // Gesamt Stückzahl für Quartal
 		double sign = Math.random() - 0.5; // 50% tige Vorzeichen + oder -
 		int rndFact = (int) (Math.random() * 70); // 70% schwankende Nachfrage.
@@ -53,17 +47,19 @@ public class OrderPool {
 
 		} while (qtyQuartal < qtyMax);
 
-		quartal++;
 	}
 
-	public void addOneOrderToPool(Order order){
-		orderList.add(order);
-		sortOrderList();
+	public void addOneOrderToPool(Order order){ //Nimmt nicht-akzeptierte Orders von den Spielen zurück.
+		orderList.add(order); // Mit Beginn einer neuen Runde wird geprüft ob die Order noch gültig ist und neu sortiert
 	}
+
 	public Order getBestOrder(){
+		if(orderList.size()>0){ //Wenn alle Orders verteilt sind, wird null zurückgegeben.
 		Order order = orderList.get(0);
 		orderList.remove(order);
 		return order;
+		}
+		else return null;
 	}
 	
 	private void removeInvalidOrders() {
@@ -77,7 +73,7 @@ public class OrderPool {
 
 	}
 
-	private void sortOrderList() {
+	private void sortOrderList() { 
 		ArrayList<Order> orderListSort = new ArrayList<Order>();
 
 		Order tmp = null;
