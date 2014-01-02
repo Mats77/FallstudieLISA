@@ -12,7 +12,7 @@ public class Mechanics {
 	
 	
 	public Mechanics(Handler h) {
-		//market = new Market();
+		market = new Market();
 		playerDataCalculator = new PlayerDataCalculator(this);
 		this.handler = h;
 	}
@@ -64,17 +64,19 @@ public class Mechanics {
 		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
 		
 		//Geld bekommen für erfüllte Aufträge
-		//Quartalsabschluss
 		playerDataCalculator.setTurnover(players);
 		playerDataCalculator.calcProfits(players);
+		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
+		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden
 	}
 	
 	private void startNewRound() {
 		quartal ++; //auf nächstes Quartal gehen.
-//		market.genOrdersForNewRound(); 
-//		market.splitOrders(players);
+		market.genOrdersForNewRound(); 
+		market.splitOrders(players);
 		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
+		//außerdem werden hier Berichte übermittelt etc.
 	}
 
 

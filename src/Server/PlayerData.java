@@ -138,6 +138,13 @@ public class PlayerData {
 	public void setCash(double money) {
 		this.cash = money;
 	}
+	
+	//Zum Testen
+	
+	public void setProduction(int production)
+	{
+		this.production = production;
+	}
 
 	
 }//class

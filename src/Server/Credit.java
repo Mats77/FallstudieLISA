@@ -15,5 +15,10 @@ public class Credit {
 			interesRate = 0.15;
 		}
 	}
+	
+	public double getInterestsForQuarter()
+	{
+		return amount*(0.25*interesRate);
+	}
 
 }

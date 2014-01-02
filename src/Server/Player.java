@@ -41,7 +41,12 @@ public class Player {
 		}
 		tmpValues = insertedValues;
 		int tmpProduction = (int)data.lastElement().getProduction()+tmpValues[0];	//Produktion ist fortlaufend
-		data.add(new PlayerData(id/*,cash*/, tmpProduction, tmpValues[1], tmpValues[2], tmpValues[3],/*tmpValues[4],*/ quartal));
+		if(tmpValues[3]<=data.lastElement().getCapacity())
+		{
+			data.add(new PlayerData(id/*,cash*/, tmpProduction, tmpValues[1], tmpValues[2], tmpValues[3],/*tmpValues[4],*/ quartal));
+		} else {//Falls der Spieler mehr produzieren möchte, als er Kapazitäten hat
+			data.add(new PlayerData(id/*,cash*/, tmpProduction, tmpValues[1], tmpValues[2], data.lastElement().getCapacity(),/*tmpValues[4],*/ quartal));
+		}
 		//wird initialisiert mit dem Cash, das am Anfang der runde zur Verfügung stand.
 	}
 	
@@ -103,5 +108,9 @@ public class Player {
 		{
 			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
 		}
+	}
+
+	public Vector<Credit> getCredits() {
+		return credits;
 	}
 }

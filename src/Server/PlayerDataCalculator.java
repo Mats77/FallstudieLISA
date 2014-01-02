@@ -112,7 +112,11 @@ public class PlayerDataCalculator {
 			PlayerData quartalData = player.getData().elementAt(mechanics.getQuartal());
 			int capacity = (int)quartalData.getProduction()/500;
 			quartalData.setCapacity(capacity);
-			double productionInvestment = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
+			double productionInvestment = 0;
+			if(player.getData().size()>1)
+			{
+				productionInvestment = quartalData.getProduction() - player.getData().elementAt(mechanics.getQuartal()-1).getProduction();
+			}
 			player.spendMoney(productionInvestment);
 		}
 	}
@@ -130,9 +134,20 @@ public class PlayerDataCalculator {
 			} else if (tmp == 2) {
 				quartalData.setVarCosts(120);
 			}
-			quartalData.setCosts(quartalData.getFixCosts()+quartalData.getVarCosts());
+			double interests = calcInterestCosts(player);
+			quartalData.setCosts(quartalData.getFixCosts() + quartalData.getVarCosts()*quartalData.getAirplanes() + interests);
 			player.spendMoney(quartalData.getCosts());
 		}
+	}
+	
+	private double calcInterestCosts(Player player)
+	{
+		double toReturn = 0;
+		Vector<Credit> credits = player.getCredits();
+		for (Credit credit : credits) {
+			toReturn += credit.getInterestsForQuarter();
+		}
+		return toReturn;
 	}
 
 	
