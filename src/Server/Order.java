@@ -15,10 +15,14 @@ public class Order {
 	private int price = 300;
 	private int deliveryTimeinQuart;
 	private String  clientName;
+	private int quantityLeft; //Aufträge können teilweise z.B. in Q1 und zum andren Teil in Q1 erfüllt werden.
+	// quantityLeft muss == 0 sein, damit ein Auftrag abgeschlossen wird.
 
 
 	public Order(int quantity, int quartal) {
-		this.quantity = quantity;		
+		this.quantity = quantity;	
+		this.quantityLeft=quantity; 
+		
 		this.quartalValidTo = quartal + 1 + (int) (Math.random() * 2.2); // Aufträge sollen max. 3 Quartale gültig sein.
 		this.deliveryTimeinQuart = 1 + (int)(Math.random()*4.1); 
 		
@@ -26,7 +30,7 @@ public class Order {
 		fixedOrders= quantity-optionalOrders;
 		setClient();
 		calcPrice();
-	}
+	} 
 
 	private void calcPrice() { //Preis mit Preisstaffeln neu berechnen
 		
@@ -66,6 +70,18 @@ public class Order {
 
 	public int getQuantity() {
 		return quantity;
+	}
+	
+	public int getQuantityLeft() {
+		return quantityLeft;
+	}
+	
+	public void setQuantityLeft(int quantityLeft) {
+		this.quantityLeft = quantityLeft;
+	}
+	
+	public String getClientName(){
+		return clientName;
 	}
 	
 	

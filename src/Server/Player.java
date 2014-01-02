@@ -13,9 +13,11 @@ public class Player {
 	private Mechanics mechanics;
 	private Vector<Credit> credits = new Vector<Credit>();
 	private double companyValue;
-	private PlayerOrderPool orderPool = new PlayerOrderPool(null);
+	private PlayerOrderPool orderPool = new PlayerOrderPool(this);
 	private double cash;
-
+	private int capacityLeft;
+	private int reliability=0;
+	
 	//Konstruktor
 	public Player(long id, String name, PlayerDataCalculator pdc, Mechanics m) {
 		this.playerDataCalculator = pdc;
@@ -96,6 +98,22 @@ public class Player {
 		this.cash += amount;
 	}
 	
+	public void setCapacityLeft(int capacity){
+		this.capacityLeft=capacity;
+	}
+	
+	public int getCapacityLeft(){
+		return capacityLeft;
+	}
+	
+	public void setReliability(int value){
+		reliability = value;
+	}
+	
+	public int getReliability(){
+		return reliability;
+	}
+	
 	public void spendMoney(double amount)
 	{
 		this.cash -= amount;
@@ -103,5 +121,10 @@ public class Player {
 		{
 			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
 		}
+	}
+	
+	//Nur fürs TESTEN
+	public PlayerOrderPool getPlayerOrderPool(){
+		return orderPool;
 	}
 }

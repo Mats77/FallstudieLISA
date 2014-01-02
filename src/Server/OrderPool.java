@@ -8,20 +8,16 @@ public class OrderPool {
 	private ArrayList<Order> orderList = new ArrayList<Order>();
 	private int quartal;
 
-
-	public OrderPool() {
-		// Zu Spielbeginn soll die Methode genNewOrders 2 mal durchgeführt
-		// werden um für Runde 1 genügend Aufträge zu erstellen.
-		for (int i = 0; i < 2; i++) {
-			genNewOrders();
-		}
-		sortOrderList(); // Liste nach Qty Höhe sortieren
-	}
-
 	public void genOrdersForNewRound() {
 		quartal = Mechanics.getQuartal(); // aktualisiert jede Runde das Quartal mit dem aktuellen Quartal 
 		removeInvalidOrders();
 		genNewOrders();
+		// Zu Spielbeginn soll die Methode genNewOrders 2 mal durchgeführt
+		// werden um für Runde 1 genügend Aufträge zu erstellen. Beim initialisiern wird also genNewOrders aufgerufen und beim Spielstart erneut
+		if(quartal==0){
+			genNewOrders();
+		}
+		
 		sortOrderList();
 	}
 
@@ -61,8 +57,8 @@ public class OrderPool {
 		}
 		else return null;
 	}
-	
-	private void removeInvalidOrders() {
+	//eigentlich private aber aus Testzwecken public
+	public void removeInvalidOrders() {
 
 		// Löscht alle Objekte, deren validTo Date abgelaufen ist.
 		for (Order order : orderList) {
@@ -91,6 +87,11 @@ public class OrderPool {
 		}
 		orderList = orderListSort;
 
+	}
+	
+	 // Nur für Testzwecke um zu beeinflussen, welche Ordes erstellt werden.
+	public void delAllOrders(){
+		 orderList = new ArrayList<Order>();
 	}
 
 }
