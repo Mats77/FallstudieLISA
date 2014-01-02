@@ -12,7 +12,7 @@ public class Mechanics {
 	
 	
 	public Mechanics(Handler h) {
-		market = new Market();
+		//market = new Market();
 		playerDataCalculator = new PlayerDataCalculator(this);
 		this.handler = h;
 	}
@@ -29,7 +29,8 @@ public class Mechanics {
 			}
 		}
 		if(areAllReadyForNextRound())
-		{	endRound();
+		{	
+			endRound();
 			startNewRound();
 		}
 	}
@@ -46,27 +47,33 @@ public class Mechanics {
 	}
 	
 	private void endRound(){
-		
-	}
-	
-	private void startNewRound() {
-		quartal ++; //auf nächstes Quartal gehen.
-		//Spieler erhalten Geld für erfüllte Aufträge
-		//Periodenabschluss	(Bilanz, GuV, Berichte)
-		for (int i = 0; i < players.length; i++) {	//Ausgabe für neue Investitionen, ggf. decken durch kurzfristige Kredite
+		for (int i = 0; i < players.length; i++) {
 			players[i].setReadyForNextRound(false);
-			players[i].calculateRoundValues();
 		}
-		double[] values = playerDataCalculator.generateNewCompanyValues(players);	//neue Werte berechnen für die neuen Aufträge
+		//Chris: einstellen welche Spieler welchen Auftrag annehme, bzw. welchen bearbeiten
+		
+		//neue Werte berechnen für die neuen Aufträge und Investitionsausgaben für F&E, Marketing
+		double[] values = playerDataCalculator.generateNewCompanyValues(players);
 		for(int i=0; i<players.length; i++)
 		{
 			players[i].setCompanyValue(values[i]);
 		}
 		
-		market.genOrdersForNewRound(); 
-		market.splitOrders(players);
 		
-		//Verteilung neue Aufträge
+		playerDataCalculator.calcCapacities(players);	//Kapazitäten errechnen und Produktionsinvestition
+		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
+		
+		//Geld bekommen für erfüllte Aufträge
+		//Quartalsabschluss
+		playerDataCalculator.setTurnover(players);
+		playerDataCalculator.calcProfits(players);
+	}
+	
+	private void startNewRound() {
+		quartal ++; //auf nächstes Quartal gehen.
+//		market.genOrdersForNewRound(); 
+//		market.splitOrders(players);
+		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 	}
 
@@ -76,6 +83,7 @@ public class Mechanics {
 	public void startGame(Vector<Conn> playersCon)
 	{
 		generatePlayers(playersCon);
+		startNewRound();	//Aufträge verteilen
 	}
 
 	//wird aufgerufen, sobald ein Spiel gestartet wird, erstellt die Spieler

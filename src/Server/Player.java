@@ -14,6 +14,7 @@ public class Player {
 	private Vector<Credit> credits = new Vector<Credit>();
 	private double companyValue;
 	private PlayerOrderPool orderPool = new PlayerOrderPool(null);
+	private double cash;
 
 	//Konstruktor
 	public Player(long id, String name, PlayerDataCalculator pdc, Mechanics m) {
@@ -21,8 +22,9 @@ public class Player {
 		this.id = (int)id;
 		this.nick = name;
 		data.add(new PlayerData((int)id, 0
-				, 7500, 25, 0, 0, 0, 7500, 25, 300));
+				, 5000, 25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
 		mechanics = m;
+		this.cash = data.lastElement().getCash();
 	}
 	
 	public void endRound(){
@@ -38,20 +40,9 @@ public class Player {
 			insertedValues[i]=Integer.parseInt(values.split(";")[i]);
 		}
 		tmpValues = insertedValues;
-		data.add(new PlayerData(id, tmpValues[0], tmpValues[1], tmpValues[2], tmpValues[3], quartal));
-	}
-
-
-	public void calculateRoundValues() {
-		double cashAfterInvestments = playerDataCalculator.calcCashFlow(tmpValues, data);
-		if(cashAfterInvestments < 0 ) 
-		{
-			credits.add(mechanics.getBank().getShortTimeCredit(cashAfterInvestments, this));
-			System.out.println(credits.get(0));
-		}
-		//Hier muss er das Geld für die Aufträge aus der Vorperiode bekommen und die neuen Aufträge annehmen können
-		double costPerAirPlane = playerDataCalculator.calcCostPerAirplane(tmpValues);
-		System.out.println("Meine Flugzeuge kosten "+costPerAirPlane);
+		int tmpProduction = (int)data.lastElement().getProduction()+tmpValues[0];	//Produktion ist fortlaufend
+		data.add(new PlayerData(id/*,cash*/, tmpProduction, tmpValues[1], tmpValues[2], tmpValues[3],/*tmpValues[4],*/ quartal));
+		//wird initialisiert mit dem Cash, das am Anfang der runde zur Verfügung stand.
 	}
 	
 	//Getter und Setter
@@ -98,5 +89,19 @@ public class Player {
 	
 	public double getCompanyValue(){
 		return companyValue;
+	}
+	
+	public void addCash(double amount)
+	{
+		this.cash += amount;
+	}
+	
+	public void spendMoney(double amount)
+	{
+		this.cash -= amount;
+		if(this.cash < 0)
+		{
+			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
+		}
 	}
 }

@@ -3,28 +3,44 @@ package Server;
 public class PlayerData {
 	private int playerID;
 	private int quartal;
-	private double money;
+	private double cash;
 	private double marketshare; // TODO im Klassendiagramm aendern
-	private double production;
+	private double production;	//Fortlaufend
 	private double research;
 	private double marketing;
 	private double turnover;
 	private int airplanes;
 	private double pricePerAirplane;
+	private double fixCosts;
+	private double varCosts;
+	private int capacity;
+	private int qualityOfMaterial;
+	private double profit;
+	private double costs;
 
 	public PlayerData(int pid, int quartal, double money, double marketshare, double production, double research,
 			double marketing, double turnover, int airplanes, double pricePerAirplane) {
 		this.playerID = pid;
 		this.quartal = quartal;
-		this.money = money;
+		this.cash = money;
 		this.marketshare = marketshare;
-		this.production = production;
+		this.production += production;
 		this.research = research;
 		this.marketing = marketing;
 		this.turnover = turnover;
 		this.airplanes = airplanes;
 		this.pricePerAirplane = pricePerAirplane;
-	}//Konstruktor
+		this.qualityOfMaterial = 1;
+		
+		//init für Kapazität und fixkosten
+		this.production+=12500;
+		this.capacity = (int)this.production/500;
+		this.fixCosts = capacity*100;
+		this.varCosts= airplanes*110;
+		this.profit = turnover - fixCosts - varCosts - marketing - production - research;
+		this.cash += profit;
+
+	}//Konstruktor init
 
 	public PlayerData(int id, int production, int marketing, int research, int airplanes, int quartal) {
 		this.playerID = id;
@@ -43,8 +59,8 @@ public class PlayerData {
 		return quartal;
 	}
 
-	public double getMoney() {
-		return money;
+	public double getCash() {
+		return cash;
 	}
 
 	public double getMarketshare() {
@@ -75,8 +91,52 @@ public class PlayerData {
 		return pricePerAirplane;
 	}
 	
-	public void setMoney(int money) {
-		this.money = money;
+	public int getCapacity() {
+		return capacity;
+	}
+
+	public void setCapacity(int capacitiy) {
+		this.capacity = capacitiy;
+	}
+
+	public double getVarCosts() {
+		return varCosts;
+	}
+
+	public void setVarCosts(int varCosts) {
+		this.varCosts = varCosts;
+	}
+
+	public int getQualityOfMaterial() {
+		return qualityOfMaterial;
+	}
+
+	public double getFixCosts() {
+		return fixCosts;
+	}
+
+	public void setFixCosts(double fixCosts) {
+		this.fixCosts = fixCosts;
+	}
+
+	public double getCosts() {
+		return costs;
+	}
+
+	public void setCosts(double costs) {
+		this.costs = costs;
+	}
+
+	public double getProfit() {
+		return profit;
+	}
+
+	public void setProfit(double profit) {
+		this.profit = profit;
+	}
+
+	public void setCash(double money) {
+		this.cash = money;
 	}
 
 	

@@ -40,15 +40,6 @@ public class PlayerDataCalculator {
 		//TODO
 		return toReturn;
 	}//calcProfit
-	
-	
-	//Die Kosten der Investitionen werden von dem alten Cash-Betrag abgezogen
-	public double calcCashFlow(int[] tmpValues, Vector<PlayerData> data) {
-		double cashOld = 0;
-		cashOld = data.get(data.size()-1).getMoney();
-		double cashNew = cashOld - tmpValues[0] - tmpValues[1] - tmpValues[2];
-		return cashNew;
-	}
 
 	public double[] generateNewCompanyValues(Player[] players) {
 		//ermitteln der Daten
@@ -68,6 +59,7 @@ public class PlayerDataCalculator {
 			
 			researchData[playerCtr] = research;
 			marketingData[playerCtr] = marketing;
+			player.spendMoney(research+marketing);
 			playerCtr++;
 		}//äußere Schleife Spieler
 		
@@ -98,6 +90,50 @@ public class PlayerDataCalculator {
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
 		return companyValues;
 	}//generateNewCompanyValues
+	
+	
+	public void calcProfits(Player[] players) {
+		for (Player player : players) {
+			PlayerData quartalData = player.getData().lastElement();
+			double tmpProduction = quartalData.getProduction() - player.getData().elementAt(mechanics.getQuartal()-1).getProduction();
+			quartalData.setProfit(quartalData.getTurnover() - quartalData.getCosts() - quartalData.getMarketing() - quartalData.getResearch() - tmpProduction);
+		}
+	}
+	
+	public void setTurnover (Player[] players) {
+		for (Player player : players) {
+			player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
+			player.addCash(turnover);//geld erhöhen
+		}
+	}
+	
+	public void calcCapacities(Player[] players) {
+		for (Player player : players) {
+			PlayerData quartalData = player.getData().elementAt(mechanics.getQuartal());
+			int capacity = (int)quartalData.getProduction()/500;
+			quartalData.setCapacity(capacity);
+			double productionInvestment = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
+			player.spendMoney(productionInvestment);
+		}
+	}
+	
+	public void calcCosts(Player[] players) {
+		for (Player player : players) {
+			PlayerData quartalData = player.getData().elementAt(mechanics.getQuartal());
+			quartalData.setFixCosts(quartalData.getCapacity()*100);
+			int tmp = quartalData.getQualityOfMaterial();
+			if(tmp == 0)
+			{
+				quartalData.setVarCosts(100);
+			} else if (tmp == 1) {
+				quartalData.setVarCosts(110);
+			} else if (tmp == 2) {
+				quartalData.setVarCosts(120);
+			}
+			quartalData.setCosts(quartalData.getFixCosts()+quartalData.getVarCosts());
+			player.spendMoney(quartalData.getCosts());
+		}
+	}
 
 	
 	//PRIVATE!!!!!!!
