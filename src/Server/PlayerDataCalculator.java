@@ -140,7 +140,8 @@ public class PlayerDataCalculator {
 		}
 	}
 	
-	private double calcInterestCosts(Player player)
+	//PRIVATE!!!!!!
+	public double calcInterestCosts(Player player)
 	{
 		double toReturn = 0;
 		Vector<Credit> credits = player.getCredits();

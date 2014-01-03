@@ -3,18 +3,18 @@ package Server;
 import java.util.Vector;
 
 public class Mechanics {
-	private Market market;
+	private Market market = new Market();
 	private Player[] players;
 	private Handler handler;
 	private PlayerDataCalculator playerDataCalculator;
 	private Bank bank = new Bank();
-	private static int quartal = 0;
+	public static int quartal = 0;
 	
 	
 	public Mechanics(Handler h) {
 		market = new Market();
 		playerDataCalculator = new PlayerDataCalculator(this);
-		this.handler = h;
+		this.handler = h;	
 	}
 
 	//wird vom Handler aufgerufen, sobald ein Spieler seine Werte eingegeben hat
@@ -75,6 +75,18 @@ public class Mechanics {
 		market.genOrdersForNewRound(); 
 		market.splitOrders(players);
 		
+		market.genOrdersForNewRound();	//Soll das 2 mal?
+		market.splitOrders(players);
+		
+		//An Client die Aufträge des Players senden UND die CapacityLeft im Player erneuern
+		for (int i = 0; i < players.length; i++) {
+			//Jede Runde wird die noch verfügbare Capazity auf die Gesamt Cap. des Player gesetzt. 
+			//Diese wird dann jeweils abgebaut durch Erfüllung eines Auftrags. Wenn die Ges. Capazity höher
+			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
+			players[i].setCapacityLeft(players[i].getData().get(quartal-1).getCapacity());
+			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
+		} //Gute Idee! Aber was ist, wenn ich 2 AUfträge halb machen möchte, geht das auch?
+		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
 	}
@@ -98,13 +110,9 @@ public class Mechanics {
 		}
 	}
 
-
-
 	public Bank getBank() {
 		return bank;
 	}
-
-
 
 	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit
 		// TODO Kreditaufnahme (langfristig)
@@ -115,6 +123,10 @@ public class Mechanics {
 		return quartal;
 	}
 	//NUR FÜRS TESTEN
+	
+	public Market getMarket(){
+		return market;
+	}
 	
 	public Player[] getPlayers(){
 		return players;

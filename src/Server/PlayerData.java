@@ -146,5 +146,13 @@ public class PlayerData {
 		this.production = production;
 	}
 
+	public void setQualityOfMaterial(int qualityOfMaterial) {
+		this.qualityOfMaterial = qualityOfMaterial;
+	}
+
+	public void setAirplanes(int airplanes) {
+		this.airplanes = airplanes;
+	} 
+
 	
 }//class

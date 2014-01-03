@@ -7,8 +7,6 @@ public class Market {
 
 	private OrderPool orderPool =  new OrderPool();
 
-
-
 	public void calcMarketShare() {
 		calcDev();
 		calcMarketing();
@@ -24,11 +22,13 @@ public class Market {
 												// verteilt dann nacheinander
 												// die Orders, bis alle verteilt
 												// sind
+		double totalValuePlayer = 0;
 		double playerValue[] = new double[player.length];
 		for (int i = 0; i < player.length; i++) { // Liest die Company Values
 													// von allen Playern ein und
 													// sortiert diese
 			playerValue[i] = player[i].getCompanyValue();
+			totalValuePlayer+=player[i].getCompanyValue();
 		}
 		Arrays.sort(playerValue); // Sortiert das Array aufsteigend.
 
@@ -54,7 +54,9 @@ public class Market {
 		while (true){
 			order= orderPool.getBestOrder();
 			if (order!=null) {
-				playerOrdered[playerCount%4].addNewOrder(order); //Verteilung der Orders in nach Rangreihenfolge 
+				if(Math.random()>=(1-(playerOrdered[playerCount%4].getCompanyValue()/totalValuePlayer)*4)){
+					playerOrdered[playerCount%4].addNewOrder(order); //Verteilung der Orders nach Rangreihenfolge 
+				}
 			}
 			else break; //Verteilung abbrechen, wenn der OrderPool leer ist.
 			playerCount++;
@@ -69,6 +71,10 @@ public class Market {
 
 	}
 	
+	// Für JUnit Test
+	public OrderPool getOrderPool(){
+		return orderPool;
+	}
 	
 
 }
