@@ -4,8 +4,7 @@ import java.net.Socket;
 
 import org.webbitserver.WebSocketConnection;
 
-//Test Kommentar! gdffasd
-//testest
+
 /**
  * @author Mats
  * 
