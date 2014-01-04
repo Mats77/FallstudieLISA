@@ -79,9 +79,9 @@ public class Handler {
 																		// Zins,
 																		// Laufzeit
 		}else if(txt.startsWith("ACCEPT-ORDER:")){
-			acceptOrder(txt);
+			acceptOrder(txt, getID(sender));
 		}else if(txt.startsWith("PRODUCE-ORDER:")){
-			produceOrder(txt);
+			produceOrder(txt, getID(sender));
 		}
 		
 	}
@@ -131,14 +131,14 @@ public class Handler {
 		connections.elementAt(playerID).send(txt);		//Nachricht an Client senden.
 	}
 	
-	private void acceptOrder(String txt){
+	private void acceptOrder(String txt, int playerId){
 		
 		txt = txt.split(":")[1];
 		int orderId= Integer.parseInt(txt.split(";")[0]);
 		mechanics.acceptOrderForPlayer(orderId, playerId); // PlayerID herausfinden aus Con?!
 	}
 	
-	private void produceOrder(String txt){
+	private void produceOrder(String txt, int playerId){
 		txt = txt.split(":")[1];
 		int orderId= Integer.parseInt(txt.split(";")[0]);
 		mechanics.produceOrderForPlayer(orderId, playerId); // PlayerID herausfinden aus Con?!
