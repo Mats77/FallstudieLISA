@@ -1,5 +1,7 @@
 package Server;
 
+import java.util.Vector;
+
 public class Bank {
 
 	public Credit getShortTimeCredit(double cashAfterInvestments, Player player) {
@@ -31,7 +33,24 @@ public class Bank {
 	}
 
 	private double getCreditRating(Player player) {
-		// TODO Auto-generated method stub
-		return 0;
+		double interestToReturn = 0.1;
+		
+		Vector<PlayerData> data = player.getData();
+		double playerCash = player.getCash();
+		Vector<Credit> creditsOfPlayer = player.getCredits();
+		double amountOfShortTimeCredits = 0;
+		double amountOfLongTimeCredits = 0;
+		
+		for (Credit credit : creditsOfPlayer) {
+			if(credit.isShortTime())
+			{
+				amountOfShortTimeCredits += credit.getAmount();
+			} else {
+				amountOfLongTimeCredits += credit.getAmount();
+			}
+		}
+		
+		if()
+		return interestToReturn;
 	}
 }

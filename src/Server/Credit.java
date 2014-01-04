@@ -23,4 +23,14 @@ public class Credit {
 		return amount*(0.25*interesRate);
 	}
 
+	public boolean isShortTime() {
+		return shortTime;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+	
+	
+
 }

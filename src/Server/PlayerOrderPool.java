@@ -28,7 +28,7 @@ public class PlayerOrderPool {
 			player.setCapacityLeft(player.getCapacityLeft()-order.getQuantityLeft());
 			finischedOrders.add(order);
 			acceptedOrders.remove(order);
-			player.addCash(order.getQuantity()*300);
+			player.addCash(order.getQuantity()*300); //HIER IST DER UMSATZ
 			
 			//Wert setzten bezüglich pünktlicher Erfüllung des Auftrags
 			int reliability	= order.getQuartalValidTo()-Mechanics.getQuartal();

@@ -16,7 +16,7 @@ public class Handler {
 		mechanics = new Mechanics(this);
 	}
 
-	// reiht das vom Server übergeben Conn objekt in das Array connections ein
+	// reicht das vom Server übergeben Conn objekt in das Array connections ein
 	public void addPlayer(Conn player) {
 		connections.add(player);
 	}
