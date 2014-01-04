@@ -112,9 +112,15 @@ public class Mechanics {
 		return bank;
 	}
 	
-	//Wird vom Handler aufgerufen, wenn ein Player eine neue Order Akzptiert.
-	public void acceptOrderForPlayer(int orderId, int playerId){
-		players[playerId].acceptNewOrder(orderId);
+	private Player getPlayerByNick(String nick)
+	{
+		for (Player player : players) {
+			if(player.getNick().equalsIgnoreCase(nick))
+			{
+				return player;
+			}
+		}
+		return null;
 	}
 	
 	//Wird vom Handler aufgerufen, wenn ein Player eine neue Order produzieren möchte.
@@ -122,9 +128,13 @@ public class Mechanics {
 		players[playerId].produceNewOrder(orderId);
 	}
 	
-	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit
+	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit		
 		// TODO Kreditaufnahme (langfristig)
-		
+		Player player = getPlayerByNick(nick);
+		if(player != null)
+		{
+			bank.getCreditOffer(player, substring);
+		}
 	}
 	
 	public static int getQuartal(){

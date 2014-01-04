@@ -16,7 +16,7 @@ public class Player {
 	private PlayerOrderPool orderPool = new PlayerOrderPool(this);
 	private double cash;
 	private int capacityLeft;
-	private int reliability=0;
+	private int reliability=0;	//Pro Quartal 1
 	
 	//Konstruktor
 	public Player(long id, String name, PlayerDataCalculator pdc, Mechanics m) {
@@ -86,10 +86,6 @@ public class Player {
 		companyValue = d;
 	}
 	
-	public void setMoney(){
-		
-	}
-	
 	public void addNewOrder(Order order){
 		orderPool.addNewOrder(order);
 	}
@@ -134,6 +130,11 @@ public class Player {
 		{
 			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
 		}
+	}
+	
+	public double getCash()
+	{
+		return this.cash;
 	}
 
 	public Vector<Credit> getCredits() {

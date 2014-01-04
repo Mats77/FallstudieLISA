@@ -13,6 +13,8 @@ public class Credit {
 			this.shortTime = true;
 			amount = cashAfterInvestments;
 			interesRate = 0.15;
+		} else {
+			
 		}
 	}
 	
@@ -20,5 +22,15 @@ public class Credit {
 	{
 		return amount*(0.25*interesRate);
 	}
+
+	public boolean isShortTime() {
+		return shortTime;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+	
+	
 
 }

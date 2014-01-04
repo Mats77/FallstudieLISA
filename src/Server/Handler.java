@@ -16,7 +16,7 @@ public class Handler {
 		mechanics = new Mechanics(this);
 	}
 
-	// reiht das vom Server übergeben Conn objekt in das Array connections ein
+	// reicht das vom Server übergeben Conn objekt in das Array connections ein
 	public void addPlayer(Conn player) {
 		connections.add(player);
 	}
@@ -135,13 +135,13 @@ public class Handler {
 		
 		txt = txt.split(":")[1];
 		int orderId= Integer.parseInt(txt.split(";")[0]);
-		mechanics.acceptOrderForPlayer(orderId, playerId); // PlayerID herausfinden aus Con?!
+		mechanics.acceptOrderForPlayer(orderId, (int)sender.getId()); // PlayerID herausfinden aus Con?!
 	}
 	
 	private void produceOrder(String txt, int playerId){
 		txt = txt.split(":")[1];
 		int orderId= Integer.parseInt(txt.split(";")[0]);
-		mechanics.produceOrderForPlayer(orderId, playerId); // PlayerID herausfinden aus Con?!
+		mechanics.produceOrderForPlayer(orderId, (int)sender.getId()); // PlayerID herausfinden aus Con?!
 	}
 
 	public void newRoundStarted() {
