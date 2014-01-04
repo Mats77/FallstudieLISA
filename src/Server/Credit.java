@@ -13,6 +13,8 @@ public class Credit {
 			this.shortTime = true;
 			amount = cashAfterInvestments;
 			interesRate = 0.15;
+		} else {
+			
 		}
 	}
 	

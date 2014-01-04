@@ -113,10 +113,26 @@ public class Mechanics {
 	public Bank getBank() {
 		return bank;
 	}
+	
+	private Player getPlayerByNick(String nick)
+	{
+		for (Player player : players) {
+			if(player.getNick().equalsIgnoreCase(nick))
+			{
+				return player;
+			}
+		}
+		return null;
+	}
 
-	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit
-		// TODO Kreditaufnahme (langfristig)
+	public void newCredit(String substring, String nick) {	//Höhe, Laufzeit
 		
+		// TODO Kreditaufnahme (langfristig)
+		Player player = getPlayerByNick(nick);
+		if(player != null)
+		{
+			bank.getCreditOffer(player, substring);
+		}
 	}
 	
 	public static int getQuartal(){

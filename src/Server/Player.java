@@ -86,10 +86,6 @@ public class Player {
 		companyValue = d;
 	}
 	
-	public void setMoney(){
-		
-	}
-	
 	public void addNewOrder(Order order){
 		orderPool.addNewOrder(order);
 	}
@@ -126,6 +122,11 @@ public class Player {
 		{
 			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
 		}
+	}
+	
+	public double getCash()
+	{
+		return this.cash;
 	}
 
 	public Vector<Credit> getCredits() {
