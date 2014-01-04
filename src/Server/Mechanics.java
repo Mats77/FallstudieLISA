@@ -8,7 +8,7 @@ public class Mechanics {
 	private Handler handler;
 	private PlayerDataCalculator playerDataCalculator;
 	private Bank bank = new Bank();
-	public static int quartal = 0;
+	private static int quartal = 0;
 	
 	
 	public Mechanics(Handler h) {
@@ -74,9 +74,7 @@ public class Mechanics {
 		quartal ++; //auf nächstes Quartal gehen.
 		market.genOrdersForNewRound(); 
 		market.splitOrders(players);
-		
-		market.genOrdersForNewRound();	//Soll das 2 mal?
-		market.splitOrders(players);
+
 		
 		//An Client die Aufträge des Players senden UND die CapacityLeft im Player erneuern
 		for (int i = 0; i < players.length; i++) {
@@ -85,7 +83,7 @@ public class Mechanics {
 			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
 			players[i].setCapacityLeft(players[i].getData().get(quartal-1).getCapacity());
 			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
-		} //Gute Idee! Aber was ist, wenn ich 2 AUfträge halb machen möchte, geht das auch?
+		} 
 		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
@@ -124,9 +122,13 @@ public class Mechanics {
 		}
 		return null;
 	}
-
-	public void newCredit(String substring, String nick) {	//Höhe, Laufzeit
-		
+	
+	//Wird vom Handler aufgerufen, wenn ein Player eine neue Order produzieren möchte.
+	public void produceOrderForPlayer(int orderId, int playerId){
+		players[playerId].produceNewOrder(orderId);
+	}
+	
+	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit		
 		// TODO Kreditaufnahme (langfristig)
 		Player player = getPlayerByNick(nick);
 		if(player != null)

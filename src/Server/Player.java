@@ -94,6 +94,14 @@ public class Player {
 		return companyValue;
 	}
 	
+	public void produceNewOrder(int orderId){
+		orderPool.produceOrder(orderId);
+	}
+	
+	public void acceptNewOrder(int orderId){
+		orderPool.acceptNewOrder(orderId);
+	}
+	
 	public void addCash(double amount)
 	{
 		this.cash += amount;
