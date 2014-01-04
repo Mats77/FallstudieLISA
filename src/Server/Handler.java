@@ -78,7 +78,12 @@ public class Handler {
 			mechanics.newCredit(txt.substring(7), sender.getNick()); // Höhe,
 																		// Zins,
 																		// Laufzeit
+		}else if(txt.startsWith("ACCEPT-ORDER:")){
+			acceptOrder(txt);
+		}else if(txt.startsWith("PRODUCE-ORDER:")){
+			produceOrder(txt);
 		}
+		
 	}
 
 	public int getID(Conn connection) {
@@ -105,22 +110,38 @@ public class Handler {
 		ArrayList<Order> newOrders = playerOderPool.getNewOrders();
 
 		String txt = "Player " + playerID;
+		
+		//String senden mit Player (ID) acceptedOrders:OrderID,Kundenname,Bestellmenge,noch zu produzierende Menge,bis wann zu produzieren;
 		if (acceptedOrders.size() > 0) {
 			txt += " acceptedOrders:";
 			for (Order order : acceptedOrders) {
-				txt += order.getClientName() + "," + order.getQuantity() + ","
+				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getQuantity() + ","
 						+ order.getQuantityLeft() + "," + order.getQuartalValidTo() + ";";
 			}
 		}
-
+		
+		// an den obigen String anhängen: newOrders:OrderID,Kundennamen,Bestellmenge,Lieferzeitpunkt;
 		if (newOrders.size() > 0) {
 			txt += " newOrders:";
 			for (Order order : newOrders) {
-				txt += order.getClientName() + "," + order.getQuantity() + ","
+				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getQuantity() + ","
 						+ order.getQuartalValidTo() + ";";
 			}
 		}
 		connections.elementAt(playerID).send(txt);		//Nachricht an Client senden.
+	}
+	
+	private void acceptOrder(String txt){
+		
+		txt = txt.split(":")[1];
+		int orderId= Integer.parseInt(txt.split(";")[0]);
+		mechanics.acceptOrderForPlayer(orderId, playerId); // PlayerID herausfinden aus Con?!
+	}
+	
+	private void produceOrder(String txt){
+		txt = txt.split(":")[1];
+		int orderId= Integer.parseInt(txt.split(";")[0]);
+		mechanics.produceOrderForPlayer(orderId, playerId); // PlayerID herausfinden aus Con?!
 	}
 
 	public void newRoundStarted() {

@@ -14,13 +14,15 @@ public class PlayerOrderPool {
 		this.player = player;
 	}
 
-	// Wird vom Market aufgerufen beim Verteilen der Orders
+	// Wird vom Market aufgerufen beim Verteilen der Orders aus dem OrderPool an die Player
 	public void addNewOrder(Order order) {
 		newOrders.add(order);
 	}
 	
 	//Wird von Mechanics aufgerufen, für jede Order die der Player für das Quartal zur Herstellung markiert hat. 
-	public void produceOrder(Order order) {
+	public void produceOrder(int orderId) {
+		
+		Order order = getOrderWithId(orderId);
 		
 		//Wenn die CapacityLeft des Players größer ist, als die  QuantityLeft der Order, wird die Order abgeschlossen
 		if(order.getQuantityLeft()<=player.getCapacityLeft()){
@@ -28,7 +30,7 @@ public class PlayerOrderPool {
 			player.setCapacityLeft(player.getCapacityLeft()-order.getQuantityLeft());
 			finischedOrders.add(order);
 			acceptedOrders.remove(order);
-			player.addCash(order.getQuantity()*300);
+			player.addCash(order.getQuantity()*order.getPricePerAirplane());
 			
 			//Wert setzten bezüglich pünktlicher Erfüllung des Auftrags
 			int reliability	= order.getQuartalValidTo()-Mechanics.getQuartal();
@@ -49,14 +51,34 @@ public class PlayerOrderPool {
 
 		
 	}
+	
+	// Sucht in den OrderPools nach der Order mit der entsprechenden OrderId
+	private Order getOrderWithId(int orderId){
+		for (Order order : acceptedOrders) {
+			if(order.getOrderId()==orderId) return order;
+		}
+		for (Order order : newOrders) {
+			if(order.getOrderId()==orderId) return order;
+		}
+		
+		//Es wurde keine Order in dem OrderPool gefunden, die mit der OrderId vom Spieler übereinstimmt.
+		System.err.println("Die OrderId der Order ist nicht im PlayerOrderPool vorhanden");
+		return null;
+	}
 
-	public void unacceptOrder(Order order) {
+	public void unacceptOrder(int orderId) {
+		Order order = getOrderWithId(orderId);
+		
 		newOrders.remove(order);
 		orderPool.addOneOrderToPool(order);
 	}
-
-	public void acceptOrder(Order order) {
+	
+	//Wird vom Player aufgerufen wenn er eine neue Order akzeptiert.
+	public void acceptNewOrder(int orderId) {
+		Order order = getOrderWithId(orderId);
 		acceptedOrders.add(order);
+		newOrders.remove(order);
+		order.setPrice(player.getData().get(Mechanics.getQuartal()).getPricePerAirplane());  //Setzt den Flugzeugpreis auf die letzt Eingabe des Players
 	}
 
 	public ArrayList<Order> getAcceptedOrders() {
@@ -67,9 +89,6 @@ public class PlayerOrderPool {
 		return newOrders;
 	}
 	
-	public boolean equals(PlayerOrderPool order) {
-		return (getClass()==	order.getClass());
-		
-	}
+	
 
 }
