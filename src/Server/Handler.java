@@ -78,12 +78,9 @@ public class Handler {
 			mechanics.newCredit(txt.substring(7), sender.getNick()); // Höhe,
 																		// Zins,
 																		// Laufzeit
-		}else if(txt.startsWith("ACCEPT-ORDER:")){
-			acceptOrder(txt, getID(sender));
-		}else if(txt.startsWith("PRODUCE-ORDER:")){
-			produceOrder(txt, getID(sender));
+		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
+			refreshPlayerOrderPool(txt, getID(sender));
 		}
-		
 	}
 
 	public int getID(Conn connection) {
@@ -131,17 +128,36 @@ public class Handler {
 		connections.elementAt(playerID).send(txt);		//Nachricht an Client senden.
 	}
 	
-	private void acceptOrder(String txt, int playerId){
-		
-		txt = txt.split(":")[1];
-		int orderId= Integer.parseInt(txt.split(";")[0]);
-		mechanics.acceptOrderForPlayer(orderId, (int)sender.getId()); // PlayerID herausfinden aus Con?!
+	//Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die Abhandlung der orders gewartet wird.
+	public void setStatusForInputValues(boolean bol, int playerId){
+	
+			connections.elementAt(playerId).send("STATUS INPUT "+bol);
 	}
 	
-	private void produceOrder(String txt, int playerId){
-		txt = txt.split(":")[1];
-		int orderId= Integer.parseInt(txt.split(";")[0]);
-		mechanics.produceOrderForPlayer(orderId, (int)sender.getId()); // PlayerID herausfinden aus Con?!
+	
+	//Aktualisiert den PlayerOrderPool der Spieler mit den neu angenommen und den kommend produzierenden Orders
+	private void refreshPlayerOrderPool(String txt, int playerId){
+	
+	
+		String produce= txt.split(" ")[2];
+		String accepted = txt.split(" ")[4];
+		
+		String orderIdToProduce [] = produce.split(",");
+		String orderIdAccepted [] = accepted.split(",");
+		
+		int orderByIdToProduce [] = new int [orderIdToProduce.length];
+		int orderByIdAccepted [] = new int [orderIdAccepted.length];
+		
+		for (int i = 0; i < orderIdToProduce.length; i++) {
+			orderByIdToProduce [i] = Integer.parseInt(orderIdToProduce[i]); 
+		}
+		
+		for (int i = 0; i < orderIdAccepted.length; i++) {
+			orderByIdAccepted [i ]= Integer.parseInt(orderIdAccepted[i]);
+		}
+		
+		mechanics.refreshPlayerOrderPool(playerId, orderByIdToProduce, orderByIdAccepted);	
+		
 	}
 
 	public void newRoundStarted() {

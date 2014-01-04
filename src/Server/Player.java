@@ -8,6 +8,7 @@ public class Player {
 	private int id;
 	private Vector<PlayerData> data = new Vector<PlayerData>();
 	private boolean readyForNextRound = false;
+	private boolean readyForOrderSelection=false;
 	private int[] tmpValues;
 	private PlayerDataCalculator playerDataCalculator;
 	private Mechanics mechanics;
@@ -35,7 +36,7 @@ public class Player {
 
 	
 	public void saveNextRoundValues(String values, int quartal) {	//String: Produktion;Marketing;Entwicklung;Anzahl Flugzeuge;Materialstufe;Preis
-		readyForNextRound = true;
+		readyForOrderSelection = true;
 		int[] insertedValues = new int[values.split(";").length];
 		for(int i=0; i< insertedValues.length; i++)
 		{
@@ -70,10 +71,17 @@ public class Player {
 	public void setReadyForNextRound(boolean readyForNextRound) {
 		this.readyForNextRound = readyForNextRound;
 	}
-
-
+	
 	public boolean isReadyForNextRound() {
 		return readyForNextRound;
+	}
+	
+	public void setReadyForOrderSelection(boolean readyForOrderSelection) {
+		this.readyForOrderSelection = readyForOrderSelection;
+	}
+	
+	public boolean isReadyForOrderSelection() {
+		return readyForOrderSelection;
 	}
 	
 	public int getId()
@@ -94,12 +102,12 @@ public class Player {
 		return companyValue;
 	}
 	
-	public void produceNewOrder(int orderId){
-		orderPool.produceOrder(orderId);
+	public void newOrdersToProduce(int[] orderId){
+		orderPool.newOrdersToProduce(orderId);
 	}
 	
-	public void acceptNewOrder(int orderId){
-		orderPool.acceptNewOrder(orderId);
+	public void newOrdersAccepted(int [] orderId){
+		orderPool.newOrdersAccepted(orderId);
 	}
 	
 	public void addCash(double amount)
