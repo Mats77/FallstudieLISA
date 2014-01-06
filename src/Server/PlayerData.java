@@ -51,6 +51,12 @@ public class PlayerData {
 		this.quartal = quartal;
 	}
 
+	public PlayerData(int id, int quartal, double turnover) {	//Dieser Konstruktor wird jede Runde für jeden Spieler aufgerufen,
+		this.playerID = id;										//anschließend werden nur noch über Setter Werte eingefügt
+		this.quartal = quartal;
+		this.turnover = turnover;
+	}
+
 	public int getPlayerID() {
 		return playerID;
 	}

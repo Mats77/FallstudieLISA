@@ -42,7 +42,7 @@ public class Order {
 	}
 
 	private void setClient() {
-		File file = new File("/Users/Christian/Desktop/airlines.txt"); // File
+		File file = new File("/Users/Mats/Desktop/airlines.txt"); // File
 																		// mit
 																		// den
 																		// top

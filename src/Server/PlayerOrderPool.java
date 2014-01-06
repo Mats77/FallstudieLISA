@@ -6,7 +6,7 @@ public class PlayerOrderPool {
 
 	private ArrayList<Order> acceptedOrders = new ArrayList<Order>();
 	private ArrayList<Order> newOrders = new ArrayList<Order>();
-	private ArrayList<Order> finischedOrders = new ArrayList<Order>();
+	private ArrayList<Order> finishedOrders = new ArrayList<Order>();
 	private OrderPool orderPool = null;
 	private Player player;
 
@@ -35,7 +35,7 @@ public class PlayerOrderPool {
 				// herabsetztn
 				player.setCapacityLeft(player.getCapacityLeft()
 						- order.getQuantityLeft());
-				finischedOrders.add(order);
+				finishedOrders.add(order);
 				acceptedOrders.remove(order);
 				player.addCash(order.getQuantity()
 						* order.getPricePerAirplane());
@@ -109,6 +109,10 @@ public class PlayerOrderPool {
 
 	public ArrayList<Order> getNewOrders() {
 		return newOrders;
+	}
+
+	public ArrayList<Order> getFinishedOrders() {
+		return finishedOrders;
 	}
 
 }

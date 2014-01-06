@@ -131,7 +131,7 @@ public class Handler {
 	//Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die Abhandlung der orders gewartet wird.
 	public void setStatusForInputValues(boolean bol, int playerId){
 	
-			connections.elementAt(playerId).send("STATUS INPUT "+bol);
+		connections.elementAt(playerId).send("STATUS INPUT "+bol);
 	}
 	
 	
@@ -163,4 +163,12 @@ public class Handler {
 	public void newRoundStarted() {
 		spread("NEWROUND");
 	}
+	
+	
+	
+	//NUR ZUM TESTEN!!!
+	public void setConnections(Vector<Conn> connections) {
+		this.connections = connections;
+	}	
+	
 }

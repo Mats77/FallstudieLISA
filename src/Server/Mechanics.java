@@ -25,14 +25,13 @@ public class Mechanics {
 			if(tmp.equalsIgnoreCase(nick))
 			{
 				players[i].saveNextRoundValues(values, quartal);
-				handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI
+				handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI zum Testen von Mattes deaktiviert
 				break;
 			}
 		}
 		if(allPlayerReadyForOrderSelection())
 		{	
 			ordersForNewRound();
-
 		}
 	}
 	
@@ -73,13 +72,11 @@ public class Mechanics {
 			players[i].setCompanyValue(values[i]);
 		}
 		
-		
-		playerDataCalculator.calcCapacities(players);	//Kapazitäten errechnen und Produktionsinvestition
-		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
-		
 		//Geld wurde schon mittel player.addCash auf den Player übertragen. Geld wird übertragen sobald der Spieler
 		//angibt und gesendet hat welchen Auftrag er produzieren möchte.
 		playerDataCalculator.setTurnover(players);
+		playerDataCalculator.calcCapacities(players);	//Kapazitäten errechnen und Produktionsinvestition
+		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
 		playerDataCalculator.calcProfits(players);
 		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
 		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden

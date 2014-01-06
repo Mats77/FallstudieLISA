@@ -1,6 +1,5 @@
 package Server;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class Player {
@@ -28,10 +27,6 @@ public class Player {
 				, 5000, 25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
 		mechanics = m;
 		this.cash = data.lastElement().getCash();
-	}
-	
-	public void endRound(){
-		
 	}
 
 	

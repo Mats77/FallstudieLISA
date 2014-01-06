@@ -34,13 +34,6 @@ public class PlayerDataCalculator {
 		return (values[0] + values[1] + values[2])/values[3];
 	}
 
-	public double calcProfit()
-	{
-		double toReturn = 0;
-		//TODO
-		return toReturn;
-	}//calcProfit
-
 	public double[] generateNewCompanyValues(Player[] players) {
 		//ermitteln der Daten
 		double[] researchData = new double[players.length];
@@ -102,6 +95,10 @@ public class PlayerDataCalculator {
 	
 	public void setTurnover (Player[] players) {
 		for (Player player : players) {
+			double turnover = 0;
+			for (Order order : player.getPlayerOrderPool().getFinishedOrders()) {
+				turnover += order.getPricePerAirplane()*order.getQuantity();
+			}
 			player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
 			player.addCash(turnover);//geld erhöhen
 		}

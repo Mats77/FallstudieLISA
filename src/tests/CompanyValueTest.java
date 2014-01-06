@@ -9,15 +9,20 @@ import org.junit.Test;
 
 import Server.Conn;
 import Server.Handler;
+import Server.Market;
 import Server.Mechanics;
 import Server.Player;
 import Server.PlayerDataCalculator;
 
+
+
+//In mechanics müssen 2 Zeilen auskommentiert werden
 public class CompanyValueTest {
 	Handler handler = new Handler();
 	Mechanics mechanics = new Mechanics(handler);
 	PlayerDataCalculator pdc = new PlayerDataCalculator(mechanics);
 	Vector<Conn> connections= new Vector<Conn>();
+	Market market = new Market();
 	
 	@Test
 	public void testGeneratePlayers() {
@@ -32,7 +37,8 @@ public class CompanyValueTest {
 		connections.add(new Conn(new Socket(), handler));
 		connections.get(3).setId(1);
 		connections.get(3).setNick("Mats4");
-				
+		
+		handler.setConnections(connections);
 		mechanics.generatePlayers(connections);
 	}
 	
@@ -44,11 +50,13 @@ public class CompanyValueTest {
 		mechanics.valuesInserted("1000;5000;5000;30;2", "Mats3");
 		mechanics.valuesInserted("1000;5500;4500;30;2", "Mats4");
 		
+		double[] values = pdc.generateNewCompanyValues(mechanics.getPlayers());
+		
 		Player[] players= mechanics.getPlayers();
-		assertEquals(11240, players[0].getCompanyValue(),1);
-		assertEquals(12619.2857, players[1].getCompanyValue(),1);
-		assertEquals(10714, players[2].getCompanyValue(),1);
-		assertEquals(10000, players[3].getCompanyValue(),1);
+		assertEquals(12885, values[0],1);
+		assertEquals(13598.2857, values[1],1);
+		assertEquals(11785, values[2],1);
+		assertEquals(11000, values[3],1);
 	}
 	
 	@Test
@@ -63,15 +71,15 @@ public class CompanyValueTest {
 		
 		Player[] players= mechanics.getPlayers();
 		
-		assertEquals(1000, pdc.calculateMarketing(players[0].getData()),1e-8);
-		assertEquals(2000, pdc.calculateMarketing(players[1].getData()),1e-8);
-		assertEquals(3000, pdc.calculateMarketing(players[2].getData()),1e-8);
-		assertEquals(10000, pdc.calculateMarketing(players[3].getData()),1e-8);
+		assertEquals(1500, pdc.calculateMarketing(players[0].getData()),1e-8);
+		assertEquals(2500, pdc.calculateMarketing(players[1].getData()),1e-8);
+		assertEquals(3500, pdc.calculateMarketing(players[2].getData()),1e-8);
+		assertEquals(10500, pdc.calculateMarketing(players[3].getData()),1e-8);
 		
-		assertEquals(1111, pdc.calculateResearch(players[0].getData()),1e-8);
-		assertEquals(2222, pdc.calculateResearch(players[1].getData()),1e-8);
-		assertEquals(3333, pdc.calculateResearch(players[2].getData()),1e-8);
-		assertEquals(4444, pdc.calculateResearch(players[3].getData()),1e-8);
+		assertEquals(1611, pdc.calculateResearch(players[0].getData()),1e-8);
+		assertEquals(2722, pdc.calculateResearch(players[1].getData()),1e-8);
+		assertEquals(3833, pdc.calculateResearch(players[2].getData()),1e-8);
+		assertEquals(4944, pdc.calculateResearch(players[3].getData()),1e-8);
 	}
 	
 	@Test
@@ -91,15 +99,15 @@ public class CompanyValueTest {
 		
 		Player[] players= mechanics.getPlayers();
 		
-		assertEquals(2000, pdc.calculateMarketing(players[0].getData()),1e-8);
-		assertEquals(3000, pdc.calculateMarketing(players[1].getData()),1e-8);
-		assertEquals(4000, pdc.calculateMarketing(players[2].getData()),1e-8);
-		assertEquals(11000, pdc.calculateMarketing(players[3].getData()),1e-8);
+		assertEquals(2500, pdc.calculateMarketing(players[0].getData()),1e-8);
+		assertEquals(3500, pdc.calculateMarketing(players[1].getData()),1e-8);
+		assertEquals(4500, pdc.calculateMarketing(players[2].getData()),1e-8);
+		assertEquals(11500, pdc.calculateMarketing(players[3].getData()),1e-8);
 		
-		assertEquals(2111, pdc.calculateResearch(players[0].getData()),1e-8);
-		assertEquals(3222, pdc.calculateResearch(players[1].getData()),1e-8);
-		assertEquals(4333, pdc.calculateResearch(players[2].getData()),1e-8);
-		assertEquals(5444, pdc.calculateResearch(players[3].getData()),1e-8);
+		assertEquals(2611, pdc.calculateResearch(players[0].getData()),1e-8);
+		assertEquals(3722, pdc.calculateResearch(players[1].getData()),1e-8);
+		assertEquals(4833, pdc.calculateResearch(players[2].getData()),1e-8);
+		assertEquals(5944, pdc.calculateResearch(players[3].getData()),1e-8);
 	}
 	
 	@Test
@@ -139,10 +147,10 @@ public class CompanyValueTest {
 		assertEquals(11882, pdc.calculateMarketing(players[2].getData()),1e-8);
 		assertEquals(25472, pdc.calculateMarketing(players[3].getData()),1e-8);
 		
-		assertEquals(5454, pdc.calculateResearch(players[0].getData()),1e-8);
-		assertEquals(5446, pdc.calculateResearch(players[1].getData()),1e-8);
-		assertEquals(28800, pdc.calculateResearch(players[2].getData()),1e-8);
-		assertEquals(8791, pdc.calculateResearch(players[3].getData()),1e-8);
+		assertEquals(5954, pdc.calculateResearch(players[0].getData()),1e-8);
+		assertEquals(5946, pdc.calculateResearch(players[1].getData()),1e-8);
+		assertEquals(29300, pdc.calculateResearch(players[2].getData()),1e-8);
+		assertEquals(9291, pdc.calculateResearch(players[3].getData()),1e-8);
 		
 	}
 
