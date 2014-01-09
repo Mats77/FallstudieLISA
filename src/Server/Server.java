@@ -8,11 +8,16 @@ class Server extends BaseWebSocketHandler {
 	private static int connectionCount;
 	private static WebServer webServer;
 	private static Handler handler;
+	private WebSocketConnection[] conn = new WebSocketConnection[4];
 
 	public void onOpen(WebSocketConnection connection){
 		connection.send("Connection aufgebaut");
+		for (int i = 0; i < conn.length; i++) {
+			if (conn[i] == null) {
+				conn[i] = connection;
+			}
+		}
 		Conn conn = new Conn(handler);
-		int id = (int) conn.getId();
 		connection.send("Connection gespeichert");
 	}
 	

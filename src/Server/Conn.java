@@ -21,13 +21,13 @@ public class Conn {
 	private String nick;
 	private int gameID;
 	private boolean ready = false;
-//	private WebSocketConnection socket;
+	private WebSocketConnection socket;
 	private boolean active = true;
 	private Handler handler;
 
 	public Conn(Handler handler) {
 		System.out.println("Richtiger Constructor!");
-//		this.socket = socket;
+		this.socket = socket;
 		this.handler = handler;
 		handler.addPlayer(this);
 		run();
@@ -106,7 +106,7 @@ public class Conn {
 		active = false;
 		handler.spread("CHAT " + handler.getID(this) + " " + nick
 				+ " hat das Spiel verlassen.");
-		// socket.close();
+		 socket.close();
 	}
 
 	public String getNick() {
@@ -117,9 +117,9 @@ public class Conn {
 		this.nick = nick;
 	}
 
-//	public WebSocketConnection getConnection() {
-//		return socket;
-//	}
+	public WebSocketConnection getConnection() {
+		return socket;
+	}
 
 	// NUR FÜRS TESTEN!!!!
 	public void setId(int id) {
