@@ -26,6 +26,7 @@ public class Handler {
 
 	// reicht das vom Server übergeben Conn objekt in das Array connections ein
 	public void addPlayer(Conn player) {
+		System.out.println("Spieler wird hinzugefügt");
 		connections.add(player);
 	}
 
