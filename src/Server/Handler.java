@@ -41,12 +41,15 @@ public class Handler {
 	public void handleString(String txt, WebSocketConnection connection) {
 
 		for (Conn con : connections) {
-			if (con.getConnection().equals(connection)) {
-				sender = con;
-				break;
-			} else {
-				sender = null;
-			}
+		if (con.getId() == Integer.parseInt((txt.substring(0, 2)))) {
+			sender = con;
+		}
+//			if (con.getConnection().equals(connection)) {
+//				sender = con;
+//				break;
+//			} else {
+//				sender = null;
+//			}
 		}
 		if (sender == null) {
 			// get player ID
