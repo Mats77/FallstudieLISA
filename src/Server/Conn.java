@@ -50,6 +50,7 @@ public class Conn extends Thread {
 		System.out.println("Richtiger Constructor!");
 		this.socket = socket;
 		this.handler = handler;
+		handler.addPlayer(this);
 		start();
 	}
 
@@ -60,8 +61,8 @@ public class Conn extends Thread {
 
 	public void run() {
 		send("CONNECTED "); // damit Client-Thread beginnt
-		this.id = handler.getID(this);
 		this.gameID = handler.getGameID();
+		this.id = handler.getID(this);
 		// create json string
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		try {

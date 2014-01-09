@@ -21,6 +21,7 @@ public class Handler {
 	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
 		this.gameID = gameID;
+		System.out.println("Handler lebt!");
 	}
 
 	// reicht das vom Server übergeben Conn objekt in das Array connections ein

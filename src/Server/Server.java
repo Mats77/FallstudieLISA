@@ -10,7 +10,6 @@ class Server extends BaseWebSocketHandler {
 
 	public void onOpen(WebSocketConnection connection){
 		Conn conn = new Conn(connection, handler);
-		handler.addPlayer(conn);
 	}
 	
     public void onClose(WebSocketConnection connection) {
@@ -27,7 +26,7 @@ class Server extends BaseWebSocketHandler {
 		//Server erstellt ein Handlerobjekt, öffnet den Server-Socket und beginnt Deamon Prozess
 		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
 		int gameID = 3;
-		Handler handler = new Handler(3);
+		Handler handler = new Handler(gameID);
         webServer = WebServers.createWebServer(8080).add("/hellowebsocket", new Server()).add(new StaticFileHandler("index.html"));
         webServer.start();
         System.out.println("Server running at " + webServer.getUri());
