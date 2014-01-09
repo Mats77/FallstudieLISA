@@ -1,23 +1,36 @@
 package Server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.webbitserver.WebSocketConnection;
 
 public class Handler {
 
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
+<<<<<<< HEAD
 	private Conn sender;	//Ist das hier notwendig?????
+=======
+	private Conn sender;
+	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
+>>>>>>> ee5d1668a22b5c7415989a38108fceee7e1011c7
 
 	// Konstruktor, erstellt direkt Mechanics
-	public Handler() {
+	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
+		this.gameID = gameID;
+		System.out.println("Handler lebt!");
 	}
 
 	// reicht das vom Server übergeben Conn objekt in das Array connections ein
 	public void addPlayer(Conn player) {
+		System.out.println("Spieler wird hinzugefügt");
 		connections.add(player);
 	}
 
@@ -32,12 +45,15 @@ public class Handler {
 	public void handleString(String txt, WebSocketConnection connection) {
 
 		for (Conn con : connections) {
-			if (con.getConnection().equals(connection)) {
-				sender = con;
-				break;
-			} else {
-				sender = null;
-			}
+		if (con.getId() == Integer.parseInt((txt.substring(0, 2)))) {
+			sender = con;
+		}
+//			if (con.getConnection().equals(connection)) {
+//				sender = con;
+//				break;
+//			} else {
+//				sender = null;
+//			}
 		}
 		if (sender == null) {
 			// get player ID
@@ -84,11 +100,20 @@ public class Handler {
 	}
 
 	public int getID(Conn connection) {
+		System.out.println("Get Player ID!");
 		int toReturn = -1;
 		for (Conn con : connections) {
+			System.out.println(con.getId());
 			if (connection == con)
-				toReturn = (int) con.getId();
+				try {
+					toReturn = (int) con.getId();
+					return toReturn;
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			toReturn = (int) con.getId();				
 		}
+		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;
 	}
 
@@ -105,7 +130,27 @@ public class Handler {
 	public void sendPlayerOrderPool(int playerID, PlayerOrderPool playerOderPool) {
 		ArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
 		ArrayList<Order> newOrders = playerOderPool.getNewOrders();
+		
+		// Dies ist nur ein Test!
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
+		try {
+			String json = ow.writeValueAsString(acceptedOrders);
+			json += ow.writeValueAsString(acceptedOrders);
+			System.out.println(json);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Ende vom Test
+		
 		String txt = "Player " + playerID;
 		
 		//String senden mit Player (ID) acceptedOrders:OrderID,Kundenname,Bestellmenge,noch zu produzierende Menge,bis wann zu produzieren;
@@ -175,5 +220,14 @@ public class Handler {
 	//NUR ZUM TESTEN!!!
 	public void setConnections(Vector<Conn> connections) {
 		this.connections = connections;
+<<<<<<< HEAD
 	}
+=======
+	}	
+	
+	public int getGameID(){
+		return gameID;
+	}
+	
+>>>>>>> ee5d1668a22b5c7415989a38108fceee7e1011c7
 }

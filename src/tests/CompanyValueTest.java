@@ -18,7 +18,7 @@ import Server.PlayerDataCalculator;
 
 //In mechanics müssen 2 Zeilen auskommentiert werden
 public class CompanyValueTest {
-	Handler handler = new Handler();
+	Handler handler = new Handler(3);
 	Mechanics mechanics = new Mechanics(handler);
 	PlayerDataCalculator pdc = new PlayerDataCalculator(mechanics);
 	Vector<Conn> connections= new Vector<Conn>();

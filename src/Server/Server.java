@@ -2,6 +2,7 @@ package Server;
 
 import org.webbitserver.*;
 import org.webbitserver.handler.StaticFileHandler;
+import org.webbitserver.wrapper.WebSocketConnectionWrapper;
 
 class Server extends BaseWebSocketHandler {
 	private static int connectionCount;
@@ -9,8 +10,10 @@ class Server extends BaseWebSocketHandler {
 	private static Handler handler;
 
 	public void onOpen(WebSocketConnection connection){
-		Conn conn = new Conn(connection, handler);
-		handler.addPlayer(conn);
+		connection.send("Connection aufgebaut");
+		Conn conn = new Conn(handler);
+		int id = (int) conn.getId();
+		connection.send("Connection gespeichert");
 	}
 	
     public void onClose(WebSocketConnection connection) {
@@ -25,7 +28,9 @@ class Server extends BaseWebSocketHandler {
 	public static void main(String args[]) {
 		
 		//Server erstellt ein Handlerobjekt, öffnet den Server-Socket und beginnt Deamon Prozess
-		Handler handler = new Handler();
+		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
+		int gameID = 3;
+		Handler handler = new Handler(gameID);
         webServer = WebServers.createWebServer(8080).add("/hellowebsocket", new Server()).add(new StaticFileHandler("index.html"));
         webServer.start();
         System.out.println("Server running at " + webServer.getUri());

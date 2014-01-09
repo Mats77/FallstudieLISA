@@ -15,7 +15,7 @@ import Server.Mechanics;
 import Server.PlayerDataCalculator;
 
 public class PlayerDataCalculatorTest {
-	Handler handler = new Handler();
+	Handler handler = new Handler(3);
 	Mechanics mechanics = new Mechanics(handler);
 	PlayerDataCalculator pdc = new PlayerDataCalculator(mechanics);
 	Vector<Conn> connections= new Vector<Conn>();
