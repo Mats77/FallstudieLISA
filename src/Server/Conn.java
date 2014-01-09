@@ -25,6 +25,14 @@ public class Conn extends BaseWebSocketHandler {
 	private boolean active = true;
 	private Handler handler;
 
+	public Conn(WebSocketConnection socket, Handler handler) {
+		System.out.println("Richtiger Constructor!");
+		this.socket = socket;
+		this.handler = handler;
+		handler.addPlayer(this);
+		run();
+	}
+	
 	public boolean isReady() {
 		return ready;
 	}
@@ -46,14 +54,6 @@ public class Conn extends BaseWebSocketHandler {
 	//
 	// start();
 	// }
-
-	public Conn(WebSocketConnection socket, Handler handler) {
-		System.out.println("Richtiger Constructor!");
-		this.socket = socket;
-		this.handler = handler;
-		handler.addPlayer(this);
-		run();
-	}
 
 	public Conn(Socket skt, Handler handler2) {
 		// TODO Auto-generated constructor stub

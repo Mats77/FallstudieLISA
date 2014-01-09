@@ -10,7 +10,9 @@ class Server extends BaseWebSocketHandler {
 	private static Handler handler;
 
 	public void onOpen(WebSocketConnection connection){
+		connection.send("Connection aufgebaut");
 		Conn conn = new Conn(connection, handler);
+		connection.send("Connection gespeichert");
 	}
 	
     public void onClose(WebSocketConnection connection) {
