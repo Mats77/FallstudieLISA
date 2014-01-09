@@ -7,6 +7,7 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
+import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 
 
@@ -14,7 +15,7 @@ import org.webbitserver.WebSocketConnection;
  * @author Mats
  * 
  */
-public class Conn extends Thread {
+public class Conn extends BaseWebSocketHandler {
 
 	private long id;
 	private String nick;
@@ -51,7 +52,7 @@ public class Conn extends Thread {
 		this.socket = socket;
 		this.handler = handler;
 		handler.addPlayer(this);
-		start();
+		run();
 	}
 
 	public Conn(Socket skt, Handler handler2) {

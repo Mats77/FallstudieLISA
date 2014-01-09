@@ -2,6 +2,7 @@ package Server;
 
 import org.webbitserver.*;
 import org.webbitserver.handler.StaticFileHandler;
+import org.webbitserver.wrapper.WebSocketConnectionWrapper;
 
 class Server extends BaseWebSocketHandler {
 	private static int connectionCount;
