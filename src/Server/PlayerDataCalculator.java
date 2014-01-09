@@ -173,4 +173,19 @@ public class PlayerDataCalculator {
 		}
 		return marketing;
 	}
+
+	public void updateCreditValues(Player[] players) {
+		for (Player player : players) {
+			for (Credit credit : player.getCredits()) {
+				if(!credit.isShortTime())
+				{
+					if(credit.reduceRuntimeLeft())
+					{
+						player.paybackCredit(credit);
+					}
+				}
+			}
+		}
+		
+	}
 }//Class

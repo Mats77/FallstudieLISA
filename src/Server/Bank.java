@@ -4,9 +4,9 @@ import java.util.Vector;
 
 public class Bank {
 
-	public Credit getShortTimeCredit(double cashAfterInvestments, Player player) {
+	public Credit getShortTimeCredit(double cashAfterInvestments, Player player) 
+	{
 		return generateShortTimeCredit(cashAfterInvestments, player);
-		
 	}
 
 	private Credit generateShortTimeCredit(double cashAfterInvestments,
@@ -14,7 +14,7 @@ public class Bank {
 		return new Credit (cashAfterInvestments, player, true);
 	}
 
-	public void getCreditOffer(Player player, String substring) {		//Höhe, Laufzeit
+	public double[] getCreditOffer(Player player, String substring) {		//Höhe, Laufzeit
 		double[] dataOfCredit = new double[2];
 		
 		for(int i=0; i<2; i++)
@@ -30,29 +30,37 @@ public class Bank {
 		double amount = dataOfCredit[0];
 		double runtime = dataOfCredit[1];
 		double creditRating = getCreditRating(player);
+		
+		double[] toReturn = {amount, runtime, creditRating};
+		return toReturn;
 	}
 
 	private double getCreditRating(Player player) {
-		double interestToReturn = 0.1;
+		double interestToReturn = 0;
 		
+		//Daten auslesen
 		Vector<PlayerData> data = player.getData();
 		double playerCash = player.getCash();
 		Vector<Credit> creditsOfPlayer = player.getCredits();
-		double amountOfShortTimeCredits = 0;
-		double amountOfLongTimeCredits = 0;
+		double totalAmountOfCredits = 0;
+		double debtRatio = totalAmountOfCredits/(totalAmountOfCredits + playerCash);
 		
 		for (Credit credit : creditsOfPlayer) {
-			if(credit.isShortTime())
-			{
-				amountOfShortTimeCredits += credit.getAmount();
-			} else {
-				amountOfLongTimeCredits += credit.getAmount();
-			}
+			totalAmountOfCredits += credit.getAmount();
 		}
 		
-		if(true)
+		//Vertikale Finanzierungsregeln
+		if(debtRatio < 0.5)
 		{
+			interestToReturn = 0.09;
+		} else if(0.5 < debtRatio && debtRatio < 0.66){
+			interestToReturn = 0.11;
+		} else if(0.66 < debtRatio && debtRatio < 0.75){
+			interestToReturn = 0.13;
+		} else {
+			interestToReturn = 0.14;
 		}
+		
 		return interestToReturn;
 	}
 }

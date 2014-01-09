@@ -15,30 +15,22 @@ import org.webbitserver.WebSocketConnection;
  * @author Mats
  * 
  */
-public class Conn extends BaseWebSocketHandler {
+public class Conn {
 
-	private long id;
+	private int id;
 	private String nick;
 	private int gameID;
 	private boolean ready = false;
-	private WebSocketConnection socket;
+//	private WebSocketConnection socket;
 	private boolean active = true;
 	private Handler handler;
 
-	public Conn(WebSocketConnection socket, Handler handler) {
+	public Conn(Handler handler) {
 		System.out.println("Richtiger Constructor!");
-		this.socket = socket;
+//		this.socket = socket;
 		this.handler = handler;
 		handler.addPlayer(this);
 		run();
-	}
-	
-	public boolean isReady() {
-		return ready;
-	}
-
-	public void setReady(boolean ready) {
-		this.ready = ready;
 	}
 
 	// public Conn (Socket socket, Handler handler) {
@@ -103,7 +95,7 @@ public class Conn extends BaseWebSocketHandler {
 
 	public void send(String txt) {
 		System.out.println("Server sendet: " + txt);
-		socket.send(txt);
+		//socket.send(txt);
 	}
 
 	public long getId() {
@@ -125,13 +117,21 @@ public class Conn extends BaseWebSocketHandler {
 		this.nick = nick;
 	}
 
-	public WebSocketConnection getConnection() {
-		return socket;
-	}
+//	public WebSocketConnection getConnection() {
+//		return socket;
+//	}
 
 	// NUR FÜRS TESTEN!!!!
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public boolean isReady() {
+		return ready;
+	}
+
+	public void setReady(boolean ready) {
+		this.ready = ready;
 	}
 
 }
