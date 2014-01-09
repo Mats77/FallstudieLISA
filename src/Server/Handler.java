@@ -91,11 +91,20 @@ public class Handler {
 	}
 
 	public int getID(Conn connection) {
+		System.out.println("Get Player ID!");
 		int toReturn = -1;
 		for (Conn con : connections) {
+			System.out.println(con.getId());
 			if (connection == con)
-				toReturn = (int) con.getId();
+				try {
+					toReturn = (int) con.getId();
+					return toReturn;
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			toReturn = (int) con.getId();				
 		}
+		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;
 	}
 

@@ -47,22 +47,23 @@ public class Conn extends Thread {
 	// }
 
 	public Conn(WebSocketConnection socket, Handler handler) {
+		System.out.println("Richtiger Constructor!");
 		this.socket = socket;
 		this.handler = handler;
-		this.gameID = handler.getGameID();
-		id = handler.getID(this);
 		start();
 	}
 
 	public Conn(Socket skt, Handler handler2) {
 		// TODO Auto-generated constructor stub
+		System.out.println("Falscher Constructor!");
 	}
 
 	public void run() {
 		send("CONNECTED "); // damit Client-Thread beginnt
+		this.id = handler.getID(this);
+		this.gameID = handler.getGameID();
 		// create json string
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-
 		try {
 			String json = ow.writeValueAsString(this);
 			System.out.println(json);
@@ -78,12 +79,12 @@ public class Conn extends Thread {
 			e.printStackTrace();
 		}
 		System.out.print("Run gestartet...Server");
-		int tmp = handler.getID(this);
-		if (tmp != -1) {
-			this.id = tmp;
-		} else {
-			System.out.println("Error while asking for Player ID");
-		}
+	//	int tmp = handler.getID(this);
+	//	if (tmp != -1) {
+	//		this.id = tmp;
+	//	} else {
+	//		System.out.println("Error while asking for Player ID");
+	//	}
 
 		// while(active){ //horchen
 		// String txt;
