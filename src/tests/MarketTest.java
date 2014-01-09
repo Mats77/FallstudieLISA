@@ -12,7 +12,7 @@ import Server.*;
 
 
 public class MarketTest {
-	static Handler handler = new Handler();
+	static Handler handler = new Handler(3);
 	static Mechanics mechanics = new Mechanics(handler);
 	static Vector<Conn> connections= new Vector<Conn>();
 	static Market market;
