@@ -14,12 +14,8 @@ public class Handler {
 
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
-<<<<<<< HEAD
 	private Conn sender;	//Ist das hier notwendig?????
-=======
-	private Conn sender;
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
->>>>>>> ee5d1668a22b5c7415989a38108fceee7e1011c7
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
@@ -220,14 +216,9 @@ public class Handler {
 	//NUR ZUM TESTEN!!!
 	public void setConnections(Vector<Conn> connections) {
 		this.connections = connections;
-<<<<<<< HEAD
 	}
-=======
-	}	
 	
 	public int getGameID(){
 		return gameID;
 	}
-	
->>>>>>> ee5d1668a22b5c7415989a38108fceee7e1011c7
 }

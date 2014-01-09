@@ -17,7 +17,7 @@ import Server.Player;
 import Server.PlayerDataCalculator;
 
 public class CreditTest {
-	Handler handler = new Handler();
+	Handler handler = new Handler(1);
 	Mechanics mechanics = new Mechanics(handler);
 	PlayerDataCalculator pdc = new PlayerDataCalculator(mechanics);
 	Vector<Conn> connections= new Vector<Conn>();
