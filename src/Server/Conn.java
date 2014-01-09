@@ -1,7 +1,12 @@
 package Server;
 
+import java.io.IOException;
 import java.net.Socket;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.webbitserver.WebSocketConnection;
 
 
@@ -13,6 +18,7 @@ public class Conn extends Thread {
 
 	private long id;
 	private String nick;
+	private int gameID;
 	private boolean ready = false;
 	private WebSocketConnection socket;
 	private boolean active = true;
@@ -43,6 +49,7 @@ public class Conn extends Thread {
 	public Conn(WebSocketConnection socket, Handler handler) {
 		this.socket = socket;
 		this.handler = handler;
+		this.gameID = handler.getGameID();
 		id = handler.getID(this);
 		start();
 	}
@@ -53,6 +60,23 @@ public class Conn extends Thread {
 
 	public void run() {
 		send("CONNECTED "); // damit Client-Thread beginnt
+		// create json string
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+
+		try {
+			String json = ow.writeValueAsString(this);
+			System.out.println(json);
+			send(json);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.print("Run gestartet...Server");
 		int tmp = handler.getID(this);
 		if (tmp != -1) {

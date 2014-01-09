@@ -1,8 +1,13 @@
 package Server;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.webbitserver.WebSocketConnection;
 
 public class Handler {
@@ -10,10 +15,12 @@ public class Handler {
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
 	private Conn sender;
+	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
 
 	// Konstruktor, erstellt direkt Mechanics
-	public Handler() {
+	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
+		this.gameID = gameID;
 	}
 
 	// reicht das vom Server übergeben Conn objekt in das Array connections ein
@@ -105,7 +112,27 @@ public class Handler {
 	public void sendPlayerOrderPool(int playerID, PlayerOrderPool playerOderPool) {
 		ArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
 		ArrayList<Order> newOrders = playerOderPool.getNewOrders();
+		
+		// Dies ist nur ein Test!
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
+		try {
+			String json = ow.writeValueAsString(acceptedOrders);
+			json += ow.writeValueAsString(acceptedOrders);
+			System.out.println(json);
+		} catch (JsonGenerationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Ende vom Test
+		
 		String txt = "Player " + playerID;
 		
 		//String senden mit Player (ID) acceptedOrders:OrderID,Kundenname,Bestellmenge,noch zu produzierende Menge,bis wann zu produzieren;
@@ -170,5 +197,9 @@ public class Handler {
 	public void setConnections(Vector<Conn> connections) {
 		this.connections = connections;
 	}	
+	
+	public int getGameID(){
+		return gameID;
+	}
 	
 }
