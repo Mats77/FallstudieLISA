@@ -78,6 +78,7 @@ public class Mechanics {
 		playerDataCalculator.calcCapacities(players);	//Kapazitäten errechnen und Produktionsinvestition
 		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
 		playerDataCalculator.calcProfits(players);
+		playerDataCalculator.updateCreditValues(players);
 		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
 		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden
 	}
@@ -105,7 +106,7 @@ public class Mechanics {
 			handler.setStatusForInputValues(true, i);
 		}
 				
-		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
+		handler.newRoundStarted(players);//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
 	}
 
@@ -158,13 +159,15 @@ public class Mechanics {
 			
 	}
 
-	public void newCredit(String substring, String nick) {	//Höhe, Zins, Laufzeit		
+	public void newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
 		// TODO Kreditaufnahme (langfristig)
 		Player player = getPlayerByNick(nick);
+		double[] offer = new double[3];
 		if(player != null)
 		{
-			bank.getCreditOffer(player, substring);
+			offer = bank.getCreditOffer(player, substring);
 		}
+		handler.offerCredit(offer, nick);
 	}
 	
 	public static int getQuartal(){

@@ -14,6 +14,7 @@ public class Player {
 	private Vector<Credit> credits = new Vector<Credit>();
 	private double companyValue;
 	private PlayerOrderPool orderPool = new PlayerOrderPool(this);
+	private double debtCapital;
 	private double cash;
 	private int capacityLeft;
 	private int reliability=0;	//Pro Quartal 1
@@ -84,7 +85,6 @@ public class Player {
 		return id;
 	}
 
-
 	public void setCompanyValue(double d) {
 		companyValue = d;
 	}
@@ -107,7 +107,24 @@ public class Player {
 	
 	public void addCash(double amount)
 	{
-		this.cash += amount;
+		boolean creditToPayBack = false;
+		for (Credit credit : credits) {
+			if(credit.isShortTime())
+			{
+				creditToPayBack = true;
+				double tmp = credit.payBackShortTimeCredit(amount);
+				if(tmp > 0)
+				{
+					credits.remove(credit);
+					cash += tmp;
+				}
+				break;
+			}
+		}
+		if(!creditToPayBack)
+		{
+			this.cash += amount;
+		}
 	}
 	
 	public void setCapacityLeft(int capacity){
@@ -131,7 +148,18 @@ public class Player {
 		this.cash -= amount;
 		if(this.cash < 0)
 		{
-			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
+			boolean shortTimeCreditAlreadyExisting = false;
+			for (Credit credit : credits) {
+				if(credit.isShortTime())
+				{
+					shortTimeCreditAlreadyExisting = true;
+					credit.addAmount(amount);
+				}
+			}
+			if(!shortTimeCreditAlreadyExisting)
+			{
+				credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
+			}
 		}
 	}
 	
@@ -143,8 +171,35 @@ public class Player {
 	public Vector<Credit> getCredits() {
 		return credits;
 	}	
-	//Nur fürs TESTEN
+	
+	public void paybackCredit(Credit credit)		//TODO ganz wichtig 
+	{
+		spendMoney(credit.getAmount());
+		this.credits.remove(credit);
+	}
+
+	public void reduceDeptCapital(double amount){
+		this.debtCapital -= amount;
+	}
+
+	public void addDebtCapital(double amount) {
+		this.debtCapital += amount;
+		this.cash +=amount;
+	}
+	
+	public void addAmountOfShortTimeCredit(double amount)
+	{
+		this.debtCapital += amount;
+	}
+
 	public PlayerOrderPool getPlayerOrderPool(){
 		return orderPool;
 	}
+
+
+	public double getDebtCapital() {
+		return debtCapital;
+	}
+	
+	
 }
