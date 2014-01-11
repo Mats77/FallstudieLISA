@@ -22,6 +22,15 @@ public class Credit {
 		}
 	}
 	
+	public Credit(Player player, double amount, double runtime, double interestRate, boolean shortTime) {
+		debtor = player;
+		this.amount = amount;
+		this.runtime = runtime;
+		this.interesRate = interestRate;
+		this.shortTime = shortTime;
+		debtor.addDebtCapital(amount);
+	}
+
 	public double getInterestsForQuarter()
 	{
 		return amount*(0.25*interesRate);
@@ -70,6 +79,14 @@ public class Credit {
 		} else {
 			return false;
 		}
+	}
+
+	public double getRuntime() {
+		return runtime;
+	}
+
+	public double getInterestRate() {
+		return interesRate;
 	}
 
 }

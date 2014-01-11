@@ -13,6 +13,10 @@ public class Bank {
 			Player player) {
 		return new Credit (cashAfterInvestments, player, true);
 	}
+	
+	public void generateLongTimeCredit(Player player, double[] creditData) {
+		player.getCredits().add(new Credit(player, creditData[0], creditData[1], creditData[2], false));
+	}
 
 	public double[] getCreditOffer(Player player, String substring) {		//Höhe, Laufzeit
 		double[] dataOfCredit = new double[2];

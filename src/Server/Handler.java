@@ -88,10 +88,11 @@ public class Handler {
 
 		} else if (txt.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), sender.getNick()); // Höhe,
-																		// Zins,
 																		// Laufzeit
 		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			refreshPlayerOrderPool(txt, getID(sender));
+		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
+			mechanics.creditOfferAccepted(txt.substring(18), sender.getNick());
 		}
 	}
 
@@ -210,7 +211,7 @@ public class Handler {
 	}
 	
 	public void offerCredit(double[] offer, String nick) {	//Für den Spieler mit dem nick muss das Angebot zurückgegeben werden
-															//offer= amount, runtime, interestRate
+														//offer= amount, runtime, interestRate
 	}	
 	
 	//NUR ZUM TESTEN!!!

@@ -78,7 +78,7 @@ public class PlayerDataCalculator {
 				erg = marketing+research;
 			}
 			companyValues[i]=erg;
-			//companyValues[i] += players[i].getReputation();
+			companyValues[i] += players[i].getReliability()*50;
 			// muss noch mit dem Preis in Verbindung gebracht werden;
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
 		return companyValues;

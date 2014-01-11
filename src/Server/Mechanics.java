@@ -182,4 +182,24 @@ public class Mechanics {
 	public Player[] getPlayers(){
 		return players;
 	}
+
+	public void creditOfferAccepted(String substring, String nick) {
+		Player player = getPlayerByNick(nick);
+		double[] creditData = new double[3];
+		boolean dataAccepted = true;
+		for(int i=0; i< substring.split(";").length; i++)
+		{
+			try
+			{
+				creditData[i] = Double.parseDouble(substring.split(";")[i]);
+			} catch (NumberFormatException e) {
+				dataAccepted = false;
+				System.out.println("Fehler bei den Kreditdaten");
+			}
+		}
+		if(dataAccepted)
+		{
+			bank.generateLongTimeCredit(player, creditData);	//creditData: Höhe, Laufzeit, Zins
+		}
+	}
 }

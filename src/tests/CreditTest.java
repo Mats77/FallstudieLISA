@@ -144,9 +144,56 @@ public class CreditTest {
 	}
 	
 	@Test
-	public void testPaybackLongTimeCredit()
+	public void testGetLongTimeCreditOffer()
+	{
+		mechanics.newCreditOffer("1000;2", "Mats1");
+	}
+	
+	@Test
+	public void testAcceptLongTimeCredit()
 	{
 		Player player = mechanics.getPlayers()[0];
+		mechanics.creditOfferAccepted("1000;2;0.09", "Mats1");
+		
+		assertEquals(1, player.getCredits().size(),0.1);
+		assertEquals(1000, player.getDebtCapital(),0.1);
+		assertEquals(6650, player.getCash(),0.1);
+		assertEquals(1000, player.getCredits().elementAt(0).getAmount(),0.1);
+		assertEquals(2, player.getCredits().elementAt(0).getRuntime(),0.2);
+		assertEquals(0.09, player.getCredits().elementAt(0).getInterestRate(),0.00001);
+		assertEquals(22.5,pdc.calcInterestCosts(player),0.1);
 	}
+	
+	@Test
+	public void payBackLongTimeCredit()
+	{
+		Player player = mechanics.getPlayers()[0];
+		mechanics.creditOfferAccepted("1000;2;0.09", "Mats1");
+		
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		assertEquals(false, player.getCredits().elementAt(0).reduceRuntimeLeft());
+		
+		double initCash = player.getCash();
+		
+		if(player.getCredits().elementAt(0).reduceRuntimeLeft())
+		{
+			player.paybackCredit(player.getCredits().elementAt(0));
+		}
+		
+		assertEquals(initCash-1000, player.getCash(),0.1);
+		assertEquals(0, player.getDebtCapital(),0.1);
+	}
+	
+//	@Test
+//	public void testPaybackLongTimeCredit()
+//	{
+//		Player player = mechanics.getPlayers()[0];
+//		player.get
+//	}
 
 }

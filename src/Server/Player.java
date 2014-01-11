@@ -174,7 +174,8 @@ public class Player {
 	
 	public void paybackCredit(Credit credit)		//TODO ganz wichtig 
 	{
-		spendMoney(credit.getAmount());
+		reduceDeptCapital(credit.getAmount());
+		cash -= credit.getAmount();
 		this.credits.remove(credit);
 	}
 
