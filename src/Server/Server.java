@@ -21,13 +21,13 @@ class Server extends BaseWebSocketHandler {
     }
 
     public void onMessage(WebSocketConnection connection, String message) {
-    	handler.handleString(message, connection); // verbindung und Nachricht wird an den Handler übertragen
+    	handler.handleString(message, connection); // verbindung und Nachricht wird an den Handler ��bertragen
         //connection.send(message.toUpperCase()); // echo back message in upper case
     }
 	
 	public static void main(String args[]) {
 		
-		//Server erstellt ein Handlerobjekt, öffnet den Server-Socket und beginnt Deamon Prozess
+		//Server erstellt ein Handlerobjekt, ��ffnet den Server-Socket und beginnt Deamon Prozess
 		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
 		int gameID = 3;
 		Handler handler = new Handler(gameID);
@@ -41,7 +41,7 @@ class Server extends BaseWebSocketHandler {
 			System.out.print(server.getLocalPort());
 			while (true) {
 				
-				//Für jede eingehende Verbindung wird ein Conn Objekt erstellt und dem Handler zum Verwalten übergeben
+				//F��r jede eingehende Verbindung wird ein Conn Objekt erstellt und dem Handler zum Verwalten ��bergeben
 				Socket skt = server.accept();
 				Conn conn = new Conn(skt, handler);
 				handler.addPlayer(conn);

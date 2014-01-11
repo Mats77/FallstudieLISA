@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 
 public class Order {
@@ -42,7 +44,7 @@ public class Order {
 	}
 
 	private void setClient() {
-		File file = new File("/Users/Mats/Desktop/airlines.txt"); // File
+		File file = new File("airlines.txt"); // File
 																		// mit
 																		// den
 																		// top

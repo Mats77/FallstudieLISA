@@ -93,7 +93,7 @@ public class Mechanics {
 			//Jede Runde wird die noch verfügbare Capazity auf die Gesamt Cap. des Player gesetzt. 
 			//Diese wird dann jeweils abgebaut durch Erfüllung eines Auftrags. Wenn die Ges. Capazity höher
 			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
-			players[i].setCapacityLeft(players[i].getData().get(quartal-1).getCapacity());
+			players[i].setCapacityLeft(players[i].getData().get(quartal).getCapacity());
 			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
 		}
 	}
