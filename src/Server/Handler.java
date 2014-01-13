@@ -14,7 +14,7 @@ public class Handler {
 
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
-	private Conn sender;
+	private Conn sender;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
 
 	// Konstruktor, erstellt direkt Mechanics
@@ -87,11 +87,12 @@ public class Handler {
 		} else if (txt.startsWith("PLAYERNAME ")) {
 
 		} else if (txt.startsWith("CREDIT")) {
-			mechanics.newCredit(txt.substring(7), sender.getNick()); // Höhe,
-																		// Zins,
+			mechanics.newCreditOffer(txt.substring(7), sender.getNick()); // Höhe,
 																		// Laufzeit
 		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			refreshPlayerOrderPool(txt, getID(sender));
+		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
+			mechanics.creditOfferAccepted(txt.substring(18), sender.getNick());
 		}
 	}
 
@@ -194,26 +195,32 @@ public class Handler {
 		}
 		
 		for (int i = 0; i < orderIdAccepted.length; i++) {
-			orderByIdAccepted [i ]= Integer.parseInt(orderIdAccepted[i]);
+			orderByIdAccepted [i]= Integer.parseInt(orderIdAccepted[i]);
 		}
 		
 		mechanics.refreshPlayerOrderPool(playerId, orderByIdToProduce, orderByIdAccepted);	
 		
 	}
 
-	public void newRoundStarted() {
+	public void newRoundStarted(Player[] players) {
 		spread("NEWROUND");
+		for (Player player : players) {
+			PlayerData newData = player.getData().lastElement();	//Hier sind die Daten für Max, kannst du auswerten und versenden
+			Vector<LongTimeCredit> credits = player.getCredits();			//hier sind die Kredite
+			ShortTimeCredit shortTimeCredits = player.getShortTimeCredit();
+		}
 	}
 	
-	
+	public void offerCredit(double[] offer, String nick) {	//Für den Spieler mit dem nick muss das Angebot zurückgegeben werden
+														//offer= amount, runtime, interestRate
+	}	
 	
 	//NUR ZUM TESTEN!!!
 	public void setConnections(Vector<Conn> connections) {
 		this.connections = connections;
-	}	
+	}
 	
 	public int getGameID(){
 		return gameID;
 	}
-	
 }

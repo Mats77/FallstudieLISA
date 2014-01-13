@@ -78,7 +78,7 @@ public class PlayerDataCalculator {
 				erg = marketing+research;
 			}
 			companyValues[i]=erg;
-			//companyValues[i] += players[i].getReputation();
+			companyValues[i] += players[i].getReliability()*50;
 			// muss noch mit dem Preis in Verbindung gebracht werden;
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
 		return companyValues;
@@ -141,9 +141,13 @@ public class PlayerDataCalculator {
 	public double calcInterestCosts(Player player)
 	{
 		double toReturn = 0;
-		Vector<Credit> credits = player.getCredits();
-		for (Credit credit : credits) {
+		Vector<LongTimeCredit> credits = player.getCredits();
+		for (LongTimeCredit credit : credits) {
 			toReturn += credit.getInterestsForQuarter();
+		}
+		if(player.getShortTimeCredit() != null)
+		{
+			toReturn += player.getShortTimeCredit().getInterestsForQuarter();
 		}
 		return toReturn;
 	}
@@ -172,5 +176,17 @@ public class PlayerDataCalculator {
 			marketing = playerData.get(playerData.size()-1).getMarketing();
 		}
 		return marketing;
+	}
+
+	public void updateCreditValues(Player[] players) {
+		for (Player player : players) {
+			for (LongTimeCredit credit : player.getCredits()) {
+				if(credit.reduceRuntimeLeft())
+				{
+					player.paybackCredit(credit);
+				}
+			}
+		}
+		
 	}
 }//Class

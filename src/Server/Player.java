@@ -11,9 +11,11 @@ public class Player {
 	private int[] tmpValues;
 	private PlayerDataCalculator playerDataCalculator;
 	private Mechanics mechanics;
-	private Vector<Credit> credits = new Vector<Credit>();
+	private Vector<LongTimeCredit> credits = new Vector<LongTimeCredit>();
+	private ShortTimeCredit shortTimeCredit = null;
 	private double companyValue;
 	private PlayerOrderPool orderPool = new PlayerOrderPool(this);
+	private double debtCapital;
 	private double cash;
 	private int capacityLeft;
 	private int reliability=0;	//Pro Quartal 1
@@ -84,7 +86,6 @@ public class Player {
 		return id;
 	}
 
-
 	public void setCompanyValue(double d) {
 		companyValue = d;
 	}
@@ -107,7 +108,17 @@ public class Player {
 	
 	public void addCash(double amount)
 	{
-		this.cash += amount;
+		if(shortTimeCredit != null)
+		{
+			double tmp = shortTimeCredit.payBackShortTimeCredit(amount);
+			if(tmp > 0)
+			{
+				cash += tmp;
+				shortTimeCredit = null;
+			}
+		} else {
+			cash += amount;
+		}
 	}
 	
 	public void setCapacityLeft(int capacity){
@@ -131,7 +142,12 @@ public class Player {
 		this.cash -= amount;
 		if(this.cash < 0)
 		{
-			credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
+			if(shortTimeCredit != null)
+			{
+				shortTimeCredit.addAmount(amount);
+			} else {
+				shortTimeCredit = mechanics.getBank().getShortTimeCredit(-cash, this);
+			}
 		}
 	}
 	
@@ -140,11 +156,41 @@ public class Player {
 		return this.cash;
 	}
 
-	public Vector<Credit> getCredits() {
+	public Vector<LongTimeCredit> getCredits() {
 		return credits;
 	}	
-	//Nur fürs TESTEN
+	
+	public void paybackCredit(Credit credit)		//TODO ganz wichtig 
+	{
+		reduceDeptCapital(credit.getAmount());
+		cash -= credit.getAmount();
+		this.credits.remove(credit);
+	}
+
+	public void reduceDeptCapital(double amount){
+		this.debtCapital -= amount;
+	}
+
+	public void addDebtCapital(double amount) {
+		this.debtCapital += amount;
+		this.cash +=amount;
+	}
+	
+	public void addAmountOfShortTimeCredit(double amount)
+	{
+		this.debtCapital += amount;
+	}
+
 	public PlayerOrderPool getPlayerOrderPool(){
 		return orderPool;
+	}
+
+
+	public double getDebtCapital() {
+		return debtCapital;
+	}
+	
+	public ShortTimeCredit getShortTimeCredit(){
+		return this.shortTimeCredit;
 	}
 }

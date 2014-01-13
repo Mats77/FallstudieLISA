@@ -1,36 +1,23 @@
 package Server;
 
-public class Credit {
-	private Player debtor;
-	private boolean shortTime;
-	private double amount;
-	private double interesRate;
+public abstract class Credit {
+	protected Player debtor;
+	protected double amount;
+	protected double interesRate;
 	
-	public Credit(double cashAfterInvestments, Player player, boolean shortTime) {
-		if(shortTime)
-		{
-			debtor = player;
-			this.shortTime = true;
-			amount = cashAfterInvestments;
-			interesRate = 0.15;
-		} else {
-			
-		}
-	}
-	
+
 	public double getInterestsForQuarter()
 	{
 		return amount*(0.25*interesRate);
 	}
 
-	public boolean isShortTime() {
-		return shortTime;
-	}
-
-	public double getAmount() {
+	public double getAmount() 
+	{
 		return amount;
 	}
-	
-	
+
+	public double getInterestRate() {
+		return interesRate;
+	}
 
 }
