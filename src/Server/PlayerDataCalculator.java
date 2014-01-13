@@ -141,9 +141,13 @@ public class PlayerDataCalculator {
 	public double calcInterestCosts(Player player)
 	{
 		double toReturn = 0;
-		Vector<Credit> credits = player.getCredits();
-		for (Credit credit : credits) {
+		Vector<LongTimeCredit> credits = player.getCredits();
+		for (LongTimeCredit credit : credits) {
 			toReturn += credit.getInterestsForQuarter();
+		}
+		if(player.getShortTimeCredit() != null)
+		{
+			toReturn += player.getShortTimeCredit().getInterestsForQuarter();
 		}
 		return toReturn;
 	}
@@ -176,13 +180,10 @@ public class PlayerDataCalculator {
 
 	public void updateCreditValues(Player[] players) {
 		for (Player player : players) {
-			for (Credit credit : player.getCredits()) {
-				if(!credit.isShortTime())
+			for (LongTimeCredit credit : player.getCredits()) {
+				if(credit.reduceRuntimeLeft())
 				{
-					if(credit.reduceRuntimeLeft())
-					{
-						player.paybackCredit(credit);
-					}
+					player.paybackCredit(credit);
 				}
 			}
 		}

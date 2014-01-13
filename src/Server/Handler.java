@@ -206,7 +206,8 @@ public class Handler {
 		spread("NEWROUND");
 		for (Player player : players) {
 			PlayerData newData = player.getData().lastElement();	//Hier sind die Daten für Max, kannst du auswerten und versenden
-			Vector<Credit> credit = player.getCredits();			//hier sind die Kredite
+			Vector<LongTimeCredit> credits = player.getCredits();			//hier sind die Kredite
+			ShortTimeCredit shortTimeCredits = player.getShortTimeCredit();
 		}
 	}
 	
