@@ -26,11 +26,8 @@ public class Conn {
 	private Handler handler;
 
 	public Conn(Handler handler) {
-		System.out.println("Richtiger Constructor!");
-		this.socket = socket;
 		this.handler = handler;
-		handler.addPlayer(this);
-		run();
+		this.gameID = handler.getGameID();
 	}
 
 	// public Conn (Socket socket, Handler handler) {
@@ -52,46 +49,6 @@ public class Conn {
 		System.out.println("Falscher Constructor!");
 	}
 
-	public void run() {
-		send("CONNECTED "); // damit Client-Thread beginnt
-		this.gameID = handler.getGameID();
-		this.id = handler.getID(this);
-		// create json string
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		try {
-			String json = ow.writeValueAsString(this);
-			System.out.println(json);
-			send(json);
-		} catch (JsonGenerationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.print("Run gestartet...Server");
-	//	int tmp = handler.getID(this);
-	//	if (tmp != -1) {
-	//		this.id = tmp;
-	//	} else {
-	//		System.out.println("Error while asking for Player ID");
-	//	}
-
-		// while(active){ //horchen
-		// String txt;
-		// try {
-		// if ((txt = in.readLine()) != null) {
-		// System.out.println("Server bekommt: " + txt + ";");
-		// handler.handleString(txt, this);
-		// }
-		// } catch (IOException e) {
-		// // TODO Auto-generated catch block
-		// close();
-		// }
-	}
 
 	public void send(String txt) {
 		System.out.println("Server sendet: " + txt);

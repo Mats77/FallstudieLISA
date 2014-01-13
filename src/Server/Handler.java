@@ -24,12 +24,6 @@ public class Handler {
 		System.out.println("Handler lebt!");
 	}
 
-	// reicht das vom Server übergeben Conn objekt in das Array connections ein
-	public void addPlayer(Conn player) {
-		System.out.println("Spieler wird hinzugefügt");
-		connections.add(player);
-	}
-
 	// veranlasst das senden einer Nachricht an alle Clients
 	public void spread(String txt) { // sendet an alle
 		for (Conn con : connections) {
@@ -38,32 +32,14 @@ public class Handler {
 	}
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
-	public void handleString(String txt, WebSocketConnection connection) {
-
-		for (Conn con : connections) {
-		if (con.getId() == Integer.parseInt((txt.substring(0, 2)))) {
-			sender = con;
-		}
-//			if (con.getConnection().equals(connection)) {
-//				sender = con;
-//				break;
-//			} else {
-//				sender = null;
-//			}
-		}
-		if (sender == null) {
-			// get player ID
-			// txt Datei nach Spieler-ID durchsuchen, wenn eine gefunden wurde:
-			// player[i] mit Spieler-ID wird ausgelesen und die
-			// WebSocketConnection neu gesetzt
-
-		}
-
+	public String handleString(String txt) {
+		
+		
 		if (txt.startsWith("CHAT ")) {
 			String s = "CHAT " + getID(sender) + " " + sender.getNick() + ": "
 					+ txt.substring(5);
 			spread(s);
-
+			return s;
 			// Einer der Spieler möchte das Spiel Starten, wenn alle Ready sind,
 			// erstellt mechanics für jede
 			// Conn ein Playerobjekt
@@ -72,13 +48,17 @@ public class Handler {
 			if (areAllReady()) {
 				mechanics.startGame(connections);
 				String s = "ALLREADY ";
-				spread(s);
+				return s;
 			}
 
 			// Ein Client fragt einen Nickname an
-		} else if (txt.startsWith("ASKFORNICK")) {
-			sender.setNick(txt.substring(11));
-
+		} else if (txt.startsWith("AUTHORIZEME ")) {
+			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
+			connections.add(new Conn(this));
+			connections.lastElement().setId(this.getID(connections.lastElement()));
+			System.out.println(connections.lastElement().getId() + " " + this.gameID);
+			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
+			
 			// Ein Client hat seine Rundenwerte abgegeben
 		} else if (txt.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
@@ -94,6 +74,7 @@ public class Handler {
 		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), sender.getNick());
 		}
+		return "NOINF";
 	}
 
 	public int getID(Conn connection) {
@@ -101,14 +82,9 @@ public class Handler {
 		int toReturn = -1;
 		for (Conn con : connections) {
 			System.out.println(con.getId());
-			if (connection == con)
-				try {
-					toReturn = (int) con.getId();
-					return toReturn;
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			toReturn = (int) con.getId();				
+			if (con.equals(connection)){
+				toReturn = connections.indexOf(con)+1;
+			}			
 		}
 		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;

@@ -1,34 +1,29 @@
 package Server;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+
 import org.webbitserver.*;
 import org.webbitserver.handler.StaticFileHandler;
 import org.webbitserver.wrapper.WebSocketConnectionWrapper;
 
-class Server extends BaseWebSocketHandler {
+class Server{
 	private static int connectionCount;
-	private static WebServer webServer;
+    private static int port;
+    private static ServerSocket server;
+    private static Socket connection;
+    private static  BufferedReader in;
+    private static  PrintWriter out;
+    private static String txtin;
+    private static String txtout;
 	private static Handler handler;
-	private WebSocketConnection[] conn = new WebSocketConnection[4];
 
-	public void onOpen(WebSocketConnection connection){
-		connection.send("Connection aufgebaut");
-		for (int i = 0; i < conn.length; i++) {
-			if (conn[i] == null) {
-				conn[i] = connection;
-			}
-		}
-		Conn conn = new Conn(handler);
-		connection.send("Connection gespeichert");
-	}
 	
-    public void onClose(WebSocketConnection connection) {
-        connectionCount--;
-    }
-
-    public void onMessage(WebSocketConnection connection, String message) {
-    	handler.handleString(message, connection); // verbindung und Nachricht wird an den Handler ��bertragen
-        //connection.send(message.toUpperCase()); // echo back message in upper case
-    }
 	
 	public static void main(String args[]) {
 		
@@ -36,21 +31,39 @@ class Server extends BaseWebSocketHandler {
 		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
 		int gameID = 3;
 		Handler handler = new Handler(gameID);
-        webServer = WebServers.createWebServer(8080).add("/hellowebsocket", new Server()).add(new StaticFileHandler("index.html"));
-        webServer.start();
-        System.out.println("Server running at " + webServer.getUri());
-        System.out.println(connectionCount);
-	
-        /*		try {
-			server = new ServerSocket(56557);
-			System.out.print(server.getLocalPort());
+    	port = 8080;
+		try {
+			server = new ServerSocket(port);
+			System.out.println(server.getLocalPort());
+			
+			
 			while (true) {
-				
-				//F��r jede eingehende Verbindung wird ein Conn Objekt erstellt und dem Handler zum Verwalten ��bergeben
-				Socket skt = server.accept();
-				Conn conn = new Conn(skt, handler);
-				handler.addPlayer(conn);
-			}//Deamon-Schleife
+				//Jede Verbindung wird angenommen und der String an den GameHandler weitergegeben
+				connection = server.accept();
+				System.out.println("Neue Verbindung angenommen");
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				out = new PrintWriter(connection.getOutputStream());
+					
+					ArrayList<String> input = new ArrayList<String>();
+					txtin = "";
+					// String entgegennehmen (können mehrere Zeilen sein)
+					while(!(txtin = in.readLine()).equals("")) {
+						System.out.println(txtin);
+						input.add(txtin);
+					}	
+					String tmp = "";
+					for (int i = 0; i < input.size(); i++) {
+						tmp += input.get(i);						
+					}
+					System.out.println(tmp);
+					txtout = handler.handleString(tmp);
+					out.println();
+					out.flush();
+					// Verbindung trennen
+					in.close();
+					out.close();
+					connection.close();
+			}//Deamon-Schleife zur Annahme von Verbindungen
 		} catch (Exception e) {
 			System.out.print("Whoops! It didn't work!\n");
 			e.printStackTrace();
@@ -65,6 +78,6 @@ class Server extends BaseWebSocketHandler {
 			e.printStackTrace();
 		}
 
-		}*/
+		}
 	}
-}
+
