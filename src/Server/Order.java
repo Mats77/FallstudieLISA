@@ -12,12 +12,11 @@ public class Order {
 	private static int orderCount = 0;
 	private final int orderId;
 	private int totalQuantity;
+	private int optionalQuantity=0;
 	private int quartalValidTo;
-	private int fixedOrders;
-	private int optionalOrders;
 	private double pricePerAirplane;
-	private int deliveryTimeinQuart;
 	private String clientName;
+	private boolean useOptinalOrders=false;
 	private int quantityLeft; // Aufträge können teilweise z.B. in Q1 und zum
 								// andren Teil in Q1 erfüllt werden.
 
@@ -25,24 +24,60 @@ public class Order {
 
 	public Order(int totalQuantity, int quartal) {
 		this.totalQuantity = totalQuantity;
-		this.quantityLeft = totalQuantity;
-
-		this.quartalValidTo = quartal + 1 + (int) (Math.random() * 2.2); // Aufträge
+		this.quartalValidTo = quartal + 1 + (int) (Math.random() * 3.1); // Aufträge
 																			// sollen
 																			// max.
-																			// 3
+																			// 4
 																			// Quartale
 																			// gültig
 																			// sein.
-		this.deliveryTimeinQuart = 1 + (int) (Math.random() * 4.1);
 		orderCount++;
 		this.orderId = orderCount;
 
-		optionalOrders = (int) (totalQuantity / 4);
-		fixedOrders = totalQuantity - optionalOrders;
+		//Es gilt immer bis zu 1/4 der Orders als optionale Bestellungen.
+		// Bei 30% der Bestellungen kommt eine optionale Bestellung hinzu!
+		
+		//Wird schon direkt berechnet, um dem User anzuzeigen.
+		int optOrders =(int) (Math.random()*(totalQuantity / 4));
+		optionalQuantity = (int) (optOrders);
+		
+		if(Math.random()<=0.3){
+			useOptinalOrders = true;
+		}
+		
+		if(useOptinalOrders){
+			this.quantityLeft = totalQuantity + optionalQuantity;
+		}else{
+			this.quantityLeft = totalQuantity;
+		}
+		
+		
 		setClient();
 	}
 
+	public Order(int totalQuantity, int quartal, boolean test){
+		this.totalQuantity = totalQuantity;
+		this.quartalValidTo = quartal + 2;
+		orderCount++;
+		this.orderId = orderCount;
+
+		
+		int optOrders = (int) (totalQuantity / 4);
+		optionalQuantity = (int) (optOrders);
+		
+		useOptinalOrders = true;
+		
+		
+		if(useOptinalOrders){
+			this.quantityLeft = totalQuantity + optionalQuantity;
+		}else{
+			this.quantityLeft = totalQuantity;
+		}
+		
+		
+		setClient();
+	}
+	
 	private void setClient() {
 		File file = new File("airlines.txt"); // File
 																		// mit
@@ -67,9 +102,15 @@ public class Order {
 	public int getQuartalValidTo() {
 		return quartalValidTo;
 	}
+	
+	
 
 	public int getQuantity() {
 		return totalQuantity;
+	}
+	
+	public int getOptionalQuantity() {
+		return optionalQuantity;
 	}
 
 	public int getQuantityLeft() {

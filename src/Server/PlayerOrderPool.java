@@ -101,6 +101,7 @@ public class PlayerOrderPool {
 			order.setPrice(player.getData().get(Mechanics.getQuartal())
 					.getPricePerAirplane()); // Setzt den Flugzeugpreis auf die
 		} // letzt Eingabe des Players
+		
 	}
 
 	public ArrayList<Order> getAcceptedOrders() {

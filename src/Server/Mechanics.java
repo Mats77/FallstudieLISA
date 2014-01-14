@@ -25,7 +25,7 @@ public class Mechanics {
 			if(tmp.equalsIgnoreCase(nick))
 			{
 				players[i].saveNextRoundValues(values, quartal);
-				handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI zum Testen von Mattes deaktiviert
+				handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI 
 				break;
 			}
 		}
@@ -116,7 +116,17 @@ public class Mechanics {
 	public void startGame(Vector<Conn> playersCon)
 	{
 		generatePlayers(playersCon);
+		
+		// CompanyValues errechnen, da dies normal immer zum Spielende gemacht wird => wird aber benötigt für OrderSplit schon zu Beginn! 
+		double[] values = playerDataCalculator.generateNewCompanyValues(players);
+		for(int i=0; i<players.length; i++)
+		{
+			players[i].setCompanyValue(values[i]);
+		}
+		
 		ordersForNewRound();	//Aufträge verteilen
+		
+
 	}
 
 	//wird aufgerufen, sobald ein Spiel gestartet wird, erstellt die Spieler
@@ -177,6 +187,10 @@ public class Mechanics {
 	
 	public Market getMarket(){
 		return market;
+	}
+	
+	public PlayerDataCalculator getPlayerDataCalculator(){
+		return playerDataCalculator;
 	}
 	
 	public Player[] getPlayers(){
