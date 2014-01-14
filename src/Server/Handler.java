@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -14,7 +15,7 @@ public class Handler {
 
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
-	private Conn sender;	//Ist das hier notwendig?????
+	private Conn activePlayer;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
 
 	// Konstruktor, erstellt direkt Mechanics
@@ -22,12 +23,6 @@ public class Handler {
 		mechanics = new Mechanics(this);
 		this.gameID = gameID;
 		System.out.println("Handler lebt!");
-	}
-
-	// reicht das vom Server übergeben Conn objekt in das Array connections ein
-	public void addPlayer(Conn player) {
-		System.out.println("Spieler wird hinzugefügt");
-		connections.add(player);
 	}
 
 	// veranlasst das senden einer Nachricht an alle Clients
@@ -38,62 +33,68 @@ public class Handler {
 	}
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
-	public void handleString(String txt, WebSocketConnection connection) {
-
-		for (Conn con : connections) {
-		if (con.getId() == Integer.parseInt((txt.substring(0, 2)))) {
-			sender = con;
-		}
-//			if (con.getConnection().equals(connection)) {
-//				sender = con;
-//				break;
-//			} else {
-//				sender = null;
-//			}
-		}
-		if (sender == null) {
-			// get player ID
-			// txt Datei nach Spieler-ID durchsuchen, wenn eine gefunden wurde:
-			// player[i] mit Spieler-ID wird ausgelesen und die
-			// WebSocketConnection neu gesetzt
-
-		}
-
+	public String handleString(String txt) {
+		// Zun�chst wird der Spieler zugewiesen
+		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
+		activePlayer = connections.get(activPlayerID);
+		
 		if (txt.startsWith("CHAT ")) {
-			String s = "CHAT " + getID(sender) + " " + sender.getNick() + ": "
+			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
 					+ txt.substring(5);
 			spread(s);
-
+			return s;
 			// Einer der Spieler möchte das Spiel Starten, wenn alle Ready sind,
 			// erstellt mechanics für jede
 			// Conn ein Playerobjekt
 		} else if (txt.startsWith("READY ")) {
-			sender.setReady(true);
+			activePlayer.setReady(true);
 			if (areAllReady()) {
 				mechanics.startGame(connections);
 				String s = "ALLREADY ";
-				spread(s);
+				return s;
 			}
 
 			// Ein Client fragt einen Nickname an
-		} else if (txt.startsWith("ASKFORNICK")) {
-			sender.setNick(txt.substring(11));
-
+		} else if (txt.startsWith("AUTHORIZEME ")) {
+			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
+			connections.add(new Conn(this));
+			connections.lastElement().setId(this.getID(connections.lastElement()));
+			System.out.println(connections.lastElement().getId() + " " + this.gameID);
+			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
+			
 			// Ein Client hat seine Rundenwerte abgegeben
 		} else if (txt.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
-			mechanics.valuesInserted(txt.substring(7), sender.getNick());
+			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
 		} else if (txt.startsWith("PLAYERNAME ")) {
 
 		} else if (txt.startsWith("CREDIT")) {
-			mechanics.newCreditOffer(txt.substring(7), sender.getNick()); // Höhe,
+			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
 		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
-			refreshPlayerOrderPool(txt, getID(sender));
+			refreshPlayerOrderPool(txt, getID(activePlayer));
 		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
-			mechanics.creditOfferAccepted(txt.substring(18), sender.getNick());
+			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
+		}else if (txt.startsWith("READY ")) {
+			activePlayer.setReady(true);
+		}else if (txt.startsWith("REFRESH ")) {
+			Boolean newRound = false;
+			for (Conn conn : connections) {
+				if (conn.isReady()== false) {
+					newRound = false;
+					break;
+				}else{
+					newRound = true;
+				}		
+			}//End of For
+			if (newRound) {
+				return ""; // Alle relevanten Objekte f�r neue Runde
+			}else{
+				return "NOINFOS";
+			}
 		}
+		return "INVALIDESTRING";
 	}
 
 	public int getID(Conn connection) {
@@ -101,14 +102,9 @@ public class Handler {
 		int toReturn = -1;
 		for (Conn con : connections) {
 			System.out.println(con.getId());
-			if (connection == con)
-				try {
-					toReturn = (int) con.getId();
-					return toReturn;
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			toReturn = (int) con.getId();				
+			if (con.equals(connection)){
+				toReturn = connections.indexOf(con)+1;
+			}			
 		}
 		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;

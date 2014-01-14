@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.net.Socket;
 import java.util.Vector;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import Server.Conn;
@@ -24,10 +25,11 @@ public class CompanyValueTest {
 	Vector<Conn> connections= new Vector<Conn>();
 	Market market = new Market();
 	
-	@Test
+	@Before
 	public void testGeneratePlayers() {
 		connections.add(new Conn(new Socket(), handler));
 		connections.get(0).setNick("Mats1");
+		connections.get(0).setId(0);
 		connections.add(new Conn(new Socket(), handler));
 		connections.get(1).setId(1);
 		connections.get(1).setNick("Mats2");
@@ -39,12 +41,13 @@ public class CompanyValueTest {
 		connections.get(3).setNick("Mats4");
 		
 		handler.setConnections(connections);
-		mechanics.generatePlayers(connections);
+		mechanics.startGame(connections);
+		
 	}
 	
 	@Test
 	public void testCompanyValues(){
-		testGeneratePlayers();
+		
 		mechanics.valuesInserted("1000;500;9500;30;2", "Mats1");
 		mechanics.valuesInserted("1000;4000;6000;30;2", "Mats2");
 		mechanics.valuesInserted("1000;5000;5000;30;2", "Mats3");
@@ -61,7 +64,7 @@ public class CompanyValueTest {
 	
 	@Test
 	public void testValuesInsertedAfterOneRound(){
-		testGeneratePlayers();
+		
 		
 		//round1
 		mechanics.valuesInserted("1000;1000;1111;30;2", "Mats1");	//??, Marketing, Research, Anzahl, Material; Spieler
@@ -85,7 +88,7 @@ public class CompanyValueTest {
 	@Test
 	public void testValuesInsertedAfterTwoRounds(){
 		//round1
-		testGeneratePlayers();
+		
 		mechanics.valuesInserted("1000;1000;1111;30;2", "Mats1");
 		mechanics.valuesInserted("1000;2000;2222;30;2", "Mats2");
 		mechanics.valuesInserted("1000;3000;3333;30;2", "Mats3");
@@ -112,7 +115,7 @@ public class CompanyValueTest {
 	
 	@Test
 	public void testValuesInsertedAfterFourRounds(){
-		testGeneratePlayers();
+		
 		
 		//round1
 		mechanics.valuesInserted("1000;1000;1111;30;2", "Mats1");
