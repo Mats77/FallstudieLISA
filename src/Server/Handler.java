@@ -34,13 +34,21 @@ public class Handler {
 
 	// Ã¼berprÃ¼ft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
-		// Zunächst wird der Spieler zugewiesen, außer String enthält AUTHORIZEME
+		String result = "";
+		// Zunï¿½chst wird der Spieler zugewiesen, auï¿½er String enthï¿½lt AUTHORIZEME
 		if (txt.startsWith("AUTHORIZEME ")) {
 			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
 			connections.add(new Conn(this));
 			connections.lastElement().setId(this.getID(connections.lastElement()));
 			System.out.println(connections.lastElement().getId() + " " + this.gameID);
-			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
+			result = connections.lastElement().getId() + " " + this.gameID;
+			if (connections.size() == 4) {
+				//start game
+				mechanics.startGame(connections);
+			}else{
+				return result;				
+			}
+
 		}else{
 			int activPlayerID = Integer.parseInt(txt.substring(0, 1))-1;
 			activePlayer = connections.get(activPlayerID);			
@@ -60,7 +68,7 @@ public class Handler {
 			activePlayer.setReady(true);
 			if (areAllReady()) {
 				if (anzPlayer()) {
-					mechanics.startGame(connections); // muss überprüft werden ob genug spieler vorhanden sind!!!!	
+					mechanics.startGame(connections); // muss ï¿½berprï¿½ft werden ob genug spieler vorhanden sind!!!!	
 					s = "ALLREADY ";
 				}else{
 					s = "NOTENOUGHPLAYER " + String.valueOf(connections.size());
@@ -84,9 +92,11 @@ public class Handler {
 		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
 		}else if (txt.substring(4, txt.length()).startsWith("REFRESH ")) {
+			result = "";
 			Boolean newRound = false;
+			result = checkOpenMessages();
 			for (Conn conn : connections) {
-				if (conn.isReady()== false) {
+				if (conn.getReady()== false) {
 					newRound = false;
 					break;
 				}else{
@@ -94,12 +104,16 @@ public class Handler {
 				}		
 			}//End of For
 			if (newRound) {
-				return ""; // Alle relevanten Objekte für neue Runde
+				return ""; // Alle relevanten Objekte fï¿½r neue Runde
 			}else{
 				return "NOINFOS";
 			}
 		}
 		return "INVALIDESTRING";
+	}
+
+	private String checkOpenMessages() {
+		return activePlayer.getOpenMessages();
 	}
 
 	private boolean anzPlayer() {
@@ -129,7 +143,7 @@ public class Handler {
 									// Evtl markieren wer fertig ist usw.
 		boolean toReturn = true;
 		for (Conn con : connections) {
-			if (!con.isReady())
+			if (!con.getReady())
 				toReturn = false;
 		}
 		return toReturn;

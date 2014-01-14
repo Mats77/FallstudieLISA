@@ -24,6 +24,7 @@ public class Conn {
 	private WebSocketConnection socket;
 	private boolean active = true;
 	private Handler handler;
+	private String openMessages;
 
 	public Conn(Handler handler) {
 		this.handler = handler;
@@ -83,7 +84,7 @@ public class Conn {
 		this.id = id;
 	}
 	
-	public boolean isReady() {
+	public boolean getReady() {
 		return ready;
 	}
 
@@ -91,4 +92,14 @@ public class Conn {
 		this.ready = ready;
 	}
 
+	public String getOpenMessages() {
+		String answer = openMessages;
+		openMessages = "";
+		return answer;
+	}
+
+	public void setOpenMessages(String openMessages) {
+		this.openMessages += openMessages;
+	}
+	
 }
