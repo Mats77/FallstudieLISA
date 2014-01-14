@@ -65,7 +65,7 @@ public class CreditTest {
 		player.spendMoney(1000);
 		
 		assertEquals(0, player.getCash(),0.1);
-		assertEquals(1000, player.getCredits().elementAt(0).getAmount(),0.1);
+		assertEquals(1000, player.getShortTimeCredit().getAmount(),0.1);
 	}
 	
 	@Test
@@ -88,8 +88,8 @@ public class CreditTest {
 		
 		player.spendMoney(1000);
 		
-		assertEquals(1, player.getCredits().size(),0.1);
-		assertEquals(2000, player.getCredits().elementAt(0).getAmount(), 0.1);
+		assertEquals(0, player.getCredits().size(),0.1);
+		assertEquals(2000, player.getShortTimeCredit().getAmount(), 0.1);
 		assertEquals(0, player.getCash(),0.1);
 	}
 	
@@ -114,8 +114,8 @@ public class CreditTest {
 		player.addCash(500);
 		
 		assertEquals(0, player.getCash(),0.1);
-		assertEquals(500, player.getCredits().elementAt(0).getAmount(),0.1);
-		assertEquals(1, player.getCredits().size(),0.1);
+		assertEquals(500, player.getShortTimeCredit().getAmount(),0.1);
+		assertEquals(0, player.getCredits().size(),0.1);
 	}
 	
 	//Longtime Credits
@@ -188,12 +188,5 @@ public class CreditTest {
 		assertEquals(initCash-1000, player.getCash(),0.1);
 		assertEquals(0, player.getDebtCapital(),0.1);
 	}
-	
-//	@Test
-//	public void testPaybackLongTimeCredit()
-//	{
-//		Player player = mechanics.getPlayers()[0];
-//		player.get
-//	}
 
 }

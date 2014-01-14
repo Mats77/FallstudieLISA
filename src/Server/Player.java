@@ -11,7 +11,8 @@ public class Player {
 	private int[] tmpValues;
 	private PlayerDataCalculator playerDataCalculator;
 	private Mechanics mechanics;
-	private Vector<Credit> credits = new Vector<Credit>();
+	private Vector<LongTimeCredit> credits = new Vector<LongTimeCredit>();
+	private ShortTimeCredit shortTimeCredit = null;
 	private double companyValue;
 	private PlayerOrderPool orderPool = new PlayerOrderPool(this);
 	private double debtCapital;
@@ -107,23 +108,16 @@ public class Player {
 	
 	public void addCash(double amount)
 	{
-		boolean creditToPayBack = false;
-		for (Credit credit : credits) {
-			if(credit.isShortTime())
-			{
-				creditToPayBack = true;
-				double tmp = credit.payBackShortTimeCredit(amount);
-				if(tmp > 0)
-				{
-					credits.remove(credit);
-					cash += tmp;
-				}
-				break;
-			}
-		}
-		if(!creditToPayBack)
+		if(shortTimeCredit != null)
 		{
-			this.cash += amount;
+			double tmp = shortTimeCredit.payBackShortTimeCredit(amount);
+			if(tmp > 0)
+			{
+				cash += tmp;
+				shortTimeCredit = null;
+			}
+		} else {
+			cash += amount;
 		}
 	}
 	
@@ -148,17 +142,11 @@ public class Player {
 		this.cash -= amount;
 		if(this.cash < 0)
 		{
-			boolean shortTimeCreditAlreadyExisting = false;
-			for (Credit credit : credits) {
-				if(credit.isShortTime())
-				{
-					shortTimeCreditAlreadyExisting = true;
-					credit.addAmount(amount);
-				}
-			}
-			if(!shortTimeCreditAlreadyExisting)
+			if(shortTimeCredit != null)
 			{
-				credits.add(mechanics.getBank().getShortTimeCredit(-cash, this));
+				shortTimeCredit.addAmount(amount);
+			} else {
+				shortTimeCredit = mechanics.getBank().getShortTimeCredit(-cash, this);
 			}
 		}
 	}
@@ -168,7 +156,7 @@ public class Player {
 		return this.cash;
 	}
 
-	public Vector<Credit> getCredits() {
+	public Vector<LongTimeCredit> getCredits() {
 		return credits;
 	}	
 	
@@ -202,5 +190,7 @@ public class Player {
 		return debtCapital;
 	}
 	
-	
+	public ShortTimeCredit getShortTimeCredit(){
+		return this.shortTimeCredit;
+	}
 }

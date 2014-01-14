@@ -4,18 +4,18 @@ import java.util.Vector;
 
 public class Bank {
 
-	public Credit getShortTimeCredit(double cashAfterInvestments, Player player) 
+	public ShortTimeCredit getShortTimeCredit(double cashAfterInvestments, Player player) 
 	{
 		return generateShortTimeCredit(cashAfterInvestments, player);
 	}
 
-	private Credit generateShortTimeCredit(double cashAfterInvestments,
+	private ShortTimeCredit generateShortTimeCredit(double cashAfterInvestments,
 			Player player) {
-		return new Credit (cashAfterInvestments, player, true);
+		return new ShortTimeCredit (cashAfterInvestments, player);
 	}
 	
 	public void generateLongTimeCredit(Player player, double[] creditData) {
-		player.getCredits().add(new Credit(player, creditData[0], creditData[1], creditData[2], false));
+		player.getCredits().add(new LongTimeCredit(player, creditData[0], creditData[1], creditData[2]));
 	}
 
 	public double[] getCreditOffer(Player player, String substring) {		//Höhe, Laufzeit
@@ -45,11 +45,11 @@ public class Bank {
 		//Daten auslesen
 		Vector<PlayerData> data = player.getData();
 		double playerCash = player.getCash();
-		Vector<Credit> creditsOfPlayer = player.getCredits();
+		Vector<LongTimeCredit> creditsOfPlayer = player.getCredits();
 		double totalAmountOfCredits = 0;
 		double debtRatio = totalAmountOfCredits/(totalAmountOfCredits + playerCash);
 		
-		for (Credit credit : creditsOfPlayer) {
+		for (LongTimeCredit credit : creditsOfPlayer) {
 			totalAmountOfCredits += credit.getAmount();
 		}
 		
