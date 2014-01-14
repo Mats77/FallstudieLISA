@@ -34,18 +34,9 @@ public class Handler {
 
 	// √ºberpr√ºft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
-		// Zun‰chst wird der Spieler zugewiesen, auﬂer String enth‰lt AUTHORIZEME
-		if (txt.startsWith("AUTHORIZEME ")) {
-			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
-			connections.add(new Conn(this));
-			connections.lastElement().setId(this.getID(connections.lastElement()));
-			System.out.println(connections.lastElement().getId() + " " + this.gameID);
-			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
-		}else{
-			int activPlayerID = Integer.parseInt(txt.substring(0, 1))-1;
-			activePlayer = connections.get(activPlayerID);			
-		}
-
+		// Zun‰chst wird der Spieler zugewiesen
+		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
+		activePlayer = connections.get(activPlayerID);
 		
 		if (txt.startsWith("CHAT ")) {
 			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
