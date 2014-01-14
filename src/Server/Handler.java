@@ -223,4 +223,14 @@ public class Handler {
 	public int getGameID(){
 		return gameID;
 	}
+
+	public void notifyWinners(int[][] winnerMap) {	//erster Wert ist jeweils der Wert und zweiter der Spieler
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void notifyWinners(double[][] winnerMapDouble) { //erster Wert ist jeweils der Wert und zweiter der Spieler
+		// TODO Auto-generated method stub
+		
+	}
 }

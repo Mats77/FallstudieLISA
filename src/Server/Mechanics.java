@@ -1,5 +1,7 @@
 package Server;
 
+import java.util.HashMap;
+import java.util.SortedMap;
 import java.util.Vector;
 
 public class Mechanics {
@@ -9,6 +11,10 @@ public class Mechanics {
 	private PlayerDataCalculator playerDataCalculator;
 	private Bank bank = new Bank();
 	private static int quartal = 0;
+	private int roundsToPlay;
+	private int conditionToWin;	// 	0: die meisten Flugzeuge gewinnen	1: Der höchste Marktanteil gewinnt
+								//	2: der höchste Umsatz gewinnt		3: der höchste Gewinn gewinnt
+								//	4: die meiste Kohle gewinnt
 	
 	
 	public Mechanics(Handler h) {
@@ -81,10 +87,108 @@ public class Mechanics {
 		playerDataCalculator.updateCreditValues(players);
 		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
 		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden
+		if(roundsToPlay+1 == quartal)
+		{
+			endGame();
+		}
 	}
 	
-	private void ordersForNewRound(){
+	private void endGame() {
+		int[][] winnerMap = new int[4][2];
+		double[][]winnerMapDouble = new double[4][2];
+		boolean integerValues = false;
+		if(conditionToWin == 0)				//die meisten Flugzeuge
+		{
+			int value = 0;
+			integerValues = true;
+			for (Player player : players) {
+				Vector<PlayerData> data = player.getData();
+				for (PlayerData playerData : data) {
+					value += playerData.getAirplanes();
+				}
+				rankPlayer(winnerMap,player, value);
+			}
+		} else if (conditionToWin == 1) {	//den größten Marktanteil
+			double value = 0;
+			for (Player player : players) {
+				Vector<PlayerData> data = player.getData();
+				for (PlayerData playerData : data) {
+					value = playerData.getMarketshare();
+				}
+				rankPlayer(winnerMapDouble,player, value);
+			}
+		} else if (conditionToWin == 2) {	//den größten Umsatz
+			double value = 0;
+			for (Player player : players) {
+				Vector<PlayerData> data = player.getData();
+				for (PlayerData playerData : data) {
+					value += playerData.getTurnover();
+				}
+				rankPlayer(winnerMapDouble,player, value);
+			}
+		} else if (conditionToWin == 3) {	//den größten Gewinn
+			double value = 0;
+			for (Player player : players) {
+				Vector<PlayerData> data = player.getData();
+				for (PlayerData playerData : data) {
+					value += playerData.getProfit();
+				}
+				rankPlayer(winnerMapDouble,player, value);
+			}
+		} else if (conditionToWin == 4) {	//die meiste Kohle
+			double value = 0;
+			for (Player player : players) {
+				value = player.getCash() - player.getDebtCapital();
+				rankPlayer(winnerMapDouble,player, value);
+			}
+		}
 		
+		if(integerValues)
+		{
+			handler.notifyWinners(winnerMap);
+		} else {
+			handler.notifyWinners(winnerMapDouble);
+		}
+	}
+	
+
+	private void rankPlayer(double[][] winnerMapDouble, Player player,
+			double value) {
+		for(int i=0; i<winnerMapDouble.length; i++)
+		{
+			if(value > winnerMapDouble[i][0])
+			{
+				for(int j = 3; j>i; j--)
+				{
+					winnerMapDouble [j][0] = winnerMapDouble [j-1][0];
+					winnerMapDouble [j][1] = winnerMapDouble [j-1][1];
+				}
+				winnerMapDouble[i][0] = value;
+				winnerMapDouble[i][1] = player.getId();
+			}
+		}
+		
+	}
+
+	private void rankPlayer(int[][] winnerMap, Player player,
+			int value) {
+		for(int i=0; i<winnerMap.length; i++)
+		{
+			if(value > winnerMap[i][0])
+			{
+				for(int j = 3; j>i; j--)
+				{
+					winnerMap [j][0] = winnerMap [j-1][0];
+					winnerMap [j][1] = winnerMap [j-1][1];
+				}
+				winnerMap[i][0] = value;
+				winnerMap[i][1] = player.getId();
+			}
+		}
+	}
+
+	private void ordersForNewRound()
+	{	
 		market.genOrdersForNewRound(); 
 		market.splitOrders(players);
 		
@@ -201,5 +305,11 @@ public class Mechanics {
 		{
 			bank.generateLongTimeCredit(player, creditData);	//creditData: Höhe, Laufzeit, Zins
 		}
+	}
+	
+	public void setEndOfGame(int condition, int numberOfRounds)
+	{
+		this.roundsToPlay = numberOfRounds;
+		this.conditionToWin = condition;
 	}
 }
