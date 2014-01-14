@@ -34,9 +34,18 @@ public class Handler {
 
 	// Ã¼berprÃ¼ft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
-		// Zunächst wird der Spieler zugewiesen
-		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
-		activePlayer = connections.get(activPlayerID);
+		// Zunächst wird der Spieler zugewiesen, außer String enthält AUTHORIZEME
+		if (txt.startsWith("AUTHORIZEME ")) {
+			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
+			connections.add(new Conn(this));
+			connections.lastElement().setId(this.getID(connections.lastElement()));
+			System.out.println(connections.lastElement().getId() + " " + this.gameID);
+			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
+		}else{
+			int activPlayerID = Integer.parseInt(txt.substring(0, 1))-1;
+			activePlayer = connections.get(activPlayerID);			
+		}
+
 		
 		if (txt.startsWith("CHAT ")) {
 			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
@@ -46,23 +55,21 @@ public class Handler {
 			// Einer der Spieler mÃ¶chte das Spiel Starten, wenn alle Ready sind,
 			// erstellt mechanics fÃ¼r jede
 			// Conn ein Playerobjekt
-		} else if (txt.startsWith("READY ")) {
+		} else if (txt.substring(4, txt.length()).startsWith("READY ")) {
+			String s = "";
 			activePlayer.setReady(true);
 			if (areAllReady()) {
-				mechanics.startGame(connections);
-				String s = "ALLREADY ";
+				if (anzPlayer()) {
+					mechanics.startGame(connections); // muss überprüft werden ob genug spieler vorhanden sind!!!!	
+					s = "ALLREADY ";
+				}else{
+					s = "NOTENOUGHPLAYER " + String.valueOf(connections.size());
+				}
 				return s;
 			}
+			return "WAITFORPLAYER";
 
 			// Ein Client fragt einen Nickname an
-		} else if (txt.startsWith("AUTHORIZEME ")) {
-			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
-			connections.add(new Conn(this));
-			connections.lastElement().setId(this.getID(connections.lastElement()));
-			System.out.println(connections.lastElement().getId() + " " + this.gameID);
-			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
-			
-			// Ein Client hat seine Rundenwerte abgegeben
 		} else if (txt.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
@@ -76,9 +83,7 @@ public class Handler {
 			refreshPlayerOrderPool(txt, getID(activePlayer));
 		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
-		}else if (txt.startsWith("READY ")) {
-			activePlayer.setReady(true);
-		}else if (txt.startsWith("REFRESH ")) {
+		}else if (txt.substring(4, txt.length()).startsWith("REFRESH ")) {
 			Boolean newRound = false;
 			for (Conn conn : connections) {
 				if (conn.isReady()== false) {
@@ -95,6 +100,16 @@ public class Handler {
 			}
 		}
 		return "INVALIDESTRING";
+	}
+
+	private boolean anzPlayer() {
+		// TODO Auto-generated method stub
+		if (connections.size()==4) {
+			return true;
+		}else{
+			return false;	
+		}
+
 	}
 
 	public int getID(Conn connection) {

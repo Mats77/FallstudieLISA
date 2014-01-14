@@ -57,6 +57,7 @@ class Server{
 					}
 					System.out.println(tmp);
 					txtout = handler.handleString(tmp);
+					out.println(txtout);
 					out.println();
 					out.flush();
 					// Verbindung trennen
