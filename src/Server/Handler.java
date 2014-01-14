@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -14,7 +15,7 @@ public class Handler {
 
 	private Vector<Conn> connections = new Vector<Conn>();
 	private Mechanics mechanics;
-	private Conn sender;	//Ist das hier notwendig?????
+	private Conn activePlayer;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
 
 	// Konstruktor, erstellt direkt Mechanics
@@ -33,10 +34,12 @@ public class Handler {
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
-		
+		// Zun�chst wird der Spieler zugewiesen
+		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
+		activePlayer = connections.get(activPlayerID);
 		
 		if (txt.startsWith("CHAT ")) {
-			String s = "CHAT " + getID(sender) + " " + sender.getNick() + ": "
+			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
 					+ txt.substring(5);
 			spread(s);
 			return s;
@@ -44,7 +47,7 @@ public class Handler {
 			// erstellt mechanics für jede
 			// Conn ein Playerobjekt
 		} else if (txt.startsWith("READY ")) {
-			sender.setReady(true);
+			activePlayer.setReady(true);
 			if (areAllReady()) {
 				mechanics.startGame(connections);
 				String s = "ALLREADY ";
@@ -63,18 +66,35 @@ public class Handler {
 		} else if (txt.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
-			mechanics.valuesInserted(txt.substring(7), sender.getNick());
+			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
 		} else if (txt.startsWith("PLAYERNAME ")) {
 
 		} else if (txt.startsWith("CREDIT")) {
-			mechanics.newCreditOffer(txt.substring(7), sender.getNick()); // Höhe,
+			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
 		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
-			refreshPlayerOrderPool(txt, getID(sender));
+			refreshPlayerOrderPool(txt, getID(activePlayer));
 		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
-			mechanics.creditOfferAccepted(txt.substring(18), sender.getNick());
+			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
+		}else if (txt.startsWith("READY ")) {
+			activePlayer.setReady(true);
+		}else if (txt.startsWith("REFRESH ")) {
+			Boolean newRound = false;
+			for (Conn conn : connections) {
+				if (conn.isReady()== false) {
+					newRound = false;
+					break;
+				}else{
+					newRound = true;
+				}		
+			}//End of For
+			if (newRound) {
+				return ""; // Alle relevanten Objekte f�r neue Runde
+			}else{
+				return "NOINFOS";
+			}
 		}
-		return "NOINF";
+		return "INVALIDESTRING";
 	}
 
 	public int getID(Conn connection) {
