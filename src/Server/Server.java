@@ -64,7 +64,7 @@ class Server{
 					}
 
 					String result = "";// Verbindung akzeptieren
-					result += "HTTP/1.1 200 \n";
+					result += "HTTP/1.1 200 OK \n";
 					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
 					result += "Content-type: text/html \n";
 					result += " \n";
