@@ -56,7 +56,6 @@ class Server{
 						tmp += input.get(i);						
 					}
 					System.out.println(tmp);
-					txtout = handler.handleString(tmp);
 					String result = "";// Verbindung akzeptieren
 					result += "HTTP/1.1 200 \n";
 					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
@@ -67,6 +66,8 @@ class Server{
 					System.out.println(result);
 					out.println();
 					out.flush();
+					// Inhalt erstellen
+					txtout = handler.handleString(tmp);
 					// Inhalt senden
 					out.println(txtout);
 					System.out.println(txtout);
