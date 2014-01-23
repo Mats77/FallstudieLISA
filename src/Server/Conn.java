@@ -1,14 +1,7 @@
 package Server;
 
-import java.io.IOException;
-import java.net.Socket;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
+import java.net.Socket;
 
 
 /**
@@ -21,14 +14,13 @@ public class Conn {
 	private String nick;
 	private int gameID;
 	private boolean ready = false;
-	private WebSocketConnection socket;
 	private boolean active = true;
 	private Handler handler;
 	private String openMessages;
 
 	public Conn(Handler handler) {
 		this.handler = handler;
-		this.gameID = handler.getGameID();
+		this.setGameID(handler.getGameID());
 	}
 
 	// public Conn (Socket socket, Handler handler) {
@@ -60,13 +52,6 @@ public class Conn {
 		return id;
 	}
 
-	public void close() {
-		active = false;
-		handler.spread("CHAT " + handler.getID(this) + " " + nick
-				+ " hat das Spiel verlassen.");
-		 socket.close();
-	}
-
 	public String getNick() {
 		return nick;
 	}
@@ -75,9 +60,6 @@ public class Conn {
 		this.nick = nick;
 	}
 
-	public WebSocketConnection getConnection() {
-		return socket;
-	}
 
 	// NUR FÜRS TESTEN!!!!
 	public void setId(int id) {
@@ -100,6 +82,22 @@ public class Conn {
 
 	public void setOpenMessages(String openMessages) {
 		this.openMessages += openMessages;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+
+	public int getGameID() {
+		return gameID;
+	}
+
+	public void setGameID(int gameID) {
+		this.gameID = gameID;
 	}
 	
 }

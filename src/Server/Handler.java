@@ -2,15 +2,12 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.webbitserver.WebSocketConnection;
 
 public class Handler {
 
@@ -105,7 +102,7 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
-		}else if(command.contains("VERIFY")){
+		}else if(command.equals("VERIFY")){
 			return "CHECK";
 		}else if (command.equals("VERIFYFAILED")) {
 			return "VERIFYFAILED";
@@ -121,13 +118,17 @@ public class Handler {
 		// get payload
 		if (txt.contains("payload")) {
 			int tmpbeg = txt.lastIndexOf("payload");
-			tmpbeg = tmpbeg +7;
+			tmpbeg = tmpbeg +8;
 			String gamePlayerId = txt.substring(tmpbeg, tmpbeg+3);
 			txt = txt.substring(tmpbeg+3);
 			int tmpend = txt.indexOf("$");
 			// set content == data from client (for example input data)
 			// get hole content!
+			try{
 			content = txt.substring(0, tmpend);
+			}catch(Exception e){
+				System.out.println("Kein Inhalt vorhanden");
+			}
 			// if active player found: set active player
 			try{
 			activePlayer = connections.get(Integer.valueOf(gamePlayerId.charAt(0)));
