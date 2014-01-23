@@ -34,9 +34,10 @@ public class Handler {
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
+		String command = getCommand(txt);
 		String result = "";
 		// Zun�chst wird der Spieler zugewiesen, au�er String enth�lt AUTHORIZEME
-		if (txt.startsWith("AUTHORIZEME ")) {
+		if (command.startsWith("AUTHORIZEME ")) {
 			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
 			connections.add(new Conn(this));
 			connections.lastElement().setId(this.getID(connections.lastElement()));
@@ -110,6 +111,21 @@ public class Handler {
 			}
 		}
 		return "INVALIDESTRING";
+	}
+
+	private String getCommand(String txt) {
+		// TODO Auto-generated method stub
+		String result = "";
+		if (txt.contains("AUTHORIZEME")){
+			result = "AUTHORIZEME";
+			return result;
+		}else if(txt.contains("GETIMAGE")){
+			result = "GETIMAGE";
+			return result;
+		}else if(txt.contains("")){
+			
+		}
+		return result;
 	}
 
 	private String checkOpenMessages() {
