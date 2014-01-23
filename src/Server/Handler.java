@@ -37,7 +37,7 @@ public class Handler {
 		String command = getCommand(txt);
 		String result = "";
 		// Zun�chst wird der Spieler zugewiesen, au�er String enth�lt AUTHORIZEME
-		if (command.equals("AUTHORIZEME ")) {
+		if (command.equals("AUTHORIZEME")) {
 			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
 			connections.add(new Conn(this));
 			connections.lastElement().setId(this.getID(connections.lastElement()));
