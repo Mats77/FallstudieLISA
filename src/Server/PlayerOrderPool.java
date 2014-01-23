@@ -37,7 +37,7 @@ public class PlayerOrderPool {
 						- order.getQuantityLeft());
 				finishedOrders.add(order);
 				acceptedOrders.remove(order);
-				player.addCash(order.getQuantity()
+				player.addCash(order.getTotalQuantity()
 						* order.getPricePerAirplane());
 
 				// Wert setzten bezüglich pünktlicher Erfüllung des Auftrags

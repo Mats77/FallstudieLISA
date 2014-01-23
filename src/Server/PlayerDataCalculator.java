@@ -97,7 +97,7 @@ public class PlayerDataCalculator {
 		for (Player player : players) {
 			double turnover = 0;
 			for (Order order : player.getPlayerOrderPool().getFinishedOrders()) {
-				turnover += order.getPricePerAirplane()*order.getQuantity();
+				turnover += order.getPricePerAirplane()*order.getTotalQuantity();
 			}
 			player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
 			player.addCash(turnover);//geld erhöhen

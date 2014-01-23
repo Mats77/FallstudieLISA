@@ -179,7 +179,7 @@ public class Handler {
 		if (acceptedOrders.size() > 0) {
 			txt += " acceptedOrders:";
 			for (Order order : acceptedOrders) {
-				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getQuantity() + ","
+				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getTotalQuantity() + ","
 						+ order.getQuantityLeft() + "," + order.getQuartalValidTo() + ";";
 			}
 		}
@@ -188,7 +188,7 @@ public class Handler {
 		if (newOrders.size() > 0) {
 			txt += " newOrders:";
 			for (Order order : newOrders) {
-				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getQuantity() + ","
+				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getTotalQuantity() + ","
 						+ order.getQuartalValidTo() + ";";
 			}
 		}

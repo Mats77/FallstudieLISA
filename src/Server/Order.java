@@ -11,7 +11,8 @@ import java.io.Reader;
 public class Order {
 	private static int orderCount = 0;
 	private final int orderId;
-	private int totalQuantity;
+	private int totalQuantity; // bis zu 1/4 der totalQuantity sind optionale Orders, der Rest sind fixedOrders
+	private int fixedQuantity=0;
 	private int optionalQuantity=0;
 	private int quartalValidTo;
 	private double pricePerAirplane;
@@ -23,8 +24,7 @@ public class Order {
 	// quantityLeft muss == 0 sein, damit ein Auftrag abgeschlossen wird.
 
 	public Order(int totalQuantity, int quartal) {
-		this.totalQuantity = totalQuantity;
-		this.quartalValidTo = quartal + 1 + (int) (Math.random() * 3.1); // Aufträge
+		this.quartalValidTo = quartal + 1 + (int) (Math.random() * 2.1); // Aufträge
 																			// sollen
 																			// max.
 																			// 4
@@ -40,18 +40,21 @@ public class Order {
 		//Wird schon direkt berechnet, um dem User anzuzeigen.
 		int optOrders =(int) (Math.random()*(totalQuantity / 4));
 		optionalQuantity = (int) (optOrders);
+		fixedQuantity = totalQuantity-optionalQuantity;
 		
 		if(Math.random()<=0.3){
 			useOptinalOrders = true;
 		}
 		
 		if(useOptinalOrders){
-			this.quantityLeft = totalQuantity + optionalQuantity;
+			this.totalQuantity = totalQuantity;
+			this.quantityLeft = totalQuantity;
 		}else{
+			this.totalQuantity = totalQuantity-optOrders;
 			this.quantityLeft = totalQuantity;
 		}
 		
-		
+		System.err.println(optionalQuantity);
 		setClient();
 	}
 
@@ -64,13 +67,16 @@ public class Order {
 		
 		int optOrders = (int) (totalQuantity / 4);
 		optionalQuantity = (int) (optOrders);
+		fixedQuantity = totalQuantity-optionalQuantity;
 		
 		useOptinalOrders = true;
 		
 		
 		if(useOptinalOrders){
-			this.quantityLeft = totalQuantity + optionalQuantity;
+			this.totalQuantity = totalQuantity;
+			this.quantityLeft = totalQuantity;
 		}else{
+			this.totalQuantity = totalQuantity-optOrders;
 			this.quantityLeft = totalQuantity;
 		}
 		
@@ -103,9 +109,11 @@ public class Order {
 		return quartalValidTo;
 	}
 	
-	
+	public int getFixedQuantity(){
+		return fixedQuantity;
+	}
 
-	public int getQuantity() {
+	public int getTotalQuantity() {
 		return totalQuantity;
 	}
 	

@@ -76,8 +76,8 @@ public class OrderPool {
 		while (orderList.size() > 0) {
 			int orderQtyMax = 0;
 			for (Order order : orderList) {
-				if (order.getQuantity() > orderQtyMax) {
-					orderQtyMax = order.getQuantity();
+				if (order.getTotalQuantity() > orderQtyMax) {
+					orderQtyMax = order.getTotalQuantity();
 					tmp = order;
 				}
 
