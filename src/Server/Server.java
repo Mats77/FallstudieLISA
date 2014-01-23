@@ -56,11 +56,20 @@ class Server{
 						tmp += input.get(i);						
 					}
 					System.out.println(tmp);
-					txtout = handler.handleString(tmp);
-					String result = "HTTP/1.1" + "\n" + "Access-Control-Allow-Origin: http://digifurt.de" + "\n";
-					result += txtout;
+					//txtout = handler.handleString(tmp);
+					String result = "";//
+					result += "HTTP/1.0 200 \n";
+					result += "Access-Control-Allow-Origin: http://digifurt.de" + "\n";
+					result += "Content-type: text/html \n";
+					result += " \n";
+		            result += "Hallo Welt";
+					//result += txtout;
 					out.println(result);
+					System.out.println(result);
 					out.println();
+					out.flush();
+					String content = "Hallo Welt!";
+					out.println(content);
 					out.flush();
 					// Verbindung trennen
 					in.close();
