@@ -60,6 +60,7 @@ class Server{
 					// Inhalt erstellen
 					txtout = handler.handleString(tmp);
 					}catch(Exception e){
+						e.printStackTrace();
 						System.out.println("Keine Daten empfangen");
 					}
 

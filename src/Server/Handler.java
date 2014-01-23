@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -17,6 +18,7 @@ public class Handler {
 	private Mechanics mechanics;
 	private Conn activePlayer;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
+	private String content;
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
@@ -109,23 +111,43 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
+		}else if(command.contains("VARIFY")){
+			
 		}
+		content = "";
 		return "INVALIDESTRING";
 	}
 
 	private String getCommand(String txt) {
 		// TODO Auto-generated method stub
+		String mes = txt;
 		String result = "";
-		if (txt.contains("AUTHORIZEME")){
-			result = "AUTHORIZEME";
-			return result;
-		}else if(txt.contains("GETIMAGE")){
-			result = "GETIMAGE";
-			return result;
-		}else if(txt.contains("")){
-			
-		}else if(txt.contains("")){
-			
+		// get payload
+		if (txt.contains("payload")) {
+			int tmpbeg = txt.lastIndexOf("payload");
+			tmpbeg = tmpbeg +7;
+			String gamePlayerId = txt.substring(tmpbeg, tmpbeg+3);
+			txt = txt.substring(tmpbeg+3);
+			int tmpend = txt.indexOf("$");
+			// set content == data from client (for example input data)
+			// get hole content!
+			content = txt.substring(0, tmpend);
+			// if active player found: set active player
+			try{
+			activePlayer = connections.get(Integer.valueOf(gamePlayerId.charAt(0)));
+			}catch(Exception e){
+				System.out.println("Player not found");
+				return "VARIFYFAILED";
+			}
+		}
+		// get reason-command
+		if(mes.contains("reason")){
+			int beg = mes.lastIndexOf("reason");
+			beg = beg + 7;
+			int end = mes.indexOf("$");
+			String message = "";
+			message = mes.substring(beg, end);
+			return message;
 		}
 		return result;
 	}
