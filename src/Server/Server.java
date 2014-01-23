@@ -8,12 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import org.webbitserver.*;
-import org.webbitserver.handler.StaticFileHandler;
-import org.webbitserver.wrapper.WebSocketConnectionWrapper;
 
 class Server{
-	private static int connectionCount;
     private static int port;
     private static ServerSocket server;
     private static Socket connection;
@@ -22,15 +18,13 @@ class Server{
     private static String txtin;
     private static String txtout;
 	private static Handler handler;
-
-	
 	
 	public static void main(String args[]) {
 		
 		//Server erstellt ein Handlerobjekt, ��ffnet den Server-Socket und beginnt Deamon Prozess
 		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
 		int gameID = 3;
-		Handler handler = new Handler(gameID);
+		handler = new Handler(gameID);
     	port = 8080;
 		try {
 			server = new ServerSocket(port);
