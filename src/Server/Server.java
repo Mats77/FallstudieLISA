@@ -47,6 +47,7 @@ class Server{
 					ArrayList<String> input = new ArrayList<String>();
 					txtin = "";
 					// String entgegennehmen (können mehrere Zeilen sein)
+					try{
 					while(!(txtin = in.readLine()).equals("")) {
 						System.out.println(txtin);
 						input.add(txtin);
@@ -56,6 +57,12 @@ class Server{
 						tmp += input.get(i);						
 					}
 					System.out.println(tmp);
+					// Inhalt erstellen
+					//txtout = handler.handleString(tmp);
+					}catch(Exception e){
+						System.out.println("Keine Daten empfangen");
+					}
+
 					String result = "";// Verbindung akzeptieren
 					result += "HTTP/1.1 200 \n";
 					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
@@ -63,10 +70,7 @@ class Server{
 					result += " \n";
 					out.println(result);
 					System.out.println(result);
-					out.println();
 					out.flush();
-					// Inhalt erstellen
-					//txtout = handler.handleString(tmp);
 					// Inhalt senden
 					out.println("Hello world!");
 					System.out.println("Hello world!");
