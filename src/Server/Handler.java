@@ -52,13 +52,7 @@ public class Handler {
 				return result;				
 			}
 
-		}else{
-			int activPlayerID = Integer.parseInt(txt.substring(0, 1))-1;
-			activePlayer = connections.get(activPlayerID);			
-		}
-
-		
-		if (txt.startsWith("CHAT ")) {
+		}else if (txt.startsWith("CHAT")) {
 			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
 					+ txt.substring(5);
 			spread(s);
@@ -66,7 +60,7 @@ public class Handler {
 			// Einer der Spieler möchte das Spiel Starten, wenn alle Ready sind,
 			// erstellt mechanics für jede
 			// Conn ein Playerobjekt
-		} else if (txt.substring(4, txt.length()).startsWith("READY ")) {
+		} else if (command.startsWith("READY ")) {
 			String s = "";
 			activePlayer.setReady(true);
 			if (areAllReady()) {
@@ -81,20 +75,20 @@ public class Handler {
 			return "WAITFORPLAYER";
 
 			// Ein Client fragt einen Nickname an
-		} else if (txt.startsWith("VALUES")) { // String:
+		} else if (command.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
-		} else if (txt.startsWith("PLAYERNAME ")) {
+		} else if (command.startsWith("PLAYERNAME ")) {
 
-		} else if (txt.startsWith("CREDIT")) {
+		} else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
-		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
+		}else if(command.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			refreshPlayerOrderPool(txt, getID(activePlayer));
-		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
+		} else if(command.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
-		}else if (txt.substring(4, txt.length()).startsWith("REFRESH ")) {
+		}else if (command.substring(4, txt.length()).startsWith("REFRESH ")) {
 			result = "";
 			Boolean newRound = false;
 			result = checkOpenMessages();
@@ -113,6 +107,8 @@ public class Handler {
 			}
 		}else if(command.contains("VARIFY")){
 			
+		}else if (command.equals("VARIFYFAILED")) {
+			return "VARIFYFAILED";
 		}
 		content = "";
 		return "INVALIDESTRING";
