@@ -124,6 +124,8 @@ public class Handler {
 			return result;
 		}else if(txt.contains("")){
 			
+		}else if(txt.contains("")){
+			
 		}
 		return result;
 	}
