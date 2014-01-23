@@ -58,7 +58,7 @@ class Server{
 					}
 					System.out.println(tmp);
 					// Inhalt erstellen
-					//txtout = handler.handleString(tmp);
+					txtout = handler.handleString(tmp);
 					}catch(Exception e){
 						System.out.println("Keine Daten empfangen");
 					}
@@ -72,8 +72,8 @@ class Server{
 					System.out.println(result);
 					out.flush();
 					// Inhalt senden
-					out.println("Hello world!");
-					System.out.println("Hello world!");
+					out.println(txtout);
+					System.out.println(txtout);
 					out.flush();
 					// Verbindung trennen
 					in.close();
