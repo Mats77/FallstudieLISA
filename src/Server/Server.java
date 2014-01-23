@@ -58,7 +58,7 @@ class Server{
 					System.out.println(tmp);
 					txtout = handler.handleString(tmp);
 					String result = "";// Verbindung akzeptieren
-					result += "HTTP/1.0 200 \n";
+					result += "HTTP/1.1 200 \n";
 					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
 					result += "Access-Control-Allow-Origin: http://digifurt.de" + "\n";
 					result += "Content-type: text/html \n";
@@ -69,6 +69,7 @@ class Server{
 					out.flush();
 					// Inhalt senden
 					out.println(txtout);
+					System.out.println(txtout);
 					out.flush();
 					// Verbindung trennen
 					in.close();
