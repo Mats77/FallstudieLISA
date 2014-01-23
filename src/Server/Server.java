@@ -66,10 +66,10 @@ class Server{
 					out.println();
 					out.flush();
 					// Inhalt erstellen
-					txtout = handler.handleString(tmp);
+					//txtout = handler.handleString(tmp);
 					// Inhalt senden
-					out.println(txtout);
-					System.out.println(txtout);
+					out.println("Hello world!");
+					System.out.println("Hello world!");
 					out.flush();
 					// Verbindung trennen
 					in.close();
