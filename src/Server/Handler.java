@@ -79,16 +79,16 @@ public class Handler {
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
-		} else if (command.startsWith("PLAYERNAME ")) {
+		} else if (command.startsWith("PLAYERNAME")) {
 
 		} else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
-		}else if(command.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
+		}else if(command.startsWith("ORDERINPUT")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			refreshPlayerOrderPool(txt, getID(activePlayer));
 		} else if(command.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
-		}else if (command.substring(4, txt.length()).startsWith("REFRESH ")) {
+		}else if (command.startsWith("REFRESH")) {
 			result = "";
 			Boolean newRound = false;
 			result = checkOpenMessages();
@@ -105,10 +105,10 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
-		}else if(command.contains("VARIFY")){
-			
-		}else if (command.equals("VARIFYFAILED")) {
-			return "VARIFYFAILED";
+		}else if(command.contains("VERIFY")){
+			return "CHECK";
+		}else if (command.equals("VERIFYFAILED")) {
+			return "VERIFYFAILED";
 		}
 		content = "";
 		return "INVALIDESTRING";
@@ -133,7 +133,7 @@ public class Handler {
 			activePlayer = connections.get(Integer.valueOf(gamePlayerId.charAt(0)));
 			}catch(Exception e){
 				System.out.println("Player not found");
-				return "VARIFYFAILED";
+				return "VERIFYFAILED";
 			}
 		}
 		// get reason-command
