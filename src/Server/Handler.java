@@ -15,6 +15,7 @@ public class Handler {
 	private Mechanics mechanics;
 	private Conn activePlayer;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
+	private String content;
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
@@ -37,49 +38,55 @@ public class Handler {
 		activePlayer = connections.get(activPlayerID);
 		
 		if (txt.startsWith("CHAT ")) {
-			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
-					+ txt.substring(5);
-			spread(s);
-			return s;
-			// Einer der Spieler möchte das Spiel Starten, wenn alle Ready sind,
-			// erstellt mechanics für jede
-			// Conn ein Playerobjekt
-		} else if (txt.startsWith("READY ")) {
-			activePlayer.setReady(true);
-			if (areAllReady()) {
-				mechanics.startGame(connections);
-				String s = "ALLREADY ";
-				return s;
-			}
-
-			// Ein Client fragt einen Nickname an
-		} else if (txt.startsWith("AUTHORIZEME ")) {
+		String command = getCommand(txt);
+		String result = "";
+		// Zun�chst wird der Spieler zugewiesen, au�er String enth�lt AUTHORIZEME
+		if (command.equals("AUTHORIZEME")) {
 			//Dem Client muss die Game-ID und die Player-ID zugewiesen werden
 			connections.add(new Conn(this));
 			connections.lastElement().setId(this.getID(connections.lastElement()));
 			System.out.println(connections.lastElement().getId() + " " + this.gameID);
-			return String.valueOf(connections.lastElement().getId()) + " " + String.valueOf(this.gameID);
-			
-			// Ein Client hat seine Rundenwerte abgegeben
-		} else if (txt.startsWith("VALUES")) { // String:
+			result = connections.lastElement().getId() + " " + this.gameID;
+			if (connections.size() == 4) {
+				//start game
+				mechanics.startGame(connections);
+			}else{
+				return result;				
+			}
+		} else if (command.startsWith("READY ")) {
+			String s = "";
+			activePlayer.setReady(true);
+			if (areAllReady()) {
+				if (anzPlayer()) {
+					mechanics.startGame(connections); // muss �berpr�ft werden ob genug spieler vorhanden sind!!!!	
+					s = "ALLREADY ";
+				}else{
+					s = "NOTENOUGHPLAYER " + String.valueOf(connections.size());
+				}
+				return s;
+			}
+			return "WAITFORPLAYER";
+
+			// Ein Client fragt einen Nickname an
+		} else if (command.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
-		} else if (txt.startsWith("PLAYERNAME ")) {
+		} else if (command.startsWith("PLAYERNAME")) {
 
-		} else if (txt.startsWith("CREDIT")) {
+		} else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
-		}else if(txt.startsWith("ORDERINPUT ")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
+		}else if(command.startsWith("ORDERINPUT")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			refreshPlayerOrderPool(txt, getID(activePlayer));
-		} else if(txt.startsWith("ACCEPTCREDITOFFER")){
+		} else if(command.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
-		}else if (txt.startsWith("READY ")) {
-			activePlayer.setReady(true);
-		}else if (txt.startsWith("REFRESH ")) {
+		}else if (command.startsWith("REFRESH")) {
+			result = "";
 			Boolean newRound = false;
+			result = checkOpenMessages();
 			for (Conn conn : connections) {
-				if (conn.isReady()== false) {
+				if (conn.getReady()== false) {
 					newRound = false;
 					break;
 				}else{
@@ -91,8 +98,65 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
+		}else if(command.equals("VERIFY")){
+			return "CHECK";
+		}else if (command.equals("VERIFYFAILED")) {
+			return "VERIFYFAILED";
 		}
+		content = "";
 		return "INVALIDESTRING";
+	}
+
+	private String getCommand(String txt) {
+		// TODO Auto-generated method stub
+		String mes = txt;
+		String result = "";
+		// get payload
+		if (txt.contains("payload")) {
+			int tmpbeg = txt.lastIndexOf("payload");
+			tmpbeg = tmpbeg +8;
+			String gamePlayerId = txt.substring(tmpbeg, tmpbeg+3);
+			txt = txt.substring(tmpbeg+3);
+			int tmpend = txt.indexOf("$");
+			// set content == data from client (for example input data)
+			// get hole content!
+			try{
+			content = txt.substring(0, tmpend);
+			}catch(Exception e){
+				System.out.println("Kein Inhalt vorhanden");
+			}
+			// if active player found: set active player
+			try{
+			activePlayer = connections.get(Integer.valueOf(gamePlayerId.charAt(0)));
+			}catch(Exception e){
+				System.out.println("Player not found");
+				return "VERIFYFAILED";
+			}
+		}
+		// get reason-command
+		if(mes.contains("reason")){
+			int beg = mes.lastIndexOf("reason");
+			beg = beg + 7;
+			int end = mes.indexOf("$");
+			String message = "";
+			message = mes.substring(beg, end);
+			return message;
+		}
+		return result;
+	}
+
+	private String checkOpenMessages() {
+		return activePlayer.getOpenMessages();
+	}
+
+	private boolean anzPlayer() {
+		// TODO Auto-generated method stub
+		if (connections.size()==4) {
+			return true;
+		}else{
+			return false;	
+		}
+
 	}
 
 	public int getID(Conn connection) {
@@ -112,7 +176,7 @@ public class Handler {
 									// Evtl markieren wer fertig ist usw.
 		boolean toReturn = true;
 		for (Conn con : connections) {
-			if (!con.isReady())
+			if (!con.getReady())
 				toReturn = false;
 		}
 		return toReturn;
@@ -148,7 +212,7 @@ public class Handler {
 		if (acceptedOrders.size() > 0) {
 			txt += " acceptedOrders:";
 			for (Order order : acceptedOrders) {
-				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getQuantity() + ","
+				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getTotalQuantity() + ","
 						+ order.getQuantityLeft() + "," + order.getQuartalValidTo() + ";";
 			}
 		}
@@ -157,7 +221,7 @@ public class Handler {
 		if (newOrders.size() > 0) {
 			txt += " newOrders:";
 			for (Order order : newOrders) {
-				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getQuantity() + ","
+				txt += order.getOrderId() + "," + order.getClientName() + "," + order.getTotalQuantity() + ","
 						+ order.getQuartalValidTo() + ";";
 			}
 		}

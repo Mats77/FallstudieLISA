@@ -8,12 +8,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-import org.webbitserver.*;
-import org.webbitserver.handler.StaticFileHandler;
-import org.webbitserver.wrapper.WebSocketConnectionWrapper;
 
 class Server{
-	private static int connectionCount;
     private static int port;
     private static ServerSocket server;
     private static Socket connection;
@@ -22,15 +18,13 @@ class Server{
     private static String txtin;
     private static String txtout;
 	private static Handler handler;
-
-	
 	
 	public static void main(String args[]) {
 		
 		//Server erstellt ein Handlerobjekt, ��ffnet den Server-Socket und beginnt Deamon Prozess
 		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
 		int gameID = 3;
-		Handler handler = new Handler(gameID);
+		handler = new Handler(gameID);
     	port = 8080;
 		try {
 			server = new ServerSocket(port);
@@ -47,6 +41,7 @@ class Server{
 					ArrayList<String> input = new ArrayList<String>();
 					txtin = "";
 					// String entgegennehmen (können mehrere Zeilen sein)
+					try{
 					while(!(txtin = in.readLine()).equals("")) {
 						System.out.println(txtin);
 						input.add(txtin);
@@ -56,8 +51,24 @@ class Server{
 						tmp += input.get(i);						
 					}
 					System.out.println(tmp);
+					// Inhalt erstellen
 					txtout = handler.handleString(tmp);
-					out.println();
+					}catch(Exception e){
+						e.printStackTrace();
+						System.out.println("Keine Daten empfangen");
+					}
+
+					String result = "";// Verbindung akzeptieren
+					result += "HTTP/1.1 200 OK \n";
+					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
+					result += "Content-type: text/html \n";
+					result += " \n";
+					out.println(result);
+					System.out.println(result);
+					out.flush();
+					// Inhalt senden
+					out.print(txtout);
+					System.out.println(txtout);
 					out.flush();
 					// Verbindung trennen
 					in.close();

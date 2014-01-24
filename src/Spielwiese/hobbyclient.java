@@ -20,37 +20,54 @@ public class hobbyclient {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String test = "AUTHORIZEME ";
+		String[] test = {"AUTHORIZEME ", "REFRESH ", "READY "};
+		String user = "";
 		System.out.println("Client startet");
 		try {
-			socket = new Socket("localhost", 8080);
-			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream());
-			System.out.println("Verbindung hergestellt");
-			
-			out.println(test);
-			out.println();
-			out.flush();
-			
-			System.out.println("Text gesendet");
-			ArrayList<String> input = new ArrayList<String>();
-			txt = "";
-			while (!(txt = in.readLine()).equals("")) {
-				input.add(txt);
-				System.out.println("Client empf√§ngt: " + txt);
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}finally{
-			try {
-				in.close();
-				out.close();
-				socket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			for (int i = 0; i < test.length; i++) {
+				try {
+					socket = new Socket("localhost", 8080);
+					in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					out = new PrintWriter(socket.getOutputStream());
+					System.out.println("Verbindung hergestellt");
+					
+					if (i != 0) {
+						out.println(user + " " + test[i]);
+					}else {
+						out.println(test[i]);	
+					}
+
+					out.println();
+					out.flush();
+					
+					System.out.println("Text gesendet: " + test[i]);
+					ArrayList<String> input = new ArrayList<String>();
+					txt = "";
+					System.out.println("Wartet auf Antwort");
+					while (!(txt = in.readLine()).equals("")) {
+						input.add(txt);
+						System.out.println("Client empf‰ngt: " + txt);
+					}
+					
+					String ans = "";
+					for (int j = 0; j < input.size(); j++) {
+						ans += input.get(i);
+					}
+					if (i == 0) {
+						user = ans;
+					}
+					System.out.println(ans);
+				} catch (Exception e) {
+					// TODO: handle exception
+				}finally{
+					in.close();
+					out.close();
+					socket.close();
+				}
 			}
 
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
 	}
 

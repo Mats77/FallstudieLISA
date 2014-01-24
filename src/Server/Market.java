@@ -1,10 +1,12 @@
 package Server;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
 public class Market {
 
+	private ArrayList<MarketData> marketData;
 	private OrderPool orderPool = new OrderPool();
 
 	public void calcMarketShare() {
@@ -41,13 +43,21 @@ public class Market {
 
 		// Sortiert die Player nach ihrer CompanyValue absteigend.
 		Player playerOrdered[] = new Player[player.length];
-		boolean playerUsed[] = new boolean [player.length]; // Sagt aus, ob ein Spieler schon sortiert wurde, um bei gleichen Werten nicht einen Spieler mehrfach zuzuweisen.
+		boolean playerUsed[] = new boolean[player.length]; // Sagt aus, ob ein
+															// Spieler schon
+															// sortiert wurde,
+															// um bei gleichen
+															// Werten nicht
+															// einen Spieler
+															// mehrfach
+															// zuzuweisen.
 		for (int i = 0; i < player.length; i++) {
 			for (int j = 0; j < player.length; j++) {
-					if (playerValueDescending[i] == player[j].getCompanyValue() && !playerUsed[j]) {
-						playerOrdered[i] = player[j];
-						playerUsed[j] = true;
-						break;
+				if (playerValueDescending[i] == player[j].getCompanyValue()
+						&& !playerUsed[j]) {
+					playerOrdered[i] = player[j];
+					playerUsed[j] = true;
+					break;
 				}
 			}
 		}

@@ -198,6 +198,7 @@ public class Mechanics {
 			//Diese wird dann jeweils abgebaut durch Erfüllung eines Auftrags. Wenn die Ges. Capazity höher
 			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
 			players[i].setCapacityLeft(players[i].getData().get(quartal).getCapacity());
+			// die Daten müssen in der Conn Klasse zwischengespeichert werden
 			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
 		}
 	}
