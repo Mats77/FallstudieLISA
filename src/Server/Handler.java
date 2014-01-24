@@ -2,14 +2,12 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
-import org.webbitserver.WebSocketConnection;
 
 public class Handler {
 
@@ -34,7 +32,7 @@ public class Handler {
 
 	// Ã¼berprÃ¼ft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
-		// Zunächst wird der Spieler zugewiesen
+		// Zunï¿½chst wird der Spieler zugewiesen
 		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
 		activePlayer = connections.get(activPlayerID);
 		
@@ -89,7 +87,7 @@ public class Handler {
 				}		
 			}//End of For
 			if (newRound) {
-				return ""; // Alle relevanten Objekte für neue Runde
+				return ""; // Alle relevanten Objekte fï¿½r neue Runde
 			}else{
 				return "NOINFOS";
 			}
