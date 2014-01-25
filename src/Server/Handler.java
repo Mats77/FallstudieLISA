@@ -39,10 +39,9 @@ public class Handler {
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
 		// Zun�chst wird der Spieler zugewiesen
-		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
-		activePlayer = connections.get(activPlayerID);
+		//int activPlayerID = Integer.parseInt(txt.substring(0, 1));
+		//activePlayer = connections.get(activPlayerID);
 		
-		if (txt.startsWith("CHAT ")) {
 		String command = getCommand(txt);
 		String result = "";
 		// Zun�chst wird der Spieler zugewiesen, au�er String enth�lt AUTHORIZEME
@@ -146,7 +145,7 @@ public class Handler {
 			}
 			return answer;
 		}
-		}
+		
 		return "INVALIDESTRING";	
 		}
 
