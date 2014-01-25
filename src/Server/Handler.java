@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -16,12 +17,16 @@ public class Handler {
 	private Conn activePlayer;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
 	private String content;
+	private int[][] winners;
+	private double[][] winnersDouble;
+	private ObjectWriter ow;
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
 		this.gameID = gameID;
 		System.out.println("Handler lebt!");
+		ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	}
 
 	// veranlasst das senden einer Nachricht an alle Clients
@@ -33,6 +38,11 @@ public class Handler {
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
 	public String handleString(String txt) {
+		// Zun�chst wird der Spieler zugewiesen
+		int activPlayerID = Integer.parseInt(txt.substring(0, 1));
+		activePlayer = connections.get(activPlayerID);
+		
+		if (txt.startsWith("CHAT ")) {
 		String command = getCommand(txt);
 		String result = "";
 		// Zun�chst wird der Spieler zugewiesen, au�er String enth�lt AUTHORIZEME
@@ -48,15 +58,6 @@ public class Handler {
 			}else{
 				return result;				
 			}
-
-		}else if (txt.startsWith("CHAT")) {
-			String s = "CHAT " + getID(activePlayer) + " " + activePlayer.getNick() + ": "
-					+ txt.substring(5);
-			spread(s);
-			return s;
-			// Einer der Spieler möchte das Spiel Starten, wenn alle Ready sind,
-			// erstellt mechanics für jede
-			// Conn ein Playerobjekt
 		} else if (command.startsWith("READY ")) {
 			String s = "";
 			activePlayer.setReady(true);
@@ -102,14 +103,32 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
-		}else if(command.equals("VERIFY")){
-			return "CHECK";
+		}else if(command.equals("GETSTATS")){
+			String values = "";
+			Player[] tmp = mechanics.getPlayers();
+			for (int i = 0; i < tmp.length; i++) {
+				if (activePlayer.getId() == tmp[i].getId()) {
+					Vector<PlayerData> data = tmp[i].getData();
+					for(PlayerData playerdata : data){
+						try {
+							values += ow.writeValueAsString(playerdata);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} // end try catch
+					}// end for playerdata
+					return values;
+				}//end if
+			} // end for players
 		}else if (command.equals("VERIFYFAILED")) {
 			return "VERIFYFAILED";
+		}else if(command.equals("VERIFY")){
+			return "CHECK";
+		}else if(command.equalsIgnoreCase("INVALIDSTRING")){
+			content = "";
+		}}
+		return "INVALIDESTRING";	
 		}
-		content = "";
-		return "INVALIDESTRING";
-	}
 
 	private String getCommand(String txt) {
 		// TODO Auto-generated method stub
@@ -287,12 +306,18 @@ public class Handler {
 	}
 
 	public void notifyWinners(int[][] winnerMap) {	//erster Wert ist jeweils der Wert und zweiter der Spieler
-		// TODO Auto-generated method stub
-		
+		this.winners = winnerMap;	
+	}
+
+	public int[][] getWinners() {
+		return winners;
+	}
+
+	public double[][] getWinnersDouble() {
+		return winnersDouble;
 	}
 
 	public void notifyWinners(double[][] winnerMapDouble) { //erster Wert ist jeweils der Wert und zweiter der Spieler
-		// TODO Auto-generated method stub
-		
+		this.winnersDouble = winnerMapDouble;
 	}
 }

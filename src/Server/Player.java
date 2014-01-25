@@ -29,6 +29,11 @@ public class Player {
 				, 5000, 25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
 		mechanics = m;
 		this.cash = data.lastElement().getCash();
+		
+		//jeder beginnt mit einem Auftrag, der die komplette Kapazität ausschöpft, 
+		//da in der ersten Runde nur Aufträge für die Zweite 
+		//Runde angenommen werden können.
+		orderPool.getOrdersToProduce().add(new Order(26, 1));
 	}
 
 	
@@ -192,5 +197,22 @@ public class Player {
 	
 	public ShortTimeCredit getShortTimeCredit(){
 		return this.shortTimeCredit;
+	}
+	
+	public boolean produceOrder(int orderID){
+		for (Order order : orderPool.getAcceptedOrders()) {
+			if(order.getOrderId()==orderID){
+				if(this.capacityLeft > order.getQuantityLeft()){
+					orderPool.produceOrder(orderID);
+					this.capacityLeft -= order.getQuantityLeft();
+					return true;
+				} else {
+					orderPool.produceOrder(orderID);
+					this.capacityLeft = 0;
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 }
