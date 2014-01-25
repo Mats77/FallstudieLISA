@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -18,12 +19,14 @@ public class Handler {
 	private String content;
 	private int[][] winners;
 	private double[][] winnersDouble;
+	private ObjectWriter ow;
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
 		this.gameID = gameID;
 		System.out.println("Handler lebt!");
+		ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	}
 
 	// veranlasst das senden einer Nachricht an alle Clients
@@ -100,10 +103,27 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
-		}else if(command.equals("VERIFY")){
-			return "CHECK";
+		}else if(command.equals("GETSTATS")){
+			String values = "";
+			Player[] tmp = mechanics.getPlayers();
+			for (int i = 0; i < tmp.length; i++) {
+				if (activePlayer.getId() == tmp[i].getId()) {
+					Vector<PlayerData> data = tmp[i].getData();
+					for(PlayerData playerdata : data){
+						try {
+							values += ow.writeValueAsString(playerdata);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} // end try catch
+					}// end for playerdata
+					return values;
+				}//end if
+			} // end for players
 		}else if (command.equals("VERIFYFAILED")) {
 			return "VERIFYFAILED";
+		}else if(command.equals("VERIFY")){
+			return "CHECK";
 		}else if(command.equalsIgnoreCase("INVALIDSTRING")){
 			content = "";
 		}}
