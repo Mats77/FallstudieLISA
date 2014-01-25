@@ -88,7 +88,7 @@ public class PlayerDataCalculator {
 	public void calcProfits(Player[] players) {
 		for (Player player : players) {
 			PlayerData quartalData = player.getData().lastElement();
-			double tmpProduction = quartalData.getProduction() - player.getData().elementAt(mechanics.getQuartal()-1).getProduction();
+			double tmpProduction = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
 			quartalData.setProfit(quartalData.getTurnover() - quartalData.getCosts() - quartalData.getMarketing() - quartalData.getResearch() - tmpProduction);
 		}
 	}
@@ -99,20 +99,22 @@ public class PlayerDataCalculator {
 			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
 				turnover += order.getPricePerAirplane()*order.getTotalQuantity();
 			}
-			player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
+			player.getPlayerOrderPool().refreshData();
+			player.insertNewTurnover(turnover);
+			//player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
 			player.addCash(turnover);//geld erhöhen
 		}
 	}
 	
 	public void calcCapacities(Player[] players) {
 		for (Player player : players) {
-			PlayerData quartalData = player.getData().elementAt(mechanics.getQuartal());
+			PlayerData quartalData = player.getData().lastElement();
 			int capacity = (int)quartalData.getProduction()/500;
 			quartalData.setCapacity(capacity);
 			double productionInvestment = 0;
 			if(player.getData().size()>1)
 			{
-				productionInvestment = quartalData.getProduction() - player.getData().elementAt(mechanics.getQuartal()-1).getProduction();
+				productionInvestment = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
 			}
 			player.spendMoney(productionInvestment);
 		}
@@ -120,7 +122,7 @@ public class PlayerDataCalculator {
 	
 	public void calcCosts(Player[] players) {
 		for (Player player : players) {
-			PlayerData quartalData = player.getData().elementAt(mechanics.getQuartal());
+			PlayerData quartalData = player.getData().lastElement();
 			quartalData.setFixCosts(quartalData.getCapacity()*100);
 			int tmp = quartalData.getQualityOfMaterial();
 			if(tmp == 0)

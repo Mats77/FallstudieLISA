@@ -31,14 +31,17 @@ public class Mechanics {
 			if(tmp.equalsIgnoreCase(nick))
 			{
 				players[i].saveNextRoundValues(values, quartal);
-				handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI 
+				//handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI 
 				break;
 			}
 		}
-		if(allPlayerReadyForOrderSelection())
-		{	
-			ordersForNewRound();
+		if(allPlayerReadyForNextRound()){
+			endRound();
 		}
+//		if(allPlayerReadyForOrderSelection())
+//		{	
+//			ordersForNewRound();
+//		}
 	}
 	
 	
@@ -55,39 +58,40 @@ public class Mechanics {
 	}
 		
 
-	private boolean allPlayerReadyForOrderSelection() {
-		boolean allPlayerReadyForOrderSelection = true;
-		for(int i=0; i<players.length; i++){
-			if(!players[i].isReadyForOrderSelection())
-			{
-				allPlayerReadyForOrderSelection = false;
-			}
-		}
-		return allPlayerReadyForOrderSelection;
-	}
+//	private boolean allPlayerReadyForOrderSelection() {
+//		boolean allPlayerReadyForOrderSelection = true;
+//		for(int i=0; i<players.length; i++){
+//			if(!players[i].isReadyForOrderSelection())
+//			{
+//				allPlayerReadyForOrderSelection = false;
+//			}
+//		}
+//		return allPlayerReadyForOrderSelection;
+//	}
 	
-	private void endRound(){
-		for (int i = 0; i < players.length; i++) {
-			players[i].setReadyForNextRound(false);
-			players[i].setReadyForOrderSelection(false);
-		}		
+	private void endRound(){	
+		
 		//neue Werte berechnen für die neuen Aufträge und Investitionsausgaben für F&E, Marketing
 		double[] values = playerDataCalculator.generateNewCompanyValues(players);
 		for(int i=0; i<players.length; i++)
 		{
 			players[i].setCompanyValue(values[i]);
 		}
+
+		for (int i = 0; i < players.length; i++) {
+			players[i].setReadyForNextRound(false);
+	//		players[i].setReadyForOrderSelection(false);
+		}		
+
 		
-		//Geld wurde schon mittel player.addCash auf den Player übertragen. Geld wird übertragen sobald der Spieler
-		//angibt und gesendet hat welchen Auftrag er produzieren möchte.
-		playerDataCalculator.setTurnover(players);
 		playerDataCalculator.calcCapacities(players);	//Kapazitäten errechnen und Produktionsinvestition
 		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
+		playerDataCalculator.setTurnover(players);
 		playerDataCalculator.calcProfits(players);
 		playerDataCalculator.updateCreditValues(players);
 		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
 		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden
-		if(roundsToPlay+1 == quartal)
+		if(roundsToPlay == quartal)
 		{
 			endGame();
 		}
@@ -195,24 +199,24 @@ public class Mechanics {
 		market.splitOrders(players);
 		
 		//An Client die Aufträge des Players senden UND die CapacityLeft im Player erneuern
-		for (int i = 0; i < players.length; i++) {
-			//Jede Runde wird die noch verfügbare Capazity auf die Gesamt Cap. des Player gesetzt. 
-			//Diese wird dann jeweils abgebaut durch Erfüllung eines Auftrags. Wenn die Ges. Capazity höher
-			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
-			players[i].setCapacityLeft(players[i].getData().get(quartal).getCapacity());
-			// die Daten müssen in der Conn Klasse zwischengespeichert werden
-			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
-		}
+//		for (int i = 0; i < players.length; i++) {
+//			//Jede Runde wird die noch verfügbare Capazity auf die Gesamt Cap. des Player gesetzt. 
+//			//Diese wird dann jeweils abgebaut durch Erfüllung eines Auftrags. Wenn die Ges. Capazity höher
+//			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
+//			players[i].setCapacityLeft(players[i].getData().get(quartal).getCapacity());
+//			// die Daten müssen in der Conn Klasse zwischengespeichert werden
+//			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
+//		}
 	}
 	
 	private void startNewRound() {
 		quartal ++; //auf nächstes Quartal gehen.
 		
 		//Die Eingabe für den User reaktivieren
-		for (int i = 0; i < players.length; i++) {
-			handler.setStatusForInputValues(true, i);
-		}
-				
+//		for (int i = 0; i < players.length; i++) {
+//			handler.setStatusForInputValues(true, i);
+//		}
+		ordersForNewRound();		
 		handler.newRoundStarted(players);//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
 	}
@@ -232,6 +236,7 @@ public class Mechanics {
 		}
 		
 		ordersForNewRound();	//Aufträge verteilen
+		quartal++;
 	}
 
 	//wird aufgerufen, sobald ein Spiel gestartet wird, erstellt die Spieler
