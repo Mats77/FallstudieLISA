@@ -19,14 +19,20 @@ import Server.PlayerDataCalculator;
 
 //In mechanics müssen 2 Zeilen auskommentiert werden
 public class CompanyValueTest {
-	Handler handler = new Handler(3);
-	Mechanics mechanics = new Mechanics(handler);
-	PlayerDataCalculator pdc = new PlayerDataCalculator(mechanics);
-	Vector<Conn> connections= new Vector<Conn>();
-	Market market = new Market();
+	Handler handler = null;
+	Mechanics mechanics = null;
+	PlayerDataCalculator pdc = null;
+	Vector<Conn> connections= null;
+	Market market = null;
 	
 	@Before
 	public void testGeneratePlayers() {
+		handler = new Handler(3);
+		mechanics = new Mechanics(handler);
+		pdc = new PlayerDataCalculator(mechanics);
+		connections = new Vector<Conn>();
+		market = new Market();
+		
 		connections.add(new Conn(new Socket(), handler));
 		connections.get(0).setNick("Mats1");
 		connections.get(0).setId(0);
