@@ -93,15 +93,15 @@ public class Mechanics {
 		}
 	}
 	
-	private void endGame() {
+	public void endGame() {
 		int[][] winnerMap = new int[4][2];
 		double[][]winnerMapDouble = new double[4][2];
 		boolean integerValues = false;
 		if(conditionToWin == 0)				//die meisten Flugzeuge
 		{
-			int value = 0;
 			integerValues = true;
 			for (Player player : players) {
+				int value = 0;
 				Vector<PlayerData> data = player.getData();
 				for (PlayerData playerData : data) {
 					value += playerData.getAirplanes();
@@ -118,8 +118,8 @@ public class Mechanics {
 				rankPlayer(winnerMapDouble,player, value);
 			}
 		} else if (conditionToWin == 2) {	//den größten Umsatz
-			double value = 0;
 			for (Player player : players) {
+				double value = 0;
 				Vector<PlayerData> data = player.getData();
 				for (PlayerData playerData : data) {
 					value += playerData.getTurnover();
@@ -127,8 +127,8 @@ public class Mechanics {
 				rankPlayer(winnerMapDouble,player, value);
 			}
 		} else if (conditionToWin == 3) {	//den größten Gewinn
-			double value = 0;
 			for (Player player : players) {
+				double value = 0;
 				Vector<PlayerData> data = player.getData();
 				for (PlayerData playerData : data) {
 					value += playerData.getProfit();
@@ -165,6 +165,7 @@ public class Mechanics {
 				}
 				winnerMapDouble[i][0] = value;
 				winnerMapDouble[i][1] = player.getId();
+				break;
 			}
 		}
 		
@@ -183,6 +184,7 @@ public class Mechanics {
 				}
 				winnerMap[i][0] = value;
 				winnerMap[i][1] = player.getId();
+				break;
 			}
 		}
 	}

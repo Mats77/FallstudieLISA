@@ -1,5 +1,9 @@
 package Server;
 
+/**
+ * @author Mats
+ *
+ */
 public class PlayerData {
 	private int playerID;
 	private int quartal;
@@ -158,6 +162,10 @@ public class PlayerData {
 
 	public void setAirplanes(int airplanes) {
 		this.airplanes = airplanes;
+	}
+
+	public void setMarketshare(double marketshare) {
+		this.marketshare = marketshare;
 	} 
 
 	

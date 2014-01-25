@@ -16,6 +16,8 @@ public class Handler {
 	private Conn activePlayer;	//Ist das hier notwendig?????
 	private int gameID; // Um Eindeutigkeit des Spiels zu gewährleisten (Wird in alle Conn-Klassen übertragen)
 	private String content;
+	private int[][] winners;
+	private double[][] winnersDouble;
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
@@ -283,12 +285,18 @@ public class Handler {
 	}
 
 	public void notifyWinners(int[][] winnerMap) {	//erster Wert ist jeweils der Wert und zweiter der Spieler
-		// TODO Auto-generated method stub
-		
+		this.winners = winnerMap;	
+	}
+
+	public int[][] getWinners() {
+		return winners;
+	}
+
+	public double[][] getWinnersDouble() {
+		return winnersDouble;
 	}
 
 	public void notifyWinners(double[][] winnerMapDouble) { //erster Wert ist jeweils der Wert und zweiter der Spieler
-		// TODO Auto-generated method stub
-		
+		this.winnersDouble = winnerMapDouble;
 	}
 }

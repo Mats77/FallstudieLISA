@@ -25,14 +25,15 @@ public class PlayerDataCalculatorTest {
 	public void testGeneratePlayers() {
 		connections.add(new Conn(new Socket(), handler));
 		connections.get(0).setNick("Mats1");
+		connections.get(0).setId(0);
 		connections.add(new Conn(new Socket(), handler));
 		connections.get(1).setId(1);
 		connections.get(1).setNick("Mats2");
 		connections.add(new Conn(new Socket(), handler));
-		connections.get(2).setId(1);
+		connections.get(2).setId(2);
 		connections.get(2).setNick("Mats3");
 		connections.add(new Conn(new Socket(), handler));
-		connections.get(3).setId(1);
+		connections.get(3).setId(3);
 		connections.get(3).setNick("Mats4");
 				
 		mechanics.generatePlayers(connections);
