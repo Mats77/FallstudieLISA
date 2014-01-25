@@ -112,7 +112,7 @@ public class PlayerData {
 		return varCosts;
 	}
 
-	public void setVarCosts(int varCosts) {
+	public void setVarCosts(double varCosts) {
 		this.varCosts = varCosts;
 	}
 
