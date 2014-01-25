@@ -85,6 +85,8 @@ public class Mechanics {
 		playerDataCalculator.calcCosts(players);		//Kosten errechnen und vom Cash abziehen
 		playerDataCalculator.calcProfits(players);
 		playerDataCalculator.updateCreditValues(players);
+		market.calcTotalTurnover(players); // Berechnet den gesamten Marktumsatz
+		market.calcMarketSharePerPlayer(players); //Berechnet für jeden Spieler den Marketshare und schreiben es in die PlayerData
 		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
 		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden
 		if(roundsToPlay+1 == quartal)

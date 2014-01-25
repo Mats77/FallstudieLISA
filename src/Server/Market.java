@@ -3,16 +3,35 @@ package Server;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Vector;
+
+import org.junit.internal.runners.model.EachTestNotifier;
 
 public class Market {
 
-	private ArrayList<MarketData> marketData;
-	private OrderPool orderPool = new OrderPool();
 
-	public void calcMarketShare() {
-		calcDev();
-		calcMarketing();
-		// Zusätzlich Zugriff auf GameHistory notwendig
+	private OrderPool orderPool = new OrderPool();
+	private int totalTurnover = 30000; //Init mit 30.000 weil der Init Wert pro Player 75000 ist.
+ 
+	public void calcMarketSharePerPlayer(Player [] players){
+		for (Player player : players) {
+			Vector<PlayerData> data = player.getData();
+			
+			int totalTurnoverSinglePlayer= 0;
+			for (int i = 0; i < data.size(); i++) {
+				totalTurnoverSinglePlayer += data.elementAt(i).getTurnover();
+			}
+				data.lastElement().setMarketshare((double) totalTurnoverSinglePlayer/totalTurnover);
+		}
+	}
+	
+	
+	public void calcTotalTurnover(Player [] players) {
+		
+		for (Player player : players) {
+			Vector<PlayerData> data = player.getData();
+				totalTurnover += data.lastElement().getTurnover();
+		}
 	}
 
 	public void genOrdersForNewRound() {
@@ -106,6 +125,10 @@ public class Market {
 
 	private void calcMarketing() {
 
+	}
+	
+	public int getTotalTurnover(){
+		return totalTurnover;
 	}
 
 	// Für JUnit Test
