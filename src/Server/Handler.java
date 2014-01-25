@@ -128,7 +128,7 @@ public class Handler {
 			content = "";
 		}else if(command.equals("STARTGAME")){
 			String[] clientdata;
-			String answer = "";
+			String answer = "ERROR";
 			clientdata = content.split(":");
 			try{
 			//1. Nutzername überprüfen

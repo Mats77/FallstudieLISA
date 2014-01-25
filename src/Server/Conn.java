@@ -66,6 +66,7 @@ public class Conn {
 	}
 
 	public void setNick(String nick) {
+		System.out.println("Nickname ist: " + nick);
 		this.nick = nick;
 	}
 
