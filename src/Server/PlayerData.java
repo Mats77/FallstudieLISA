@@ -46,12 +46,11 @@ public class PlayerData {
 
 	}//Konstruktor init
 
-	public PlayerData(int id, int production, int marketing, int research, int airplanes, int quartal) {
+	public PlayerData(int id, int production, int marketing, int research, int quartal) {	//
 		this.playerID = id;
 		this.production = production;
 		this.research = research;
 		this.marketing = marketing;
-		this.airplanes = airplanes;
 		this.quartal = quartal;
 	}
 
@@ -166,6 +165,10 @@ public class PlayerData {
 
 	public void setMarketshare(double marketshare) {
 		this.marketshare = marketshare;
+	}
+
+	public void setTurnover(double turnover) {
+		this.turnover = turnover;
 	} 
 
 	

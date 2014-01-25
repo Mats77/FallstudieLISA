@@ -7,7 +7,6 @@ public class Player {
 	private int id;
 	private Vector<PlayerData> data = new Vector<PlayerData>();
 	private boolean readyForNextRound = false;
-	private boolean readyForOrderSelection=false;
 	private int[] tmpValues;
 	private PlayerDataCalculator playerDataCalculator;
 	private Mechanics mechanics;
@@ -37,8 +36,8 @@ public class Player {
 	}
 
 	
-	public void saveNextRoundValues(String values, int quartal) {	//String: Produktion;Marketing;Entwicklung;Anzahl Flugzeuge;Materialstufe;Preis
-		readyForOrderSelection = true;
+	public void saveNextRoundValues(String values, int quartal) {	//String: Produktion;Marketing;Entwicklung;Materialstufe;Preis
+		readyForNextRound = true;
 		int[] insertedValues = new int[values.split(";").length];
 		for(int i=0; i< insertedValues.length; i++)
 		{
@@ -46,12 +45,8 @@ public class Player {
 		}
 		tmpValues = insertedValues;
 		int tmpProduction = (int)data.lastElement().getProduction()+tmpValues[0];	//Produktion ist fortlaufend
-		if(tmpValues[3]<=data.lastElement().getCapacity())
-		{
-			data.add(new PlayerData(id/*,cash*/, tmpProduction, tmpValues[1], tmpValues[2], tmpValues[3],/*tmpValues[4],*/ quartal));
-		} else {//Falls der Spieler mehr produzieren möchte, als er Kapazitäten hat
-			data.add(new PlayerData(id/*,cash*/, tmpProduction, tmpValues[1], tmpValues[2], data.lastElement().getCapacity(),/*tmpValues[4],*/ quartal));
-		}
+		data.add(new PlayerData(id, tmpProduction, insertedValues[1], insertedValues[2], mechanics.getQuartal()));
+		spendMoney(insertedValues[0] + insertedValues[1] + insertedValues[2]);
 		//wird initialisiert mit dem Cash, das am Anfang der runde zur Verfügung stand.
 	}
 	
@@ -78,13 +73,13 @@ public class Player {
 		return readyForNextRound;
 	}
 	
-	public void setReadyForOrderSelection(boolean readyForOrderSelection) {
-		this.readyForOrderSelection = readyForOrderSelection;
-	}
-	
-	public boolean isReadyForOrderSelection() {
-		return readyForOrderSelection;
-	}
+//	public void setReadyForOrderSelection(boolean readyForOrderSelection) {
+//		this.readyForOrderSelection = readyForOrderSelection;
+//	}
+//	
+//	public boolean isReadyForOrderSelection() {
+//		return readyForOrderSelection;
+//	}
 	
 	public int getId()
 	{
@@ -214,5 +209,10 @@ public class Player {
 			}
 		}
 		return false;
+	}
+
+
+	public void insertNewTurnover(double turnover) {
+		data.get(data.size()-1).setTurnover(turnover);
 	}
 }

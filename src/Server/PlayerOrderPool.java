@@ -136,9 +136,12 @@ public class PlayerOrderPool {
 	}
 	
 	public ArrayList<Order> getOrdersToProduce() {
-		ArrayList<Order> toReturn = toProduce;
-		toProduce = toProduceNextRound;
+		return toProduce;
+	}
+
+	public void refreshData() {
+		toProduce = (ArrayList<Order>) toProduceNextRound.clone();
 		toProduceNextRound = new ArrayList<Order>();
-		return toReturn;
+		
 	}
 }
