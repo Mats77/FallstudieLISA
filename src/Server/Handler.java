@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -18,12 +19,14 @@ public class Handler {
 	private String content;
 	private int[][] winners;
 	private double[][] winnersDouble;
+	private ObjectWriter ow;
 
 	// Konstruktor, erstellt direkt Mechanics
 	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
 		this.gameID = gameID;
 		System.out.println("Handler lebt!");
+		ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	}
 
 	// veranlasst das senden einer Nachricht an alle Clients
@@ -100,13 +103,50 @@ public class Handler {
 			}else{
 				return "NOINFOS";
 			}
-		}else if(command.equals("VERIFY")){
-			return "CHECK";
+		}else if(command.equals("GETSTATS")){
+			String values = "";
+			Player[] tmp = mechanics.getPlayers();
+			for (int i = 0; i < tmp.length; i++) {
+				if (activePlayer.getId() == tmp[i].getId()) {
+					Vector<PlayerData> data = tmp[i].getData();
+					for(PlayerData playerdata : data){
+						try {
+							values += ow.writeValueAsString(playerdata);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} // end try catch
+					}// end for playerdata
+					return values;
+				}//end if
+			} // end for players
 		}else if (command.equals("VERIFYFAILED")) {
 			return "VERIFYFAILED";
+		}else if(command.equals("VERIFY")){
+			return "CHECK";
 		}else if(command.equalsIgnoreCase("INVALIDSTRING")){
 			content = "";
-		}}
+		}else if(command.equals("STARTGAME")){
+			String[] clientdata;
+			String answer = "ERROR";
+			clientdata = content.split(":");
+			try{
+			//1. Nutzername überprüfen
+			if(checkNickName(clientdata[0])){
+				activePlayer.setNick(clientdata[0]);
+				answer = "CHECKNICK";
+			}else{
+				answer = "NICKNAMEINUSE";
+			}			
+			//2. Rundenanzahl ( gewüschte Anzahl an Runden)
+			activePlayer.setPrefRound(Integer.getInteger(clientdata[1]));
+			//3. Siegbedingung
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return answer;
+		}
+		}
 		return "INVALIDESTRING";	
 		}
 
@@ -299,5 +339,16 @@ public class Handler {
 
 	public void notifyWinners(double[][] winnerMapDouble) { //erster Wert ist jeweils der Wert und zweiter der Spieler
 		this.winnersDouble = winnerMapDouble;
+	}
+	
+	public Boolean checkNickName(String name){
+		for (Conn conn: connections) {
+			if(conn.getNick().equals(name)){
+				return false;
+			}else if (conn.getNick() == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
