@@ -126,7 +126,27 @@ public class Handler {
 			return "CHECK";
 		}else if(command.equalsIgnoreCase("INVALIDSTRING")){
 			content = "";
-		}}
+		}else if(command.equals("STARTGAME")){
+			String[] clientdata;
+			String answer = "";
+			clientdata = content.split(":");
+			try{
+			//1. Nutzername überprüfen
+			if(checkNickName(clientdata[0])){
+				activePlayer.setNick(clientdata[0]);
+				answer = "CHECKNICK";
+			}else{
+				answer = "NICKNAMEINUSE";
+			}			
+			//2. Rundenanzahl ( gewüschte Anzahl an Runden)
+			activePlayer.setPrefRound(Integer.getInteger(clientdata[1]));
+			//3. Siegbedingung
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			return answer;
+		}
+		}
 		return "INVALIDESTRING";	
 		}
 
@@ -319,5 +339,16 @@ public class Handler {
 
 	public void notifyWinners(double[][] winnerMapDouble) { //erster Wert ist jeweils der Wert und zweiter der Spieler
 		this.winnersDouble = winnerMapDouble;
+	}
+	
+	public Boolean checkNickName(String name){
+		for (Conn conn: connections) {
+			if(conn.getNick().equals(name)){
+				return false;
+			}else if (conn.getNick() == null) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

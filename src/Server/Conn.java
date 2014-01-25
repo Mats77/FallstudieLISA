@@ -17,6 +17,15 @@ public class Conn {
 	private boolean active = true;
 	private Handler handler;
 	private String openMessages;
+	private int prefRound; //bevorzugte Rundenanzahl von Spieler
+
+	public int getPrefRound() {
+		return prefRound;
+	}
+
+	public void setPrefRound(int prefRound) {
+		this.prefRound = prefRound;
+	}
 
 	public Conn(Handler handler) {
 		this.handler = handler;
