@@ -193,4 +193,21 @@ public class Player {
 	public ShortTimeCredit getShortTimeCredit(){
 		return this.shortTimeCredit;
 	}
+	
+	public boolean produceOrder(int orderID){
+		for (Order order : orderPool.getAcceptedOrders()) {
+			if(order.getOrderId()==orderID){
+				if(this.capacityLeft > order.getQuantityLeft()){
+					orderPool.produceOrder(orderID);
+					this.capacityLeft -= order.getQuantityLeft();
+					return true;
+				} else {
+					orderPool.produceOrder(orderID);
+					this.capacityLeft = 0;
+					return false;
+				}
+			}
+		}
+		return false;
+	}
 }

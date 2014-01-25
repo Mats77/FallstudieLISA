@@ -104,10 +104,11 @@ public class Handler {
 			return "CHECK";
 		}else if (command.equals("VERIFYFAILED")) {
 			return "VERIFYFAILED";
+		}else if(command.equalsIgnoreCase("INVALIDSTRING")){
+			content = "";
+		}}
+		return "INVALIDESTRING";	
 		}
-		content = "";
-		return "INVALIDESTRING";
-	}
 
 	private String getCommand(String txt) {
 		// TODO Auto-generated method stub

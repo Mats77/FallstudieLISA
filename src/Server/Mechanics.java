@@ -232,8 +232,6 @@ public class Mechanics {
 		}
 		
 		ordersForNewRound();	//Aufträge verteilen
-		
-
 	}
 
 	//wird aufgerufen, sobald ein Spiel gestartet wird, erstellt die Spieler
@@ -274,6 +272,30 @@ public class Mechanics {
 			startNewRound();
 		}
 			
+	}
+	
+	public void acceptOrder(int playerID, int orderID)
+	{
+		for (Player player : players) {
+			if(player.getId() == playerID)
+			{
+				player.getPlayerOrderPool().acceptOrder(orderID);
+			}
+		}
+	}
+	
+	public boolean produceOrder(int playerID, int orderID){		//liefert true, falls mehr produziert werden dürfen
+		for (Player player : players) {
+			if(player.getId() == playerID)
+			{
+				if(player.produceOrder(orderID)){
+					return true;
+				} else {
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		

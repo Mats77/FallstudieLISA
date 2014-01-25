@@ -9,6 +9,8 @@ public class PlayerOrderPool {
 	private ArrayList<Order> finishedOrders = new ArrayList<Order>();
 	private OrderPool orderPool = null;
 	private Player player;
+	private ArrayList<Order> toProduce = new ArrayList<Order>();
+	private ArrayList<Order> toProduceNextRound = new ArrayList<Order>();
 
 	public PlayerOrderPool(Player player) {
 		this.player = player;
@@ -103,7 +105,24 @@ public class PlayerOrderPool {
 		} // letzt Eingabe des Players
 		
 	}
-
+	
+	public void acceptOrder(int orderID){
+		for (Order order : newOrders) {
+			if(order.getOrderId() == orderID){
+				acceptedOrders.add(order);
+				newOrders.remove(order);
+			}
+		}
+	}
+	
+	public void produceOrder(int orderID)
+	{
+		for (Order order : acceptedOrders) {
+			toProduceNextRound.add(order);
+			acceptedOrders.remove(order);
+		}
+	}
+	
 	public ArrayList<Order> getAcceptedOrders() {
 		return acceptedOrders;
 	}
@@ -115,5 +134,11 @@ public class PlayerOrderPool {
 	public ArrayList<Order> getFinishedOrders() {
 		return finishedOrders;
 	}
-
+	
+	public ArrayList<Order> getOrdersToProduce() {
+		ArrayList<Order> toReturn = toProduce;
+		toProduce = toProduceNextRound;
+		toProduceNextRound = new ArrayList<Order>();
+		return toReturn;
+	}
 }
