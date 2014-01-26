@@ -180,9 +180,10 @@ public class Handler {
 		if(mes.contains("reason")){
 			int beg = mes.lastIndexOf("reason");
 			beg = beg + 7;
+			mes = mes.substring(beg);
 			int end = mes.indexOf("$");
 			String message = "";
-			message = mes.substring(beg, end);
+			message = mes.substring(0, end);
 			return message;
 		}
 		return result;
