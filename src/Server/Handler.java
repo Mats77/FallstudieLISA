@@ -141,7 +141,7 @@ public class Handler {
 				answer = "NICKNAMEINUSE";
 			}			
 			//2. Rundenanzahl ( gewüschte Anzahl an Runden)
-			activePlayer.setPrefRound(Integer.getInteger(clientdata[1]));
+			activePlayer.setPrefRound(Integer.parseInt(clientdata[1]));
 			//3. Siegbedingung
 			}catch(Exception e){
 				e.printStackTrace();
@@ -356,13 +356,15 @@ public class Handler {
 	}
 	
 	public Boolean checkNickName(String name){
+		Boolean answer = false;
 		for (Conn conn: connections) {
 			if(conn.getNick().equals(name)){
-				return false;
-			}else if (conn.getNick() == null) {
-				return true;
+				System.out.println("Nickname in Use");
+				answer = false;
+			}else{
+				answer = true;
 			}
 		}
-		return false;
+		return answer;
 	}
 }
