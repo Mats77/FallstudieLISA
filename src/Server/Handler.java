@@ -153,16 +153,18 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return answer;
-		}else if(command.equals("CHAT")){
+		}else if(command.equals("CHATSEND")){
 			String answer = "ERROR";
-			answer = chatService();
+			answer = chatSendService();
 			return answer;
+		}else if (command.equals("CHATREFRESH")) {
+			return activePlayer.getChatMessages();
 		}
 		
 		return "INVALIDESTRING";	
 	}
 	
-   private String chatService() {
+   private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
 		System.out.println(content);
@@ -186,9 +188,9 @@ public class Handler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			con.setOpenMessages(answer);
+			con.setChatMessages(answer);
 		}
-		return activePlayer.getOpenMessages();
+		return "SENDSUCC";
 	}
 
 private String getCurrentTimeAsString()

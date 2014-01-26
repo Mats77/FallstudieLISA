@@ -17,6 +17,15 @@ public class Conn {
 	private boolean active = true;
 	private Handler handler;
 	private String openMessages;
+	private String chatMessages;
+	public String getChatMessages() {
+		return chatMessages;
+	}
+
+	public void setChatMessages(String chatMessages) {
+		this.chatMessages += chatMessages;
+	}
+
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
 
 	public int getPrefRound() {
