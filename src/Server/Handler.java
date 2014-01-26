@@ -167,8 +167,9 @@ public class Handler {
 		String[] clientdata;
 		System.out.println(content);
 		clientdata = content.split(":");
-		String message = clientdata[1];
-		String avatar = clientdata[0];
+		String message = clientdata[0];
+		System.out.println("Nachricht: " + clientdata[0]);
+		String avatar = clientdata[1];
 		String direction;
 		for(Conn con : connections){
 			if (con == activePlayer) {
@@ -177,12 +178,15 @@ public class Handler {
 				direction = "in";
 			}
 			ChatMessage Message = new ChatMessage(direction, avatar, activePlayer.getNick(), time, message);	
+			String answer = "";
 			try {
-				con.setOpenMessages(ow.writeValueAsString(Message));
-			} catch (IOException e) {
+				answer = ow.writeValueAsString(Message);
+				System.out.println(answer);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			con.setOpenMessages(answer);
 		}
 		return activePlayer.getOpenMessages();
 	}
