@@ -24,7 +24,7 @@ public class Conn {
 	}
 
 	public void setChatMessages(ChatMessage Message) {
-		this.chatMessages.add(Message);
+		chatMessages.add(Message);
 	}
 
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
