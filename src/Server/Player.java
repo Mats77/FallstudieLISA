@@ -24,6 +24,7 @@ public class Player {
 		this.playerDataCalculator = pdc;
 		this.id = (int)id;
 		this.nick = name;
+		this.capacityLeft = 26;
 		data.add(new PlayerData((int)id, 0
 				, 5000, 25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
 		mechanics = m;
@@ -34,6 +35,7 @@ public class Player {
 		//Runde angenommen werden können.
 		orderPool.getOrdersToProduce().add(new Order(26, 1, true));
 		orderPool.getOrdersToProduce().get(0).setPrice(300);
+		this.orderPool.setOrderPool(mechanics.getMarket().getOrderPool());
 	}
 
 	

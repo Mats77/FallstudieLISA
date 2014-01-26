@@ -162,8 +162,10 @@ public class PlayerOrderPool {
 		} else {
 			for(int i = 0; i < toProduce.size() - 1; i++){
 				finishedOrders.add(toProduce.get(i));
+				toProduce.get(i).setQuantityLeft(0);
+				toProduce.remove(i);
 			}
-			toProduce.get(0).setQuantityLeft(player.getData().lastElement().getCapacity()-ctr);
+			toProduce.get(0).setQuantityLeft(ctr - player.getData().lastElement().getCapacity());
 			acceptedOrders.add(toProduce.get(0));
 			toProduce.clear();
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
@@ -173,5 +175,9 @@ public class PlayerOrderPool {
 
 	public CopyOnWriteArrayList<Order> getToProduceNextRound() {
 		return toProduceNextRound;
+	}
+
+	public void setOrderPool(OrderPool orderPool) {
+		this.orderPool = orderPool;
 	}
 }

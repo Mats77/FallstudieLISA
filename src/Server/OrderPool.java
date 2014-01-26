@@ -94,4 +94,10 @@ public class OrderPool {
 		 orderList = new ArrayList<Order>();
 	}
 
+	public ArrayList<Order> getOrderList() {
+		return orderList;
+	}
+	
+	
+
 }
