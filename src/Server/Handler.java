@@ -163,13 +163,14 @@ public class Handler {
 			// set content == data from client (for example input data)
 			// get hole content!
 			try{
-			content = txt.substring(0, tmpend);
+			content = txt.substring(1, tmpend);
 			}catch(Exception e){
 				System.out.println("Kein Inhalt vorhanden");
 			}
 			// if active player found: set active player
 			try{
-			activePlayer = connections.get(Integer.valueOf(gamePlayerId.charAt(0)));
+				System.out.println("Player-ID = " + gamePlayerId.charAt(0));
+				getactivePlayer(gamePlayerId);
 			}catch(Exception e){
 				System.out.println("Player not found");
 				return "VERIFYFAILED";
@@ -185,6 +186,16 @@ public class Handler {
 			return message;
 		}
 		return result;
+	}
+
+	private void getactivePlayer(String gamePlayerId) {
+		for (Conn conn : connections) {
+			if (conn.getId() == gamePlayerId.charAt(0)) {
+				activePlayer = conn;
+				break;
+			}
+		}
+		activePlayer = null;	
 	}
 
 	private String checkOpenMessages() {
