@@ -46,12 +46,14 @@ public class PlayerData {
 
 	}//Konstruktor init
 
-	public PlayerData(int id, int production, int marketing, int research, int quartal) {	//
+	public PlayerData(int id, int production, int marketing, int research, int quartal, int qualityOfMaterial, int pricePerAirplane) {	//
 		this.playerID = id;
 		this.production = production;
 		this.research = research;
 		this.marketing = marketing;
 		this.quartal = quartal;
+		this.qualityOfMaterial = qualityOfMaterial;
+		this.pricePerAirplane = pricePerAirplane;
 	}
 
 	public PlayerData(int id, int quartal, double turnover) {	//Dieser Konstruktor wird jede Runde für jeden Spieler aufgerufen,
@@ -170,6 +172,8 @@ public class PlayerData {
 	public void setTurnover(double turnover) {
 		this.turnover = turnover;
 	} 
+	
+	
 
 	
 }//class

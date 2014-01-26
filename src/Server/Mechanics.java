@@ -69,7 +69,7 @@ public class Mechanics {
 //		return allPlayerReadyForOrderSelection;
 //	}
 	
-	private void endRound(){	
+	public void endRound(){	
 		
 		//neue Werte berechnen für die neuen Aufträge und Investitionsausgaben für F&E, Marketing
 		double[] values = playerDataCalculator.generateNewCompanyValues(players);
@@ -195,7 +195,7 @@ public class Mechanics {
 		}
 	}
 
-	private void ordersForNewRound()
+	public void ordersForNewRound()
 	{	
 		market.genOrdersForNewRound(); 
 		market.splitOrders(players);
@@ -287,6 +287,17 @@ public class Mechanics {
 			if(player.getId() == playerID)
 			{
 				player.getPlayerOrderPool().acceptOrder(orderID);
+				break;
+			}
+		}
+	}
+	
+	public void declineOrder(int playerID, int orderID)
+	{
+		for(Player player : players) {
+			if(player.getId() == playerID){
+				player.getPlayerOrderPool().unacceptOrder(orderID);
+				break;
 			}
 		}
 	}

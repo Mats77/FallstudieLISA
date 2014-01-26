@@ -97,7 +97,7 @@ public class PlayerDataCalculator {
 		for (Player player : players) {
 			double turnover = 0;
 			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
-				turnover += order.getPricePerAirplane()*order.getTotalQuantity();
+				turnover += order.getPricePerAirplane()*order.getQuantityLeft();
 			}			
 			player.getPlayerOrderPool().refreshData();
 			player.insertNewTurnover(turnover);
@@ -118,6 +118,12 @@ public class PlayerDataCalculator {
 				productionInvestment = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
 			}
 			player.spendMoney(productionInvestment);
+			player.setCapacityLeft(quartalData.getCapacity());
+			int ctr = 0;
+			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
+				ctr += order.getQuantityLeft();
+			}
+			player.getData().lastElement().setAirplanes(ctr);
 		}
 	}
 	
