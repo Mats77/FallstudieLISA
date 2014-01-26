@@ -75,15 +75,11 @@ public class Handler {
 				return s;
 			}
 			return "WAITFORPLAYER";
-
-			// Ein Client fragt einen Nickname an
 		} else if (command.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
-		} else if (command.startsWith("PLAYERNAME")) {
-
-		} else if (command.startsWith("CREDIT")) {
+		}else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
 		}else if(command.startsWith("ORDERINPUT")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
@@ -158,7 +154,20 @@ public class Handler {
 			answer = chatSendService();
 			return answer;
 		}else if (command.equals("CHATREFRESH")) {
-			return activePlayer.getChatMessages();
+			String answer = "";
+			try {
+				answer = ow.writeValueAsString(activePlayer.getChatMessages());
+			} catch (JsonGenerationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return answer;
 		}
 		
 		return "INVALIDESTRING";	
@@ -173,7 +182,6 @@ public class Handler {
 		System.out.println("Nachricht: " + clientdata[0]);
 		String avatar = clientdata[1];
 		String direction;
-		String answer = "";
 		for(Conn con : connections){
 			if (con == activePlayer) {
 				direction = "out";
@@ -181,20 +189,9 @@ public class Handler {
 				direction = "in";
 			}
 			ChatMessage Message = new ChatMessage(direction, avatar, activePlayer.getNick(), time, message);	
-			try {
-				answer = ow.writeValueAsString(Message);
-				System.out.println(answer);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				answer = "UUUPSITDIDNTWORK";
-				e.printStackTrace();
-			}finally{
-				con.setChatMessages(answer);
-				answer = "SENDSUCC";
-			}
-
+			con.setChatMessages(Message);
 		}
-		return answer;
+		return "SENDSUCC";
 	}
 
 private String getCurrentTimeAsString()

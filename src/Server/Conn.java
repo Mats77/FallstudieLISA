@@ -2,6 +2,7 @@ package Server;
 
 
 import java.net.Socket;
+import java.util.Vector;
 
 
 /**
@@ -17,13 +18,13 @@ public class Conn {
 	private boolean active = true;
 	private Handler handler;
 	private String openMessages;
-	private String chatMessages;
-	public String getChatMessages() {
+	private Vector<ChatMessage> chatMessages;
+	public Vector getChatMessages() {
 		return chatMessages;
 	}
 
-	public void setChatMessages(String chatMessages) {
-		this.chatMessages += chatMessages;
+	public void setChatMessages(ChatMessage Message) {
+		this.chatMessages.add(Message);
 	}
 
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
