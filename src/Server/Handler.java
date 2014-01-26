@@ -1,9 +1,13 @@
 package Server;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.TimeZone;
 import java.util.Vector;
 
 import org.codehaus.jackson.JsonGenerationException;
@@ -58,7 +62,7 @@ public class Handler {
 			}else{
 				return result;				
 			}
-		} else if (command.startsWith("READY ")) {
+		} else if (command.startsWith("READY")) {
 			String s = "";
 			activePlayer.setReady(true);
 			if (areAllReady()) {
@@ -149,10 +153,46 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return answer;
+		}else if(command.equals("CHAT")){
+			String answer = "ERROR";
+			answer = chatService();
+			return answer;
 		}
 		
 		return "INVALIDESTRING";	
+	}
+	
+   private String chatService() {
+		String time = getCurrentTimeAsString();
+		String[] clientdata;
+		System.out.println(content);
+		clientdata = content.split(":");
+		String message = clientdata[1];
+		String avatar = clientdata[0];
+		String direction;
+		for(Conn con : connections){
+			if (con == activePlayer) {
+				direction = "out";
+			}else{
+				direction = "in";
+			}
+			ChatMessage Message = new ChatMessage(direction, avatar, activePlayer.getNick(), time, message);	
+			try {
+				con.setOpenMessages(ow.writeValueAsString(Message));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
+		return activePlayer.getOpenMessages();
+	}
+
+private String getCurrentTimeAsString()
+	  {
+	    DateFormat formatter = new SimpleDateFormat("HH:mm:ss"); 
+	    formatter.setTimeZone(TimeZone.getTimeZone("GMT+2:00"));
+	    return formatter.format(new Date());
+	  }
 
 	private String getCommand(String txt) {
 		// TODO Auto-generated method stub
