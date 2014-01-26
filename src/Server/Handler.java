@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -128,7 +129,9 @@ public class Handler {
 		}else if(command.equals("STARTGAME")){
 			String[] clientdata;
 			String answer = "ERROR";
+			System.out.println(content);
 			clientdata = content.split(":");
+			System.out.println("Arraydaten: 1. Länge " + clientdata.length + " 2. Inhalt " + Arrays.toString(clientdata) );
 			try{
 			//1. Nutzername überprüfen
 			if(checkNickName(clientdata[0])){
