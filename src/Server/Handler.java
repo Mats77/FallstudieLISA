@@ -197,7 +197,7 @@ public class Handler {
 	private void getactivePlayer(String gamePlayerId) {
 		for (Conn conn : connections) {
 			System.out.println(conn.getId() + " Id empfangen: " + gamePlayerId.charAt(0));
-			if (conn.getId() == gamePlayerId.charAt(0)) {
+			if (conn.getId() == Integer.parseInt(gamePlayerId.substring(0, 0))) {
 				activePlayer = conn;
 				System.out.println("AktivPlayer gesetzt!");
 				break;
