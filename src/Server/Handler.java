@@ -200,8 +200,7 @@ public class Handler {
 				activePlayer = conn;
 				break;
 			}
-		}
-		activePlayer = null;	
+		}	
 	}
 
 	private String checkOpenMessages() {
