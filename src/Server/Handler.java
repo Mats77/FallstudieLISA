@@ -78,7 +78,6 @@ public class Handler {
 		} else if (command.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
-												//Produktion;Marketing;Entwicklung;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
 		}else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,

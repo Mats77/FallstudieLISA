@@ -20,7 +20,12 @@ public class hobbyclient {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String[] test = {"AUTHORIZEME ", "REFRESH ", "READY "};
+		String[] test = {"GET /reason=AUTHORIZEME$ HTTP/1.1",
+						 "GET /?payload=1+3:abc:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
+						 "GET /reason=AUTHORIZEME$ HTTP/1.1",
+						 "GET /?payload=2+3:abcd:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
+						 "GET /reason=AUTHORIZEME$ HTTP/1.1",
+						 "GET /?payload=3+3:abcde:12:wintype2$&reason=STARTGAME$ HTTP/1.1"};
 		String user = "";
 		System.out.println("Client startet");
 		try {
@@ -46,7 +51,7 @@ public class hobbyclient {
 					System.out.println("Wartet auf Antwort");
 					while (!(txt = in.readLine()).equals("")) {
 						input.add(txt);
-						System.out.println("Client empfängt: " + txt);
+						System.out.println("Client empfï¿½ngt: " + txt);
 					}
 					
 					String ans = "";
