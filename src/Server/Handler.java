@@ -135,7 +135,9 @@ public class Handler {
 			try{
 			//1. Nutzername überprüfen
 			if(checkNickName(clientdata[0])){
-				activePlayer.setNick(clientdata[0]);
+				String name = clientdata[0];
+				System.out.println("My name is ... " + name);
+				activePlayer.setNick(name);
 				answer = "CHECKNICK";
 			}else{
 				answer = "NICKNAMEINUSE";
