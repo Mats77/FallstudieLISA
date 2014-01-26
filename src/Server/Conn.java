@@ -18,24 +18,8 @@ public class Conn {
 	private boolean active = true;
 	private Handler handler;
 	private String openMessages;
-	private Vector<ChatMessage> chatMessages;
-	public Vector getChatMessages() {
-		return chatMessages;
-	}
-
-	public void setChatMessages(ChatMessage Message) {
-		chatMessages.add(Message);
-	}
-
+	private Vector<ChatMessage> chatMessages = new Vector<ChatMessage>();
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
-
-	public int getPrefRound() {
-		return prefRound;
-	}
-
-	public void setPrefRound(int prefRound) {
-		this.prefRound = prefRound;
-	}
 
 	public Conn(Handler handler) {
 		this.handler = handler;
@@ -74,12 +58,28 @@ public class Conn {
 	public String getNick() {
 		return nick;
 	}
+	
+	public Vector getChatMessages() {
+		return chatMessages;
+	}
+
+	public void setChatMessages(ChatMessage Message) {
+		chatMessages.add(Message);
+	}
+
 
 	public void setNick(String nick) {
 		System.out.println("Nickname ist: " + nick);
 		this.nick = nick;
 	}
 
+	public int getPrefRound() {
+		return prefRound;
+	}
+
+	public void setPrefRound(int prefRound) {
+		this.prefRound = prefRound;
+	}
 
 	// NUR FÜRS TESTEN!!!!
 	public void setId(int id) {
