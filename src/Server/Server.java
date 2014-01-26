@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 
@@ -50,7 +51,7 @@ class Server{
 					}	
 					String tmp = "";
 					for (int i = 0; i < input.size(); i++) {
-						tmp += input.get(i);						
+						tmp += URLDecoder.decode(input.get(i), "utf-8");						
 					}
 					// Inhalt erstellen
 					txtout = handler.handleString(tmp);

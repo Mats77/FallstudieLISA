@@ -75,9 +75,14 @@ public class Handler {
 				return s;
 			}
 			return "WAITFORPLAYER";
-		} else if (command.startsWith("VALUES")) { // String:
-												// Produktion;Marketing;Entwicklung;Anzahl
-												// Flgzeuge;Materialstufe;Preis
+		} else if (command.startsWith("VALUES")) { // String: Produktion;Marketing;Entwicklung;Materialstufe;Preis an Player
+			Player[] players = mechanics.getPlayers();
+			for(Player player : players){
+				if (player.getId() == activePlayer.getId()) {
+					player.saveNextRoundValues(content, mechanics.getQuartal() );
+				}
+			}
+												// Flugzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
 		}else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
@@ -354,8 +359,8 @@ private String getCurrentTimeAsString()
 	private void refreshPlayerOrderPool(String txt, int playerId){
 	
 	
-		String produce= txt.split(" ")[2];
-		String accepted = txt.split(" ")[4];
+		String produce= txt.split(";")[2];
+		String accepted = txt.split(";")[4];
 		
 		String orderIdToProduce [] = produce.split(",");
 		String orderIdAccepted [] = accepted.split(",");
