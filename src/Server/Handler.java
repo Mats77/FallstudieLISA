@@ -78,6 +78,7 @@ public class Handler {
 		} else if (command.startsWith("VALUES")) { // String:
 												// Produktion;Marketing;Entwicklung;Anzahl
 												// Flgzeuge;Materialstufe;Preis
+												//Produktion;Marketing;Entwicklung;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
 		}else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
@@ -188,8 +189,8 @@ public class Handler {
 			}else{
 				direction = "in";
 			}
-			ChatMessage Message = new ChatMessage(direction, avatar, activePlayer.getNick(), time, message);	
-			con.setChatMessages(Message);
+			ChatMessage tmp = new ChatMessage(direction, avatar, activePlayer.getNick(), time, message);	
+			con.setChatMessages(tmp);
 		}
 		return "SENDSUCC";
 	}
