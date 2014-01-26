@@ -11,7 +11,7 @@ import java.net.Socket;
 public class Conn {
 
 	private int id;
-	private String nick;
+	private String nick ="";
 	private int gameID;
 	private boolean ready = false;
 	private boolean active = true;
