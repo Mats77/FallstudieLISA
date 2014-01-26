@@ -173,6 +173,7 @@ public class Handler {
 		System.out.println("Nachricht: " + clientdata[0]);
 		String avatar = clientdata[1];
 		String direction;
+		String answer = "";
 		for(Conn con : connections){
 			if (con == activePlayer) {
 				direction = "out";
@@ -180,17 +181,20 @@ public class Handler {
 				direction = "in";
 			}
 			ChatMessage Message = new ChatMessage(direction, avatar, activePlayer.getNick(), time, message);	
-			String answer = "";
 			try {
 				answer = ow.writeValueAsString(Message);
 				System.out.println(answer);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				answer = "UUUPSITDIDNTWORK";
 				e.printStackTrace();
+			}finally{
+				con.setChatMessages(answer);
+				answer = "SENDSUCC";
 			}
-			con.setChatMessages(answer);
+
 		}
-		return "SENDSUCC";
+		return answer;
 	}
 
 private String getCurrentTimeAsString()
