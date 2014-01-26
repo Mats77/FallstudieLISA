@@ -43,14 +43,15 @@ class Server{
 					// String entgegennehmen (können mehrere Zeilen sein)
 					try{
 					while(!(txtin = in.readLine()).equals("")) {
-						System.out.println(txtin);
+						if (txtin.contains("GET")) {
+							System.out.println(txtin);	
+						}
 						input.add(txtin);
 					}	
 					String tmp = "";
 					for (int i = 0; i < input.size(); i++) {
 						tmp += input.get(i);						
 					}
-					System.out.println(tmp);
 					// Inhalt erstellen
 					txtout = handler.handleString(tmp);
 					}catch(Exception e){
