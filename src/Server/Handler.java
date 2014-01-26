@@ -178,7 +178,7 @@ public class Handler {
 				getactivePlayer(gamePlayerId);
 			}catch(Exception e){
 				System.out.println("Player not found");
-				return "VERIFYFAILED";
+				return "PLAYERNOTFOUND";
 			}
 		}
 		// get reason-command
@@ -196,8 +196,8 @@ public class Handler {
 
 	private void getactivePlayer(String gamePlayerId) {
 		for (Conn conn : connections) {
-			System.out.println(conn.getId() + " Id empfangen: " + gamePlayerId.charAt(0));
-			if (conn.getId() == Integer.parseInt(gamePlayerId.substring(0, 0))) {
+			System.out.println(conn.getId() + " Id empfangen: " + gamePlayerId.substring(0, 1));
+			if (conn.getId() == Integer.parseInt(gamePlayerId.substring(0, 1))) {
 				activePlayer = conn;
 				System.out.println("AktivPlayer gesetzt!");
 				break;
