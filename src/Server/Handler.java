@@ -246,7 +246,15 @@ private String getCurrentTimeAsString()
 	}
 
 	private String checkOpenMessages() {
-		return activePlayer.getOpenMessages();
+		String tmp;
+		try{
+			tmp = activePlayer.getOpenMessages();
+		}catch(Exception e){
+			tmp = "NONEWS";
+		}
+			return tmp;
+		
+
 	}
 
 	private boolean anzPlayer() {
