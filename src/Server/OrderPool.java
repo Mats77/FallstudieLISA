@@ -33,10 +33,10 @@ public class OrderPool {
 		 */
 
 		do {
-			int qty = 1 + (int) (Math.random() * 35); // Ermittelt eine
+			int qty = 1 + (int) (Math.random() * 20); // Ermittelt eine
 														// Stückzahl zwischen 1
-														// und 71 stk. Stat.
-														// Mittel => 35,5
+														// und 21 stk. Stat.
+														
 			qtyQuartal += qty;
 			orderList.add(new Order(qty, quartal));
 			System.out.println(qty);

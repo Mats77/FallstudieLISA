@@ -31,7 +31,7 @@ public class hobbyclient {
 		try {
 			for (int i = 0; i < test.length; i++) {
 				try {
-					socket = new Socket("localhost", 8081);
+					socket = new Socket("127.0.0.1", 8080);
 					in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					out = new PrintWriter(socket.getOutputStream());
 					System.out.println("Verbindung hergestellt");
