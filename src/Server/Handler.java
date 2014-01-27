@@ -162,7 +162,7 @@ public class Handler {
 			String answer = "ERROR";
 			answer = chatSendService();
 			return answer;
-		}else if (command.equals("CHAT")) {
+		}else if (command.equals("CHATREFRESH")) {
 			String answer = "";
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
