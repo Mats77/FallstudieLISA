@@ -180,4 +180,21 @@ public class PlayerOrderPool {
 	public void setOrderPool(OrderPool orderPool) {
 		this.orderPool = orderPool;
 	}
+	
+	public CopyOnWriteArrayList<Order> getOrdersToDisplay()
+	{
+		CopyOnWriteArrayList<Order> toReturn = new CopyOnWriteArrayList<Order>();
+		toReturn = (CopyOnWriteArrayList<Order>) toProduce.clone();
+		toReturn.add(null);
+		
+		for (Order order : toProduceNextRound) {
+			toReturn.add(order);
+		}
+		toReturn.add(null);
+		
+		for (Order order : acceptedOrders) {
+			toReturn.add(order);
+		}
+		return toReturn;
+	}
 }
