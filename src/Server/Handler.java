@@ -138,14 +138,12 @@ public class Handler {
 			for (int i = 0; i < tmp.length; i++) {
 				if (activePlayer.getId() == tmp[i].getId()) {
 					Vector<PlayerData> data = tmp[i].getData();
-					for (PlayerData playerdata : data) {
 						try {
-							values += ow.writeValueAsString(playerdata);
+							values = ow.writeValueAsString(data);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} // end try catch
-					}// end for playerdata
 					return values;
 				}// end if
 			} // end for players
