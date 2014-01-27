@@ -20,6 +20,7 @@ public class Conn {
 	private Handler handler;
 	private CopyOnWriteArrayList<Order> openNewOrders = new CopyOnWriteArrayList<Order>();
 	private Vector<ChatMessage> chatMessages = new Vector<ChatMessage>();
+	private CopyOnWriteArrayList<Order> acceptedOrders = new CopyOnWriteArrayList<Order>();
 	private String openMessage;
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
 
@@ -127,6 +128,15 @@ public class Conn {
 	public void setOpenMessage(String openMessage) {
 		this.openMessage = openMessage;
 	}
+	
+	public CopyOnWriteArrayList<Order> getAcceptedOrders() {
+		return acceptedOrders;
+	}
+
+	public void setAcceptedOrders(CopyOnWriteArrayList<Order> acceptedOrders) {
+		this.acceptedOrders = acceptedOrders;
+	}
+
 
 	
 }
