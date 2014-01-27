@@ -316,6 +316,10 @@ private String getCurrentTimeAsString()
 		}
 		return toReturn;
 	}
+	
+	public void setPlayerOrderPoolActivOrders(Conn conn){
+		
+	}
 
 	public void setPlayerOrderPoolNewOrders(Conn conn) {
 		// von Conn auf Player schlie�en
@@ -389,7 +393,8 @@ private String getCurrentTimeAsString()
 	//Aktualisiert den PlayerOrderPool der Spieler mit den neu angenommen und den kommend produzierenden Orders
 	private void refreshPlayerOrderPool(String txt, int playerId){
 	
-	
+		System.out.println(txt);
+		System.out.println(content);
 		String produce= txt.split(";")[2];
 		String accepted = txt.split(";")[4];
 		
