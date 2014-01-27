@@ -43,6 +43,7 @@ public class Handler {
 	}
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
+	@SuppressWarnings("static-access")
 	public String handleString(String txt) {
 		// Zun�chst wird der Spieler zugewiesen
 		//int activPlayerID = Integer.parseInt(txt.substring(0, 1));

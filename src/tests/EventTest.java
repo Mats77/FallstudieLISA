@@ -6,7 +6,6 @@ import java.net.Socket;
 import java.util.Vector;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Server.Conn;

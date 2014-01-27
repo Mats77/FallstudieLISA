@@ -1,6 +1,5 @@
 package Server;
 
-import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayerOrderPool {
@@ -146,6 +145,7 @@ public class PlayerOrderPool {
 		return toProduce;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void refreshData() {
 		int ctr=0;
 		for (Order order : toProduce) {
