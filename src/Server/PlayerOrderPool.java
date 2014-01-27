@@ -109,6 +109,7 @@ public class PlayerOrderPool {
 	public void acceptOrder(int orderID){
 		for (Order order : newOrders) {
 			if(order.getOrderId() == orderID){
+				order.setStatus(2);
 				acceptedOrders.add(order);
 				newOrders.remove(order);
 				order.setPrice(player.getData().lastElement().getPricePerAirplane());
@@ -159,6 +160,9 @@ public class PlayerOrderPool {
 				toProduce.remove(order);
 			}
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
+			for (Order order : toProduce) {
+				order.setStatus(1);
+			}
 			toProduceNextRound = new CopyOnWriteArrayList<Order>();
 		} else {
 			for(int i = 0; i < toProduce.size() - 1; i++){
