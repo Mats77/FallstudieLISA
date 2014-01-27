@@ -104,8 +104,6 @@ public class Handler {
 			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
 			refreshPlayerProduceOrderPool();
-		} else if (command.equals("PRODUCE")){
-			setOrdersToProduce();
 			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
 			String tmp = "";
 			try {
@@ -115,6 +113,9 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return tmp;
+		} else if (command.equals("PRODUCE")){
+			setOrdersToProduce();
+			return "PRODUCESUCC";
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
 			Boolean newRound = false;
