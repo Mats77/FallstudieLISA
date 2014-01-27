@@ -267,20 +267,20 @@ public class Mechanics {
 		return null;
 	}
 	
-	//Wird vom Handler aufgerufen wenn der Client mit der Selektion seiner Orders fertig ist.
-	public void refreshPlayerOrderPool(int playerID, int [] orderByIdToProduce, int [] orderByIdAccepted){
-		players[playerID].setReadyForNextRound(true);
-		players[playerID].newOrdersToProduce(orderByIdToProduce);
-		players[playerID].newOrdersAccepted(orderByIdAccepted);
-		
-		//Wenn alle Spieler mit ihrer Auftragsbearbeitung fertig sind, wird die Runde ausgwertet und eine neue gestartet.
-		if(allPlayerReadyForNextRound())
-		{	
-			endRound();
-			startNewRound();
-		}
-			
-	}
+//	//Wird vom Handler aufgerufen wenn der Client mit der Selektion seiner Orders fertig ist.
+//	public void refreshPlayerOrderPool(int playerID, int [] orderByIdToProduce, int [] orderByIdAccepted){
+//		players[playerID].setReadyForNextRound(true);
+//		players[playerID].newOrdersToProduce(orderByIdToProduce);
+//		players[playerID].newOrdersAccepted(orderByIdAccepted);
+//		
+//		//Wenn alle Spieler mit ihrer Auftragsbearbeitung fertig sind, wird die Runde ausgwertet und eine neue gestartet.
+//		if(allPlayerReadyForNextRound())
+//		{	
+//			endRound();
+//			startNewRound();
+//		}
+//			
+//	}
 	
 	public void acceptOrder(int playerID, int orderID)
 	{
