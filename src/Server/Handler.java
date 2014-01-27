@@ -103,6 +103,7 @@ public class Handler {
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
 			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
+			System.out.println("Get Orders");
 			refreshPlayerProduceOrderPool();
 			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
 			String tmp = "";
@@ -255,6 +256,7 @@ public class Handler {
 			// get hole content!
 			try {
 				content = txt.substring(1, tmpend);
+				System.out.println(content);
 			} catch (Exception e) {
 				System.out.println("Kein Inhalt vorhanden");
 			}
@@ -275,6 +277,7 @@ public class Handler {
 			int end = mes.indexOf("$");
 			String message = "";
 			message = mes.substring(0, end);
+			System.out.println("Reason =  " + message);
 			return message;
 		}
 		return result;
