@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -84,6 +85,7 @@ public class Handler {
 			}
 												// Flugzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
+			return "VALUESSUCC";
 		}else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 																		// Laufzeit
@@ -303,8 +305,8 @@ private String getCurrentTimeAsString()
 	}
 
 	public void sendPlayerOrderPool(int playerID, PlayerOrderPool playerOderPool) {
-		ArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
-		ArrayList<Order> newOrders = playerOderPool.getNewOrders();
+		CopyOnWriteArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
+		CopyOnWriteArrayList<Order> newOrders = playerOderPool.getNewOrders();
 		
 		// Dies ist nur ein Test!
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
