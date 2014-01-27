@@ -54,19 +54,18 @@ public class CompanyValueTest {
 	@Test
 	public void testCompanyValues(){
 		
-		mechanics.valuesInserted("1000;500;9500;2", "Mats1");
-		mechanics.valuesInserted("1000;4000;6000;2", "Mats2");
-		mechanics.valuesInserted("1000;5000;5000;2", "Mats3");
-		System.out.println(mechanics.getQuartal());
-		mechanics.valuesInserted("1000;5500;4500;2", "Mats4");
+		mechanics.valuesInserted("1000;500;9500;2;300", "Mats1");
+		mechanics.valuesInserted("1000;4000;6000;2;300", "Mats2");
+		mechanics.valuesInserted("1000;5000;5000;2;300", "Mats3");
+		mechanics.valuesInserted("1000;5500;4500;2;300", "Mats4");
 		
 		double[] values = pdc.generateNewCompanyValues(mechanics.getPlayers());
 		
 		Player[] players= mechanics.getPlayers();
-		assertEquals(12885, values[0],1);
-		assertEquals(13598.2857, values[1],1);
-		assertEquals(11785, values[2],1);
-		assertEquals(11000, values[3],1);
+		assertEquals(444.52, values[0],1);
+		assertEquals(468.29, values[1],1);
+		assertEquals(407.86, values[2],1);
+		assertEquals(381.66, values[3],1);
 	}
 	
 	@Test
@@ -74,10 +73,10 @@ public class CompanyValueTest {
 		
 		
 		//round1
-		mechanics.valuesInserted("1000;1000;1111;2", "Mats1");	//??, Marketing, Research, Anzahl, Material; Spieler
-		mechanics.valuesInserted("1000;2000;2222;2", "Mats2");
-		mechanics.valuesInserted("1000;3000;3333;2", "Mats3");
-		mechanics.valuesInserted("1000;10000;4444;2", "Mats4");
+		mechanics.valuesInserted("1000;1000;1111;2;300", "Mats1");	//??, Marketing, Research, Anzahl, Material; Spieler
+		mechanics.valuesInserted("1000;2000;2222;2;300", "Mats2");
+		mechanics.valuesInserted("1000;3000;3333;2;300", "Mats3");
+		mechanics.valuesInserted("1000;10000;4444;2;300", "Mats4");
 		
 		Player[] players= mechanics.getPlayers();
 		
@@ -96,16 +95,16 @@ public class CompanyValueTest {
 	public void testValuesInsertedAfterTwoRounds(){
 		//round1
 		
-		mechanics.valuesInserted("1000;1000;1111;2", "Mats1");
-		mechanics.valuesInserted("1000;2000;2222;2", "Mats2");
-		mechanics.valuesInserted("1000;3000;3333;2", "Mats3");
-		mechanics.valuesInserted("1000;10000;4444;2", "Mats4");
+		mechanics.valuesInserted("1000;1000;1111;2;300", "Mats1");
+		mechanics.valuesInserted("1000;2000;2222;2;300", "Mats2");
+		mechanics.valuesInserted("1000;3000;3333;2;300", "Mats3");
+		mechanics.valuesInserted("1000;10000;4444;2;300", "Mats4");
 		
 		//round2
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats1");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats2");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats3");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats4");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats1");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats2");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats3");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats4");
 		
 		Player[] players= mechanics.getPlayers();
 		
@@ -125,29 +124,29 @@ public class CompanyValueTest {
 		
 		
 		//round1
-		mechanics.valuesInserted("1000;1000;1111;2", "Mats1");
-		mechanics.valuesInserted("1000;2000;2222;2", "Mats2");
-		mechanics.valuesInserted("1000;3000;3333;2", "Mats3");
-		mechanics.valuesInserted("1000;10000;4444;2", "Mats4");
+		mechanics.valuesInserted("1000;1000;1111;2;300", "Mats1");
+		mechanics.valuesInserted("1000;2000;2222;2;300", "Mats2");
+		mechanics.valuesInserted("1000;3000;3333;2;300", "Mats3");
+		mechanics.valuesInserted("1000;10000;4444;2;300", "Mats4");
 		
 		//round2
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats1");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats2");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats3");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats4");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats1");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats2");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats3");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats4");
 		
 		
 		//round3
-		mechanics.valuesInserted("1000;6754;2343;2", "Mats1");
-		mechanics.valuesInserted("1000;5478;1224;2", "Mats2");
-		mechanics.valuesInserted("1000;9882;23467;2", "Mats3");
-		mechanics.valuesInserted("1000;23472;2347;2", "Mats4");
+		mechanics.valuesInserted("1000;6754;2343;2;300", "Mats1");
+		mechanics.valuesInserted("1000;5478;1224;2;300", "Mats2");
+		mechanics.valuesInserted("1000;9882;23467;2;300", "Mats3");
+		mechanics.valuesInserted("1000;23472;2347;2;300", "Mats4");
 		
 		//round4
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats1");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats2");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats3");
-		mechanics.valuesInserted("1000;1000;1000;2", "Mats4");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats1");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats2");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats3");
+		mechanics.valuesInserted("1000;1000;1000;2;300", "Mats4");
 		
 		
 		Player[] players= mechanics.getPlayers();

@@ -77,8 +77,16 @@ public class PlayerDataCalculator {
 			if(erg < marketing + research){
 				erg = marketing+research;
 			}
-			companyValues[i]=erg;
+			companyValues[i] = erg;
 			companyValues[i] += players[i].getReliability()*50;
+			companyValues[i] /= (players[i].getData().lastElement().getPricePerAirplane()/10);
+			int ctr = 0;
+			double value = 0;
+			for (PlayerData data : players[i].getData()) {
+				ctr++;
+				value += data.getQualityOfMaterial();
+			}
+			companyValues[i] += (value/ctr)*10;
 			// muss noch mit dem Preis in Verbindung gebracht werden;
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
 		return companyValues;
@@ -97,7 +105,7 @@ public class PlayerDataCalculator {
 		for (Player player : players) {
 			double turnover = 0;
 			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
-				turnover += order.getPricePerAirplane()*order.getTotalQuantity();
+				turnover += order.getPricePerAirplane()*order.getQuantityLeft();
 			}			
 			player.getPlayerOrderPool().refreshData();
 			player.insertNewTurnover(turnover);
@@ -118,6 +126,12 @@ public class PlayerDataCalculator {
 				productionInvestment = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
 			}
 			player.spendMoney(productionInvestment);
+			player.setCapacityLeft(quartalData.getCapacity());
+			int ctr = 0;
+			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
+				ctr += order.getQuantityLeft();
+			}
+			player.getData().lastElement().setAirplanes(ctr);
 		}
 	}
 	

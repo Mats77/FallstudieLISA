@@ -21,17 +21,17 @@ public class hobbyclient {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String[] test = {"GET /reason=AUTHORIZEME$ HTTP/1.1",
-						 "GET /?payload=1+3:abc:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
+						 "GET /?payload=2+3:abc:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
 						 "GET /reason=AUTHORIZEME$ HTTP/1.1",
-						 "GET /?payload=2+3:abcd:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
+						 "GET /?payload=3+3:abcd:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
 						 "GET /reason=AUTHORIZEME$ HTTP/1.1",
-						 "GET /?payload=3+3:abcde:12:wintype2$&reason=STARTGAME$ HTTP/1.1"};
+						 "GET /?payload=4+3:abcde:12:wintype2$&reason=STARTGAME$ HTTP/1.1"};
 		String user = "";
 		System.out.println("Client startet");
 		try {
 			for (int i = 0; i < test.length; i++) {
 				try {
-					socket = new Socket("localhost", 8080);
+					socket = new Socket("127.0.0.1", 8080);
 					in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					out = new PrintWriter(socket.getOutputStream());
 					System.out.println("Verbindung hergestellt");
@@ -62,12 +62,11 @@ public class hobbyclient {
 						user = ans;
 					}
 					System.out.println(ans);
-				} catch (Exception e) {
-					// TODO: handle exception
-				}finally{
 					in.close();
 					out.close();
 					socket.close();
+				} catch (Exception e) {
+					// TODO: handle exception
 				}
 			}
 

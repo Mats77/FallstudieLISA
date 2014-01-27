@@ -24,6 +24,7 @@ public class Player {
 		this.playerDataCalculator = pdc;
 		this.id = (int)id;
 		this.nick = name;
+		this.capacityLeft = 26;
 		data.add(new PlayerData((int)id, 0
 				, 5000, 25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
 		mechanics = m;
@@ -32,7 +33,9 @@ public class Player {
 		//jeder beginnt mit einem Auftrag, der die komplette Kapazität ausschöpft, 
 		//da in der ersten Runde nur Aufträge für die Zweite 
 		//Runde angenommen werden können.
-		orderPool.getOrdersToProduce().add(new Order(26, 1));
+		orderPool.getOrdersToProduce().add(new Order(26, 1, true));
+		orderPool.getOrdersToProduce().get(0).setPrice(300);
+		this.orderPool.setOrderPool(mechanics.getMarket().getOrderPool());
 	}
 
 	
@@ -45,7 +48,7 @@ public class Player {
 		}
 		tmpValues = insertedValues;
 		int tmpProduction = (int)data.lastElement().getProduction()+tmpValues[0];	//Produktion ist fortlaufend
-		data.add(new PlayerData(id, tmpProduction, insertedValues[1], insertedValues[2], mechanics.getQuartal()));
+		data.add(new PlayerData(id, tmpProduction, insertedValues[1], insertedValues[2], mechanics.getQuartal(), insertedValues[3], insertedValues[4]));
 		spendMoney(insertedValues[0] + insertedValues[1] + insertedValues[2]);
 		//wird initialisiert mit dem Cash, das am Anfang der runde zur Verfügung stand.
 	}

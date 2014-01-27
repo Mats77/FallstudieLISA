@@ -1,16 +1,17 @@
 package Server;
 
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayerOrderPool {
 
-	private ArrayList<Order> acceptedOrders = new ArrayList<Order>();
-	private ArrayList<Order> newOrders = new ArrayList<Order>();
-	private ArrayList<Order> finishedOrders = new ArrayList<Order>();
+	private CopyOnWriteArrayList<Order> acceptedOrders = new CopyOnWriteArrayList<Order>();
+	private CopyOnWriteArrayList<Order> newOrders = new CopyOnWriteArrayList<Order>();
+	private CopyOnWriteArrayList<Order> finishedOrders = new CopyOnWriteArrayList<Order>();
 	private OrderPool orderPool = null;
 	private Player player;
-	private ArrayList<Order> toProduce = new ArrayList<Order>();
-	private ArrayList<Order> toProduceNextRound = new ArrayList<Order>();
+	private CopyOnWriteArrayList<Order> toProduce = new CopyOnWriteArrayList<Order>();
+	private CopyOnWriteArrayList<Order> toProduceNextRound = new CopyOnWriteArrayList<Order>();
 
 	public PlayerOrderPool(Player player) {
 		this.player = player;
@@ -111,6 +112,8 @@ public class PlayerOrderPool {
 			if(order.getOrderId() == orderID){
 				acceptedOrders.add(order);
 				newOrders.remove(order);
+				order.setPrice(player.getData().lastElement().getPricePerAirplane());
+				break;
 			}
 		}
 	}
@@ -118,30 +121,63 @@ public class PlayerOrderPool {
 	public void produceOrder(int orderID)
 	{
 		for (Order order : acceptedOrders) {
-			toProduceNextRound.add(order);
-			acceptedOrders.remove(order);
+			if(order.getOrderId() == orderID)
+			{
+				toProduceNextRound.add(order);
+				acceptedOrders.remove(order);
+				break;
+			}
 		}
 	}
 	
-	public ArrayList<Order> getAcceptedOrders() {
+	public CopyOnWriteArrayList<Order> getAcceptedOrders() {
 		return acceptedOrders;
 	}
 
-	public ArrayList<Order> getNewOrders() {
+	public CopyOnWriteArrayList<Order> getNewOrders() {
 		return newOrders;
 	}
 
-	public ArrayList<Order> getFinishedOrders() {
+	public CopyOnWriteArrayList<Order> getFinishedOrders() {
 		return finishedOrders;
 	}
 	
-	public ArrayList<Order> getOrdersToProduce() {
+	public CopyOnWriteArrayList<Order> getOrdersToProduce() {
 		return toProduce;
 	}
 
 	public void refreshData() {
-		toProduce = (ArrayList<Order>) toProduceNextRound.clone();
-		toProduceNextRound = new ArrayList<Order>();
-		
+		int ctr=0;
+		for (Order order : toProduce) {
+			ctr += order.getQuantityLeft();
+		}
+		if(ctr <= player.getData().get(player.getData().size()-2).getCapacity() )
+		{
+			for (Order order : toProduce) {
+				finishedOrders.add(order);
+				toProduce.remove(order);
+			}
+			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
+			toProduceNextRound = new CopyOnWriteArrayList<Order>();
+		} else {
+			for(int i = 0; i < toProduce.size() - 1; i++){
+				finishedOrders.add(toProduce.get(i));
+				toProduce.get(i).setQuantityLeft(0);
+				toProduce.remove(i);
+			}
+			toProduce.get(0).setQuantityLeft(ctr - player.getData().lastElement().getCapacity());
+			acceptedOrders.add(toProduce.get(0));
+			toProduce.clear();
+			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
+			toProduceNextRound = new CopyOnWriteArrayList<Order>();
+		}	
+	}
+
+	public CopyOnWriteArrayList<Order> getToProduceNextRound() {
+		return toProduceNextRound;
+	}
+
+	public void setOrderPool(OrderPool orderPool) {
+		this.orderPool = orderPool;
 	}
 }

@@ -37,6 +37,7 @@ public class Mechanics {
 		}
 		if(allPlayerReadyForNextRound()){
 			endRound();
+			startNewRound();
 		}
 //		if(allPlayerReadyForOrderSelection())
 //		{	
@@ -69,7 +70,7 @@ public class Mechanics {
 //		return allPlayerReadyForOrderSelection;
 //	}
 	
-	private void endRound(){	
+	public void endRound(){	
 		
 		//neue Werte berechnen für die neuen Aufträge und Investitionsausgaben für F&E, Marketing
 		double[] values = playerDataCalculator.generateNewCompanyValues(players);
@@ -195,7 +196,7 @@ public class Mechanics {
 		}
 	}
 
-	private void ordersForNewRound()
+	public void ordersForNewRound()
 	{	
 		market.genOrdersForNewRound(); 
 		market.splitOrders(players);
@@ -219,7 +220,7 @@ public class Mechanics {
 //			handler.setStatusForInputValues(true, i);
 //		}
 		ordersForNewRound();		
-		handler.newRoundStarted(players);//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
+		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
 	}
 
@@ -278,8 +279,8 @@ public class Mechanics {
 			endRound();
 			startNewRound();
 		}
-			
-	}
+		
+}
 	
 	public void acceptOrder(int playerID, int orderID)
 	{
@@ -287,6 +288,17 @@ public class Mechanics {
 			if(player.getId() == playerID)
 			{
 				player.getPlayerOrderPool().acceptOrder(orderID);
+				break;
+			}
+		}
+	}
+	
+	public void declineOrder(int playerID, int orderID)
+	{
+		for(Player player : players) {
+			if(player.getId() == playerID){
+				player.getPlayerOrderPool().unacceptOrder(orderID);
+				break;
 			}
 		}
 	}

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -37,7 +38,7 @@ public class Handler {
 	// veranlasst das senden einer Nachricht an alle Clients
 	public void spread(String txt) { // sendet an alle
 		for (Conn con : connections) {
-			con.send(txt);
+			con.setOpenMessage(txt);
 		}
 	}
 
@@ -59,6 +60,8 @@ public class Handler {
 			if (connections.size() == 4) {
 				//start game
 				mechanics.startGame(connections);
+				newRoundStarted();
+				
 			}else{
 				return result;				
 			}
@@ -75,10 +78,16 @@ public class Handler {
 				return s;
 			}
 			return "WAITFORPLAYER";
-		} else if (command.startsWith("VALUES")) { // String:
-												// Produktion;Marketing;Entwicklung;Anzahl
-												// Flgzeuge;Materialstufe;Preis
+		} else if (command.startsWith("VALUES")) { // String: Produktion;Marketing;Entwicklung;Materialstufe;Preis an Player
+			Player[] players = mechanics.getPlayers();
+			for(Player player : players){
+				if (player.getId() == activePlayer.getId()) {
+					player.saveNextRoundValues(content, mechanics.getQuartal() );
+				}
+			}
+												// Flugzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
+			return "VALUESSUCC";
 		}else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // HÃ¶he,
 																		// Laufzeit
@@ -86,6 +95,8 @@ public class Handler {
 			refreshPlayerOrderPool(txt, getID(activePlayer));
 		} else if(command.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
+		}else if (command.equals("GETOPENORDERS")) {
+			
 		}else if (command.startsWith("REFRESH")) {
 			result = "";
 			Boolean newRound = false;
@@ -96,13 +107,11 @@ public class Handler {
 					break;
 				}else{
 					newRound = true;
+					newRoundStarted();
+					setStatusForNewRoundFalse();
 				}		
 			}//End of For
-			if (newRound) {
-				return ""; // Alle relevanten Objekte fï¿½r neue Runde
-			}else{
-				return "NOINFOS";
-			}
+			return result;
 		}else if(command.equals("GETSTATS")){
 			String values = "";
 			Player[] tmp = mechanics.getPlayers();
@@ -153,7 +162,7 @@ public class Handler {
 			String answer = "ERROR";
 			answer = chatSendService();
 			return answer;
-		}else if (command.equals("CHATREFRESH")) {
+		}else if (command.equals("CHAT")) {
 			String answer = "";
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
@@ -173,7 +182,13 @@ public class Handler {
 		return "INVALIDESTRING";	
 	}
 	
-   private String chatSendService() {
+   private void setStatusForNewRoundFalse() {
+		for(Conn conn: connections){
+			conn.setReady(false);
+		}
+	}
+
+private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
 		System.out.println(content);
@@ -253,13 +268,18 @@ private String getCurrentTimeAsString()
 	}
 
 	private String checkOpenMessages() {
-		String tmp;
-		try{
-			tmp = activePlayer.getOpenMessages();
-		}catch(Exception e){
-			tmp = "NONEWS";
+		CopyOnWriteArrayList<Order> tmp;
+		String answer = "";
+		tmp = activePlayer.getNewOrders();
+		
+		try {
+			answer = ow.writeValueAsString(tmp);
+			System.out.println(answer);
+		} catch (Exception e) {
+			// TODO: handle exception
+			answer = "NONEWS";
 		}
-			return tmp;
+			return answer;
 		
 
 	}
@@ -297,9 +317,25 @@ private String getCurrentTimeAsString()
 		return toReturn;
 	}
 
-	public void sendPlayerOrderPool(int playerID, PlayerOrderPool playerOderPool) {
-		ArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
-		ArrayList<Order> newOrders = playerOderPool.getNewOrders();
+	public void setPlayerOrderPoolNewOrders(Conn conn) {
+		// von Conn auf Player schließen
+		Player[] players = mechanics.getPlayers();
+		String answer = "NOORDERS";
+		for(Player player : players){
+			if (player.getId() == conn.getId()) {
+				PlayerOrderPool pool = player.getPlayerOrderPool(); // orderpool für player holen
+				CopyOnWriteArrayList<Order> newOrders = pool.getNewOrders(); // neuen bestellungen holen
+				try {
+					answer = ow.writeValueAsString(newOrders); // Bestellungen in String abspeichern
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		
+		
+		/*CopyOnWriteArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
+		CopyOnWriteArrayList<Order> newOrders = playerOderPool.getNewOrders();
 		
 		// Dies ist nur ein Test!
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
@@ -341,12 +377,11 @@ private String getCurrentTimeAsString()
 			}
 		}
 		connections.elementAt(playerID).send(txt);		//Nachricht an Client senden.
-	}
+*/	}
 	
 	//Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die Abhandlung der orders gewartet wird.
 	public void setStatusForInputValues(boolean bol, int playerId){
-	
-		connections.elementAt(playerId).send("STATUS INPUT "+bol);
+		connections.elementAt(playerId).setOpenMessage("STATUS INPUT "+bol);
 	}
 	
 	
@@ -354,8 +389,8 @@ private String getCurrentTimeAsString()
 	private void refreshPlayerOrderPool(String txt, int playerId){
 	
 	
-		String produce= txt.split(" ")[2];
-		String accepted = txt.split(" ")[4];
+		String produce= txt.split(";")[2];
+		String accepted = txt.split(";")[4];
 		
 		String orderIdToProduce [] = produce.split(",");
 		String orderIdAccepted [] = accepted.split(",");
@@ -375,8 +410,12 @@ private String getCurrentTimeAsString()
 		
 	}
 
-	public void newRoundStarted(Player[] players) {
-		spread("NEWROUND");
+	public void newRoundStarted() {
+		Player[] players = mechanics.getPlayers();
+		//spread("NEWROUND");
+		for(Conn conn : connections){
+			setPlayerOrderPoolNewOrders(conn);
+		}
 		for (Player player : players) {
 			PlayerData newData = player.getData().lastElement();	//Hier sind die Daten fÃ¼r Max, kannst du auswerten und versenden
 			Vector<LongTimeCredit> credits = player.getCredits();			//hier sind die Kredite
