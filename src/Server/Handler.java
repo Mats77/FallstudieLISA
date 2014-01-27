@@ -203,6 +203,10 @@ public class Handler {
 		return "INVALIDESTRING";
 	}
 
+	public Mechanics getMechanics() {
+		return mechanics;
+	}
+
 	private void setOrdersToProduce() {
 
 	}

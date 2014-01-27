@@ -115,6 +115,7 @@ public class Conn {
 	}
 	
 	public CopyOnWriteArrayList<Order> getAcceptedOrders() {
+		System.out.println(acceptedOrders.toString());
 		return acceptedOrders;
 	}
 
