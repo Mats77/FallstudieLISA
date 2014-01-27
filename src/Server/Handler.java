@@ -103,9 +103,8 @@ public class Handler {
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
 			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
+			System.out.println("Get Orders");
 			refreshPlayerProduceOrderPool();
-		} else if (command.equals("PRODUCE")){
-			setOrdersToProduce();
 			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
 			String tmp = "";
 			try {
@@ -115,6 +114,9 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return tmp;
+		} else if (command.equals("PRODUCE")){
+			setOrdersToProduce();
+			return "PRODUCESUCC";
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
 			Boolean newRound = false;
@@ -201,6 +203,10 @@ public class Handler {
 		return "INVALIDESTRING";
 	}
 
+	public Mechanics getMechanics() {
+		return mechanics;
+	}
+
 	private void setOrdersToProduce() {
 
 	}
@@ -254,6 +260,7 @@ public class Handler {
 			// get hole content!
 			try {
 				content = txt.substring(1, tmpend);
+				System.out.println(content);
 			} catch (Exception e) {
 				System.out.println("Kein Inhalt vorhanden");
 			}
@@ -274,6 +281,7 @@ public class Handler {
 			int end = mes.indexOf("$");
 			String message = "";
 			message = mes.substring(0, end);
+			System.out.println("Reason =  " + message);
 			return message;
 		}
 		return result;
