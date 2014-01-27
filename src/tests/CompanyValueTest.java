@@ -28,7 +28,7 @@ public class CompanyValueTest {
 	@Before
 	public void testGeneratePlayers() {
 		handler = new Handler(3);
-		mechanics = new Mechanics(handler);
+		mechanics = handler.getMechanics();
 		pdc = new PlayerDataCalculator(mechanics);
 		connections = new Vector<Conn>();
 		market = new Market();
