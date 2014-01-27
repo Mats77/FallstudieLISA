@@ -60,6 +60,8 @@ public class Handler {
 			if (connections.size() == 4) {
 				//start game
 				mechanics.startGame(connections);
+				newRoundStarted();
+				
 			}else{
 				return result;				
 			}
@@ -379,7 +381,6 @@ private String getCurrentTimeAsString()
 	
 	//Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die Abhandlung der orders gewartet wird.
 	public void setStatusForInputValues(boolean bol, int playerId){
-	
 		connections.elementAt(playerId).send("STATUS INPUT "+bol);
 	}
 	
@@ -419,7 +420,6 @@ private String getCurrentTimeAsString()
 			PlayerData newData = player.getData().lastElement();	//Hier sind die Daten für Max, kannst du auswerten und versenden
 			Vector<LongTimeCredit> credits = player.getCredits();			//hier sind die Kredite
 			ShortTimeCredit shortTimeCredits = player.getShortTimeCredit();
-			
 		}
 	}
 	
