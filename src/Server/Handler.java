@@ -214,10 +214,10 @@ public class Handler {
 	private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
-		System.out.println(content);
+		//System.out.println(content);
 		clientdata = content.split(":");
 		String message = clientdata[0];
-		System.out.println("Nachricht: " + clientdata[0]);
+		//System.out.println("Nachricht: " + clientdata[0]);
 		String avatar = clientdata[1];
 		String direction;
 		for (Conn con : connections) {
@@ -341,28 +341,11 @@ public class Handler {
 	}
 
 	public void setPlayerOrderPoolActivOrders(Conn conn) {
-		// von Conn auf Player schlie�en
-		Player[] players = mechanics.getPlayers();
-		String answer = "NOORDERSACTIV";
-		for (Player player : players) {
-			if (player.getId() == conn.getId()) {
-				PlayerOrderPool pool = player.getPlayerOrderPool(); // orderpool
-																	// f�r
-																	// player
-																	// holen
-				CopyOnWriteArrayList<Order> newOrders = pool.getAcceptedOrders(); // neuen
-																				// bestellungen
-																				// holen
-				conn.setAcceptedOrders(newOrders);
-				try {
-					answer = ow.writeValueAsString(newOrders); // Bestellungen
-																// in String
-																// abspeichern
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-	}
+		System.out.println(content);
+		int index = content.indexOf(";");
+		String produce = content.substring(index + 1);
+		int produceId = Integer.parseInt(produce);
+		mechanics.produceOrder(activePlayer.getId(), produceId);
 	}
 
 	public void setPlayerOrderPoolNewOrders(Conn conn) {
@@ -406,11 +389,28 @@ public class Handler {
 	}
 
 	private void refreshPlayerProduceOrderPool() {
-		System.out.println(content);
-		int index = content.indexOf(";");
-		String produce = content.substring(index + 1);
-		int produceId = Integer.parseInt(produce);
-		mechanics.produceOrder(activePlayer.getId(), produceId);
+		// von Conn auf Player schlie�en
+		Player[] players = mechanics.getPlayers();
+		String answer = "NOORDERSACTIV";
+		for (Player player : players) {
+			if (player.getId() == activePlayer.getId()) {
+				PlayerOrderPool pool = player.getPlayerOrderPool(); // orderpool
+																	// f�r
+																	// player
+																	// holen
+				CopyOnWriteArrayList<Order> newOrders = pool.getAcceptedOrders(); // neuen
+																				// bestellungen
+																				// holen
+				activePlayer.setAcceptedOrders(newOrders);
+				try {
+					answer = ow.writeValueAsString(newOrders); // Bestellungen
+																// in String
+																// abspeichern
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+	}
 	}
 
 	public void newRoundStarted() {

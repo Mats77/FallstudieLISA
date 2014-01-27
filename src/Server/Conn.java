@@ -29,25 +29,10 @@ public class Conn {
 		this.setGameID(handler.getGameID());
 	}
 
-	// public Conn (Socket socket, Handler handler) {
-	// this.socket = socket;
-	// this.handler = handler;
-	// try {
-	// out = new PrintWriter(socket.getOutputStream(), true);
-	// in = new BufferedReader(new InputStreamReader( socket.getInputStream()));
-	// } catch (IOException e) {
-	// close();
-	// e.printStackTrace();
-	// }
-	//
-	// start();
-	// }
-
 	public Conn(Socket skt, Handler handler2) {
 		// TODO Auto-generated constructor stub
 		System.out.println("Falscher Constructor!");
 	}
-
 
 	public void send(Order order) {
 		openNewOrders.add(order);
