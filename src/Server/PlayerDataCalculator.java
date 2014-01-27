@@ -80,6 +80,13 @@ public class PlayerDataCalculator {
 			companyValues[i] = erg;
 			companyValues[i] += players[i].getReliability()*50;
 			companyValues[i] /= (players[i].getData().lastElement().getPricePerAirplane()/10);
+			int ctr = 0;
+			double value = 0;
+			for (PlayerData data : players[i].getData()) {
+				ctr++;
+				value += data.getQualityOfMaterial();
+			}
+			companyValues[i] += (value/ctr)*10;
 			// muss noch mit dem Preis in Verbindung gebracht werden;
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
 		return companyValues;

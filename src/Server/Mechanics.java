@@ -37,6 +37,7 @@ public class Mechanics {
 		}
 		if(allPlayerReadyForNextRound()){
 			endRound();
+			startNewRound();
 		}
 //		if(allPlayerReadyForOrderSelection())
 //		{	
