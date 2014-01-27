@@ -15,7 +15,10 @@ public class Order {
 	private boolean useOptinalOrders=false;
 	private int quantityLeft; // Aufträge können teilweise z.B. in Q1 und zum
 								// andren Teil in Q1 erfüllt werden.
-
+	private int status = 0;  //0: inProduction
+							 //1: inQueue
+							 //2: accepted
+							 //3: delayed
 	// quantityLeft muss == 0 sein, damit ein Auftrag abgeschlossen wird.
 
 	public Order(int totalQuantity, int quartal) {
@@ -136,8 +139,12 @@ public class Order {
 	public double getPricePerAirplane() {
 		return pricePerAirplane;
 	}
-	
 
-		
+	public int getStatus() {
+		return status;
+	}
 
+	public void setStatus(int status) {
+		this.status = status;
+	}
 }
