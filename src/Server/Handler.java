@@ -318,13 +318,14 @@ private String getCurrentTimeAsString()
 	}
 
 	public void setPlayerOrderPoolNewOrders(Conn conn) {
-		// von Conn auf Player schließen
+		// von Conn auf Player schlieï¿½en
 		Player[] players = mechanics.getPlayers();
 		String answer = "NOORDERS";
 		for(Player player : players){
 			if (player.getId() == conn.getId()) {
-				PlayerOrderPool pool = player.getPlayerOrderPool(); // orderpool für player holen
+				PlayerOrderPool pool = player.getPlayerOrderPool(); // orderpool fï¿½r player holen
 				CopyOnWriteArrayList<Order> newOrders = pool.getNewOrders(); // neuen bestellungen holen
+				conn.setOpenNewOrders(newOrders);
 				try {
 					answer = ow.writeValueAsString(newOrders); // Bestellungen in String abspeichern
 				} catch (Exception e) {

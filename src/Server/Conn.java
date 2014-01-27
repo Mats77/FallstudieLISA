@@ -100,8 +100,8 @@ public class Conn {
 		return openNewOrders;
 	}
 
-	public void setOpenNewOrders(Order order) {
-		openNewOrders.add(order);
+	public void setOpenNewOrders(CopyOnWriteArrayList<Order> order) {
+		openNewOrders = order;
 	}
 
 	public boolean isActive() {
