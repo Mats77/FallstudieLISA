@@ -38,7 +38,7 @@ public class Handler {
 	// veranlasst das senden einer Nachricht an alle Clients
 	public void spread(String txt) { // sendet an alle
 		for (Conn con : connections) {
-			con.setOpenMessages(txt);
+			con.setOpenMessage(txt);
 		}
 	}
 
@@ -268,9 +268,9 @@ private String getCurrentTimeAsString()
 	}
 
 	private String checkOpenMessages() {
-		Vector<String> tmp;
+		CopyOnWriteArrayList<Order> tmp;
 		String answer = "";
-		tmp = activePlayer.getOpenMessages();
+		tmp = activePlayer.getNewOrders();
 		
 		try {
 			answer = ow.writeValueAsString(tmp);
@@ -316,7 +316,7 @@ private String getCurrentTimeAsString()
 		return toReturn;
 	}
 
-	public String sendPlayerOrderPoolNewOrders(Conn conn) {
+	public void setPlayerOrderPoolNewOrders(Conn conn) {
 		// von Conn auf Player schlieﬂen
 		Player[] players = mechanics.getPlayers();
 		String answer = "NOORDERS";
@@ -332,7 +332,6 @@ private String getCurrentTimeAsString()
 			}
 		}
 		
-		return answer;
 		
 		/*CopyOnWriteArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
 		CopyOnWriteArrayList<Order> newOrders = playerOderPool.getNewOrders();
@@ -381,7 +380,7 @@ private String getCurrentTimeAsString()
 	
 	//Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die Abhandlung der orders gewartet wird.
 	public void setStatusForInputValues(boolean bol, int playerId){
-		connections.elementAt(playerId).send("STATUS INPUT "+bol);
+		connections.elementAt(playerId).setOpenMessage("STATUS INPUT "+bol);
 	}
 	
 	
@@ -414,7 +413,7 @@ private String getCurrentTimeAsString()
 		Player[] players = mechanics.getPlayers();
 		//spread("NEWROUND");
 		for(Conn conn : connections){
-			conn.setOpenMessages(sendPlayerOrderPoolNewOrders(conn));
+			setPlayerOrderPoolNewOrders(conn);
 		}
 		for (Player player : players) {
 			PlayerData newData = player.getData().lastElement();	//Hier sind die Daten f√ºr Max, kannst du auswerten und versenden
