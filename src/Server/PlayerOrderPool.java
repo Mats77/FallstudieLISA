@@ -122,6 +122,7 @@ public class PlayerOrderPool {
 		for (Order order : acceptedOrders) {
 			if(order.getOrderId() == orderID)
 			{
+				order.setStatus(1);
 				toProduceNextRound.add(order);
 				acceptedOrders.remove(order);
 				break;
@@ -185,13 +186,9 @@ public class PlayerOrderPool {
 	{
 		CopyOnWriteArrayList<Order> toReturn = new CopyOnWriteArrayList<Order>();
 		toReturn = (CopyOnWriteArrayList<Order>) toProduce.clone();
-		toReturn.add(null);
-		
 		for (Order order : toProduceNextRound) {
 			toReturn.add(order);
-		}
-		toReturn.add(null);
-		
+		}		
 		for (Order order : acceptedOrders) {
 			toReturn.add(order);
 		}
