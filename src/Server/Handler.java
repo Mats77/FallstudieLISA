@@ -409,7 +409,8 @@ private String getCurrentTimeAsString()
 	private void refreshPlayerProduceOrderPool(int playerId){
 		
 		System.out.println(content);
-		String produce = content.substring(9);
+		int index = content.indexOf(";");
+		String produce = content.substring(index+1);
 		
 		String orderIdToProduce [] = produce.split(",");
 		int orderByIdToProduce [] = new int [orderIdToProduce.length];
