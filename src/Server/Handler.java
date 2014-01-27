@@ -47,8 +47,6 @@ public class Handler {
 	@SuppressWarnings("static-access")
 	public String handleString(String txt) {
 		// Zun�chst wird der Spieler zugewiesen
-		// int activPlayerID = Integer.parseInt(txt.substring(0, 1));
-		// activePlayer = connections.get(activPlayerID);
 
 		String command = getCommand(txt);
 		String result = "";
@@ -115,7 +113,6 @@ public class Handler {
 			try {
 				tmp = ow.writeValueAsString(acceptedOrders);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return tmp;
@@ -146,7 +143,6 @@ public class Handler {
 						try {
 							values += ow.writeValueAsString(playerdata);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} // end try catch
 					}// end for playerdata
@@ -192,13 +188,10 @@ public class Handler {
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
 			} catch (JsonGenerationException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return answer;
@@ -246,7 +239,6 @@ public class Handler {
 	}
 
 	private String getCommand(String txt) {
-		// TODO Auto-generated method stub
 		String mes = txt;
 		String result = "";
 		// get payload
@@ -306,7 +298,6 @@ public class Handler {
 			answer = ow.writeValueAsString(tmp);
 			System.out.println(answer);
 		} catch (Exception e) {
-			// TODO: handle exception
 			answer = "NONEWS";
 		}
 		return answer;
@@ -314,7 +305,6 @@ public class Handler {
 	}
 
 	private boolean anzPlayer() {
-		// TODO Auto-generated method stub
 		if (connections.size() == 4) {
 			return true;
 		} else {
@@ -365,7 +355,6 @@ public class Handler {
 																// in String
 																// abspeichern
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
 	}
