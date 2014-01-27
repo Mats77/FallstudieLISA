@@ -162,7 +162,7 @@ public class Handler {
 			String answer = "ERROR";
 			answer = chatSendService();
 			return answer;
-		}else if (command.equals("CHATREFRESH")) {
+		}else if (command.equals("CHAT")) {
 			String answer = "";
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
@@ -274,6 +274,7 @@ private String getCurrentTimeAsString()
 		
 		try {
 			answer = ow.writeValueAsString(tmp);
+			System.out.println(answer);
 		} catch (Exception e) {
 			// TODO: handle exception
 			answer = "NONEWS";
