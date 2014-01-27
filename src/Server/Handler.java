@@ -83,7 +83,7 @@ public class Handler {
 			}
 			return "WAITFORPLAYER";
 		} else if (command.startsWith("VALUES")) { // String:
-													// Produktion;Marketing;Entwicklung;Materialstufe;Preis
+													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
 			Player[] players = mechanics.getPlayers();
 			for (Player player : players) {
@@ -92,7 +92,7 @@ public class Handler {
 				}
 			}
 			// Flugzeuge;Materialstufe;Preis
-			mechanics.valuesInserted(txt.substring(7), activePlayer.getNick());
+			mechanics.valuesInserted(content, activePlayer.getNick());
 			return "VALUESSUCC";
 		} else if (command.startsWith("CREDIT")) {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
@@ -264,6 +264,7 @@ public class Handler {
 			} catch (Exception e) {
 				System.out.println("Kein Inhalt vorhanden");
 			}
+			System.out.println("Conent = " + content);
 			// if active player found: set active player
 			try {
 				System.out.println("Player-ID = " + gamePlayerId.charAt(0));
@@ -406,7 +407,7 @@ public class Handler {
 																	// f�r
 																	// player
 																	// holen
-				CopyOnWriteArrayList<Order> newOrders = pool.getAcceptedOrders(); // neuen
+				CopyOnWriteArrayList<Order> newOrders = pool.getOrdersToDisplay(); // neuen
 																				// bestellungen
 																				// holen
 				activePlayer.setAcceptedOrders(newOrders);
