@@ -395,7 +395,7 @@ private String getCurrentTimeAsString()
 	private void refreshPlayerAcceotedOrderPool(int playerId){
 	
 		System.out.println(content); // 8
-		String accepted = content.substring(8);
+		String accepted = content.substring(9);
 		String orderIdAccepted [] = accepted.split(",");
 		int orderByIdAccepted [] = new int [orderIdAccepted.length];
 		
