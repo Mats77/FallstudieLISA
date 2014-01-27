@@ -38,7 +38,7 @@ public class Handler {
 	// veranlasst das senden einer Nachricht an alle Clients
 	public void spread(String txt) { // sendet an alle
 		for (Conn con : connections) {
-			con.send(txt);
+			con.setOpenMessages(txt);
 		}
 	}
 
@@ -93,6 +93,8 @@ public class Handler {
 			refreshPlayerOrderPool(txt, getID(activePlayer));
 		} else if(command.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
+		}else if (command.equals("GETOPENORDERS")) {
+			
 		}else if (command.startsWith("REFRESH")) {
 			result = "";
 			Boolean newRound = false;
@@ -103,6 +105,8 @@ public class Handler {
 					break;
 				}else{
 					newRound = true;
+					newRoundStarted();
+					setStatusForNewRoundFalse();
 				}		
 			}//End of For
 			if (newRound) {
@@ -180,7 +184,13 @@ public class Handler {
 		return "INVALIDESTRING";	
 	}
 	
-   private String chatSendService() {
+   private void setStatusForNewRoundFalse() {
+		for(Conn conn: connections){
+			conn.setReady(false);
+		}
+	}
+
+private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
 		System.out.println(content);
@@ -304,8 +314,25 @@ private String getCurrentTimeAsString()
 		return toReturn;
 	}
 
-	public void sendPlayerOrderPool(int playerID, PlayerOrderPool playerOderPool) {
-		CopyOnWriteArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
+	public String sendPlayerOrderPoolNewOrders(Conn conn) {
+		// von Conn auf Player schließen
+		Player[] players = mechanics.getPlayers();
+		String answer = "NOORDERS";
+		for(Player player : players){
+			if (player.getId() == conn.getId()) {
+				PlayerOrderPool pool = player.getPlayerOrderPool(); // orderpool für player holen
+				CopyOnWriteArrayList<Order> newOrders = pool.getNewOrders(); // neuen bestellungen holen
+				try {
+					answer = ow.writeValueAsString(newOrders); // Bestellungen in String abspeichern
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+			}
+		}
+		
+		return answer;
+		
+		/*CopyOnWriteArrayList<Order> acceptedOrders = playerOderPool.getAcceptedOrders();
 		CopyOnWriteArrayList<Order> newOrders = playerOderPool.getNewOrders();
 		
 		// Dies ist nur ein Test!
@@ -348,7 +375,7 @@ private String getCurrentTimeAsString()
 			}
 		}
 		connections.elementAt(playerID).send(txt);		//Nachricht an Client senden.
-	}
+*/	}
 	
 	//Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die Abhandlung der orders gewartet wird.
 	public void setStatusForInputValues(boolean bol, int playerId){
@@ -382,12 +409,17 @@ private String getCurrentTimeAsString()
 		
 	}
 
-	public void newRoundStarted(Player[] players) {
+	public void newRoundStarted() {
+		Player[] players = mechanics.getPlayers();
 		spread("NEWROUND");
+		for(Conn conn : connections){
+			conn.setOpenMessages(sendPlayerOrderPoolNewOrders(conn));
+		}
 		for (Player player : players) {
 			PlayerData newData = player.getData().lastElement();	//Hier sind die Daten fÃ¼r Max, kannst du auswerten und versenden
 			Vector<LongTimeCredit> credits = player.getCredits();			//hier sind die Kredite
 			ShortTimeCredit shortTimeCredits = player.getShortTimeCredit();
+			
 		}
 	}
 	
