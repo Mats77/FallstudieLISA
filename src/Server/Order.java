@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class Order {
+	private final String [] AIRLINENAMES = {"China Eastern Airlines", "Lufthansa" , "United Airlines",	"Delta Air Lines",
+			"Southwest Airlines", "American Airlines", "US Airways", "Ryanai", "China Southern Airlines", "Air China"};
 	private static int orderCount = 0;
 	private final int orderId;
 	private int totalQuantity; // bis zu 1/4 der totalQuantity sind optionale Orders, der Rest sind fixedOrders
@@ -54,7 +56,7 @@ public class Order {
 			this.quantityLeft = totalQuantity;
 		}
 		
-		System.err.println(optionalQuantity);
+
 		setClient();
 	}
 
@@ -85,23 +87,10 @@ public class Order {
 	}
 	
 	private void setClient() {
-		File file = new File("airlines.txt"); // File
-																		// mit
-																		// den
-																		// top
-																		// 10
-																		// Airline
-																		// Name
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(file));
-			int rnd = (int) (Math.random() * 10);
-			for (int i = 0; i < rnd; i++) {
-				reader.readLine();
-			}
-			clientName = reader.readLine();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
+			int rnd = (int) (Math.random() * AIRLINENAMES.length);
+			clientName = AIRLINENAMES[rnd];
+		
 
 	}
 
@@ -154,5 +143,8 @@ public class Order {
 	public double getPricePerAirplane() {
 		return pricePerAirplane;
 	}
+	
+
+		
 
 }
