@@ -268,13 +268,17 @@ private String getCurrentTimeAsString()
 	}
 
 	private String checkOpenMessages() {
-		String tmp;
-		try{
-			tmp = activePlayer.getOpenMessages();
-		}catch(Exception e){
-			tmp = "NONEWS";
+		Vector<String> tmp;
+		String answer = "";
+		tmp = activePlayer.getOpenMessages();
+		
+		try {
+			answer = ow.writeValueAsString(tmp);
+		} catch (Exception e) {
+			// TODO: handle exception
+			answer = "NONEWS";
 		}
-			return tmp;
+			return answer;
 		
 
 	}

@@ -17,7 +17,7 @@ public class Conn {
 	private boolean ready = false;
 	private boolean active = true;
 	private Handler handler;
-	private String openMessages;
+	private Vector<String> openMessages = new Vector<String>();
 	private Vector<ChatMessage> chatMessages = new Vector<ChatMessage>();
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
 
@@ -48,7 +48,7 @@ public class Conn {
 
 	public void send(String txt) {
 		System.out.println("Server sendet: " + txt);
-		openMessages += txt + "\n";
+		openMessages.add(txt);
 		//socket.send(txt);
 	}
 
@@ -95,14 +95,12 @@ public class Conn {
 		this.ready = ready;
 	}
 
-	public String getOpenMessages() {
-		String answer = openMessages;
-		openMessages = "";
-		return answer;
+	public Vector<String> getOpenMessages() {
+		return openMessages;
 	}
 
-	public void setOpenMessages(String openMessages) {
-		this.openMessages += openMessages + "\n";
+	public void setOpenMessages(String openMessage) {
+		openMessages.add(openMessage);
 	}
 
 	public boolean isActive() {
