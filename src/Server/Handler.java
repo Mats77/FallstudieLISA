@@ -111,11 +111,7 @@ public class Handler {
 					setStatusForNewRoundFalse();
 				}		
 			}//End of For
-			if (newRound) {
-				return ""; // Alle relevanten Objekte f�r neue Runde
-			}else{
-				return "NOINFOS";
-			}
+			return result;
 		}else if(command.equals("GETSTATS")){
 			String values = "";
 			Player[] tmp = mechanics.getPlayers();
