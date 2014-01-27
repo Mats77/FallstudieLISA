@@ -93,6 +93,7 @@ public class Handler {
 																		// Laufzeit
 		}else if(command.startsWith("ORDERINPUT")){ //Nachricht vom Client : "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			refreshPlayerAcceotedOrderPool(getID(activePlayer));
+			return "ORDERSACCEPTED";
 		} else if(command.startsWith("ACCEPTCREDITOFFER")){
 			mechanics.creditOfferAccepted(txt.substring(18), activePlayer.getNick());
 		}else if (command.equals("GETOPENORDERS")) {
