@@ -44,10 +44,8 @@ public class Handler {
 	}
 
 	// überprüft, was der Client gesendet hat und veranlasst Reaktion
-	@SuppressWarnings("static-access")
 	public String handleString(String txt) {
 		// Zun�chst wird der Spieler zugewiesen
-
 		String command = getCommand(txt);
 		String result = "";
 		// Zun�chst wird der Spieler zugewiesen, au�er String enth�lt
@@ -100,12 +98,10 @@ public class Handler {
 			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
 			// Laufzeit
 		} else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
-														// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
-			refreshPlayerAcceotedOrderPool(getID(activePlayer));
+			refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			return "ORDERSACCEPTED";
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
-			mechanics.creditOfferAccepted(txt.substring(18),
-					activePlayer.getNick());
+			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
 			setOrdersToProduce();
 			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
@@ -113,11 +109,12 @@ public class Handler {
 			try {
 				tmp = ow.writeValueAsString(acceptedOrders);
 			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return tmp;
 		} else if (command.equals("PRODUCE")){
-			refreshPlayerProduceOrderPool(getID(activePlayer));
+			refreshPlayerProduceOrderPool();
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
 			Boolean newRound = false;
@@ -143,6 +140,7 @@ public class Handler {
 						try {
 							values += ow.writeValueAsString(playerdata);
 						} catch (IOException e) {
+							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} // end try catch
 					}// end for playerdata
@@ -188,10 +186,13 @@ public class Handler {
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
 			} catch (JsonGenerationException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonMappingException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return answer;
@@ -239,6 +240,7 @@ public class Handler {
 	}
 
 	private String getCommand(String txt) {
+		// TODO Auto-generated method stub
 		String mes = txt;
 		String result = "";
 		// get payload
@@ -298,6 +300,7 @@ public class Handler {
 			answer = ow.writeValueAsString(tmp);
 			System.out.println(answer);
 		} catch (Exception e) {
+			// TODO: handle exception
 			answer = "NONEWS";
 		}
 		return answer;
@@ -305,6 +308,7 @@ public class Handler {
 	}
 
 	private boolean anzPlayer() {
+		// TODO Auto-generated method stub
 		if (connections.size() == 4) {
 			return true;
 		} else {
@@ -355,6 +359,7 @@ public class Handler {
 																// in String
 																// abspeichern
 				} catch (Exception e) {
+					// TODO: handle exception
 				}
 			}
 	}
@@ -428,34 +433,19 @@ public class Handler {
 
 	// Aktualisiert den PlayerOrderPool der Spieler mit den neu angenommen und
 	// den kommend produzierenden Orders
-	private void refreshPlayerAcceotedOrderPool(int playerId) {
-
+	private void refreshPlayerAcceptedOrderPool() {
 		System.out.println(content); // 8
 		String accepted = content.substring(9);
-		String orderIdAccepted[] = accepted.split(",");
-		int orderByIdAccepted[] = new int[orderIdAccepted.length];
-
-		for (int i = 0; i < orderIdAccepted.length; i++) {
-			orderByIdAccepted[i] = Integer.parseInt(orderIdAccepted[i]);
-		}
-		mechanics.refreshPlayerOrderPool(playerId, null, orderByIdAccepted);
-
+		int orderId = Integer.parseInt(accepted);
+		mechanics.acceptOrder(activePlayer.getId(), orderId);
 	}
 
-	private void refreshPlayerProduceOrderPool(int playerId) {
-
+	private void refreshPlayerProduceOrderPool() {
 		System.out.println(content);
 		int index = content.indexOf(";");
 		String produce = content.substring(index + 1);
-
-		String orderIdToProduce[] = produce.split(",");
-		int orderByIdToProduce[] = new int[orderIdToProduce.length];
-
-		for (int i = 0; i < orderIdToProduce.length; i++) {
-			orderByIdToProduce[i] = Integer.parseInt(orderIdToProduce[i]);
-		}
-
-		mechanics.refreshPlayerOrderPool(playerId, orderByIdToProduce, null);
+		int produceId = Integer.parseInt(produce);
+		mechanics.produceOrder(activePlayer.getId(), produceId);
 	}
 
 	public void newRoundStarted() {

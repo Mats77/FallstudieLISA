@@ -54,7 +54,7 @@ public class Conn {
 		//socket.send(txt);
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
