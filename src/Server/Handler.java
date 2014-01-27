@@ -103,6 +103,8 @@ public class Handler {
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
 			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
+			refreshPlayerProduceOrderPool();
+		} else if (command.equals("PRODUCE")){
 			setOrdersToProduce();
 			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
 			String tmp = "";
@@ -113,8 +115,6 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return tmp;
-		} else if (command.equals("PRODUCE")){
-			refreshPlayerProduceOrderPool();
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
 			Boolean newRound = false;
@@ -388,42 +388,7 @@ public class Handler {
 				}
 			}
 		}
-
-		/*
-		 * CopyOnWriteArrayList<Order> acceptedOrders =
-		 * playerOderPool.getAcceptedOrders(); CopyOnWriteArrayList<Order>
-		 * newOrders = playerOderPool.getNewOrders();
-		 * 
-		 * // Dies ist nur ein Test! ObjectWriter ow = new
-		 * ObjectMapper().writer().withDefaultPrettyPrinter();
-		 * 
-		 * try { String json = ow.writeValueAsString(acceptedOrders); json +=
-		 * ow.writeValueAsString(acceptedOrders); System.out.println(json); }
-		 * catch (JsonGenerationException e) { // TODO Auto-generated catch
-		 * block e.printStackTrace(); } catch (JsonMappingException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); } catch (IOException
-		 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
-		 * 
-		 * // Ende vom Test
-		 * 
-		 * String txt = "Player " + playerID;
-		 * 
-		 * //String senden mit Player (ID)
-		 * acceptedOrders:OrderID,Kundenname,Bestellmenge,noch zu produzierende
-		 * Menge,bis wann zu produzieren; if (acceptedOrders.size() > 0) { txt
-		 * += " acceptedOrders:"; for (Order order : acceptedOrders) { txt +=
-		 * order.getOrderId() + "," + order.getClientName() + "," +
-		 * order.getTotalQuantity() + "," + order.getQuantityLeft() + "," +
-		 * order.getQuartalValidTo() + ";"; } }
-		 * 
-		 * // an den obigen String anhängen:
-		 * newOrders:OrderID,Kundennamen,Bestellmenge,Lieferzeitpunkt; if
-		 * (newOrders.size() > 0) { txt += " newOrders:"; for (Order order :
-		 * newOrders) { txt += order.getOrderId() + "," + order.getClientName()
-		 * + "," + order.getTotalQuantity() + "," + order.getQuartalValidTo() +
-		 * ";"; } } connections.elementAt(playerID).send(txt); //Nachricht an
-		 * Client senden.
-		 */}
+		}
 
 	// Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die
 	// Abhandlung der orders gewartet wird.

@@ -45,7 +45,12 @@ class Server{
 					try{
 					while(!(txtin = in.readLine()).equals("")) {
 						if (txtin.contains("GET")) {
-							System.out.println(txtin);	
+							if (txtin.contains("CHATREFRESH")) {
+								
+							}else{
+								System.out.println(txtin);		
+							}
+
 						}
 						input.add(txtin);
 					}	
