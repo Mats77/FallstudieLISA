@@ -264,7 +264,7 @@ public class Handler {
 			} catch (Exception e) {
 				System.out.println("Kein Inhalt vorhanden");
 			}
-			System.out.println("Conent = " + content);
+			System.out.println("Content = " + content);
 			// if active player found: set active player
 			try {
 				System.out.println("Player-ID = " + gamePlayerId.charAt(0));
