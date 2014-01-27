@@ -3,9 +3,10 @@ package Server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class OrderPool {
-	private ArrayList<Order> orderList = new ArrayList<Order>();
+	private CopyOnWriteArrayList<Order> orderList = new CopyOnWriteArrayList<Order>();
 	private int quartal;
 
 	public void genOrdersForNewRound() {
@@ -70,7 +71,7 @@ public class OrderPool {
 	}
 
 	private void sortOrderList() { 
-		ArrayList<Order> orderListSort = new ArrayList<Order>();
+		CopyOnWriteArrayList<Order> orderListSort = new CopyOnWriteArrayList<Order>();
 
 		Order tmp = null;
 		while (orderList.size() > 0) {
@@ -91,10 +92,10 @@ public class OrderPool {
 	
 	 // Nur für Testzwecke um zu beeinflussen, welche Ordes erstellt werden.
 	public void delAllOrders(){
-		 orderList = new ArrayList<Order>();
+		 orderList = new CopyOnWriteArrayList<Order>();
 	}
 
-	public ArrayList<Order> getOrderList() {
+	public CopyOnWriteArrayList<Order> getOrderList() {
 		return orderList;
 	}
 	
