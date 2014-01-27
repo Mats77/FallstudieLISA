@@ -175,7 +175,13 @@ public class PlayerOrderPool {
 			toProduce.clear();
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
 			toProduceNextRound = new CopyOnWriteArrayList<Order>();
-		}	
+		}
+		for (Order order : acceptedOrders) {
+			if(Mechanics.getQuartal() > order.getQuartalValidTo())
+			{
+				order.setStatus(3);
+			}
+		}
 	}
 
 	public CopyOnWriteArrayList<Order> getToProduceNextRound() {
