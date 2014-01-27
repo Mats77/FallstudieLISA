@@ -3,6 +3,7 @@ package Server;
 
 import java.net.Socket;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 /**
@@ -17,8 +18,10 @@ public class Conn {
 	private boolean ready = false;
 	private boolean active = true;
 	private Handler handler;
-	private String openMessages;
+	private CopyOnWriteArrayList<Order> openNewOrders = new CopyOnWriteArrayList<Order>();
 	private Vector<ChatMessage> chatMessages = new Vector<ChatMessage>();
+	private CopyOnWriteArrayList<Order> acceptedOrders = new CopyOnWriteArrayList<Order>();
+	private String openMessage;
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
 
 	public Conn(Handler handler) {
@@ -46,8 +49,8 @@ public class Conn {
 	}
 
 
-	public void send(String txt) {
-		System.out.println("Server sendet: " + txt);
+	public void send(Order order) {
+		openNewOrders.add(order);
 		//socket.send(txt);
 	}
 
@@ -94,14 +97,12 @@ public class Conn {
 		this.ready = ready;
 	}
 
-	public String getOpenMessages() {
-		String answer = openMessages;
-		openMessages = "";
-		return answer;
+	public CopyOnWriteArrayList<Order> getNewOrders() {
+		return openNewOrders;
 	}
 
-	public void setOpenMessages(String openMessages) {
-		this.openMessages += openMessages;
+	public void setOpenNewOrders(CopyOnWriteArrayList<Order> order) {
+		openNewOrders = order;
 	}
 
 	public boolean isActive() {
@@ -119,5 +120,23 @@ public class Conn {
 	public void setGameID(int gameID) {
 		this.gameID = gameID;
 	}
+	
+	public String getOpenMessage() {
+		return openMessage;
+	}
+
+	public void setOpenMessage(String openMessage) {
+		this.openMessage = openMessage;
+	}
+	
+	public CopyOnWriteArrayList<Order> getAcceptedOrders() {
+		return acceptedOrders;
+	}
+
+	public void setAcceptedOrders(CopyOnWriteArrayList<Order> acceptedOrders) {
+		this.acceptedOrders = acceptedOrders;
+	}
+
+
 	
 }

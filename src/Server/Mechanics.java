@@ -37,6 +37,7 @@ public class Mechanics {
 		}
 		if(allPlayerReadyForNextRound()){
 			endRound();
+			startNewRound();
 		}
 //		if(allPlayerReadyForOrderSelection())
 //		{	
@@ -219,7 +220,7 @@ public class Mechanics {
 //			handler.setStatusForInputValues(true, i);
 //		}
 		ordersForNewRound();		
-		handler.newRoundStarted(players);//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
+		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
 	}
 
@@ -278,8 +279,8 @@ public class Mechanics {
 			endRound();
 			startNewRound();
 		}
-			
-	}
+		
+}
 	
 	public void acceptOrder(int playerID, int orderID)
 	{
