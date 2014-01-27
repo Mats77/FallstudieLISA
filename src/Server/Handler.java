@@ -408,7 +408,7 @@ private String getCurrentTimeAsString()
 
 	public void newRoundStarted() {
 		Player[] players = mechanics.getPlayers();
-		spread("NEWROUND");
+		//spread("NEWROUND");
 		for(Conn conn : connections){
 			conn.setOpenMessages(sendPlayerOrderPoolNewOrders(conn));
 		}

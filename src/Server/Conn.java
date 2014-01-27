@@ -48,7 +48,7 @@ public class Conn {
 
 	public void send(String txt) {
 		System.out.println("Server sendet: " + txt);
-		openMessages += "\n" + txt;
+		openMessages += txt + "\n";
 		//socket.send(txt);
 	}
 
@@ -102,7 +102,7 @@ public class Conn {
 	}
 
 	public void setOpenMessages(String openMessages) {
-		this.openMessages += "\n" + openMessages;
+		this.openMessages += openMessages + "\n";
 	}
 
 	public boolean isActive() {
