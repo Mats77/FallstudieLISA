@@ -82,6 +82,14 @@ public class Handler {
 				return s;
 			}
 			return "WAITFORPLAYER";
+		} else if (command.startsWith("GETBASICDASHBOARD")) {
+			String s = getDashboardValues();
+		} else if (command.startsWith("GETACTIVEPLAYER")) {
+			String s = "";
+			for(Conn conn:connections){
+				s += conn.getNick() + ":";
+			}
+			return s;
 		} else if (command.startsWith("VALUES")) { // String:
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
@@ -199,6 +207,86 @@ public class Handler {
 		}
 
 		return "INVALIDESTRING";
+	}
+
+	private String getDashboardValues() {
+		// activen Player bekommen
+		Player[] players = mechanics.getPlayers();
+		Player player = null;
+		for(Player play : players){
+			if (play.getId() == activePlayer.getId()) {
+				player = play;
+			}
+		}
+		// objekt für Geld
+		DashboardIcon cash = new DashboardIcon("Cash");
+		cash.setColor("green");
+		cash.setIcon("usd");
+		try{
+		cash.setValue(Double.toString(player.getCash()));
+		}catch(Exception e){
+			return "PLAYERDONTEXIST";
+		}
+		//objekt für MarketShare
+		DashboardIcon marketShare = new DashboardIcon("Market Share");
+		marketShare.setIcon("globe");
+		marketShare.setColor("turquoise");
+		try{
+		cash.setValue(Double.toString(player.getData().lastElement().getMarketshare()));
+		}catch(Exception e){
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für Capacity
+		DashboardIcon capacity = new DashboardIcon("Capacity");
+		capacity.setIcon("wrench");
+		capacity.setColor("gray");
+		try{
+		cash.setValue(Double.toString(player.getData().lastElement().getCapacity()));
+		}catch(Exception e){
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für marketing
+		DashboardIcon marketing = new DashboardIcon("Marketing");
+		marketing.setIcon("bullhorn");
+		marketing.setColor("purple");
+		try{
+		cash.setValue(Double.toString(player.getData().lastElement().getMarketing()));
+		}catch(Exception e){
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für R&D
+		DashboardIcon research = new DashboardIcon("R&D");
+		research.setIcon("flask");
+		research.setColor("blue");
+		try{
+		cash.setValue(Double.toString(player.getData().lastElement().getResearch()));
+		}catch(Exception e){
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für earnings
+		DashboardIcon earnings = new DashboardIcon("Earnings");
+		earnings.setIcon("money");
+		earnings.setColor("green");
+		try{
+		cash.setValue(Double.toString(player.getData().lastElement().getProfit()));
+		}catch(Exception e){
+			return "PLAYERDONTEXIST";
+		}
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(cash);
+		dashboard.add(marketShare);
+		dashboard.add(capacity);
+		dashboard.add(marketing);
+		dashboard.add(research);
+		dashboard.add(earnings);
+		String s = "";
+		try {
+			s = ow.writeValueAsString(dashboard);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return s;
 	}
 
 	public Mechanics getMechanics() {
