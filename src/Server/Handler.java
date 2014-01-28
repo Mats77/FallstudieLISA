@@ -1,18 +1,13 @@
 package Server;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
@@ -84,6 +79,7 @@ public class Handler {
 			return "WAITFORPLAYER";
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
 			String s = getDashboardValues();
+			return s;
 		} else if (command.startsWith("GETACTIVEPLAYER")) {
 			String s = "";
 			for(Conn conn:connections){
@@ -127,14 +123,11 @@ public class Handler {
 			return "PRODUCESUCC";
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
-			Boolean newRound = false;
 			result = checkOpenMessages();
 			for (Conn conn : connections) {
 				if (conn.getReady() == false) {
-					newRound = false;
 					break;
 				} else {
-					newRound = true;
 					newRoundStarted();
 					setStatusForNewRoundFalse();
 				}
@@ -148,7 +141,7 @@ public class Handler {
 					Vector<PlayerData> data = tmp[i].getData();
 						try {
 							values = ow.writeValueAsString(data);
-						} catch (IOException e) {
+						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} // end try catch
@@ -193,13 +186,7 @@ public class Handler {
 			String answer = "";
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
-			} catch (JsonGenerationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
