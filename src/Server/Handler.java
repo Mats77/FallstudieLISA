@@ -77,15 +77,18 @@ public class Handler {
 				return s;
 			}
 			return "WAITFORPLAYER";
-		} else if (command.startsWith("GETBASICDASHBOARD")) {
-			String s = getDashboardValues();
-			return s;
 		} else if (command.startsWith("GETACTIVEPLAYER")) {
 			String s = "";
 			for(Conn conn:connections){
 				s += conn.getNick() + ":";
 			}
 			return s;
+		} else if (command.startsWith("GETBASICDASHBOARD")) {
+			String s = getDashboardValues();
+			return s;
+		}else if(command.equals("GETCOSTENS")) {
+			String s = getCostensValues();
+		
 		} else if (command.startsWith("VALUES")) { // String:
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
@@ -99,7 +102,7 @@ public class Handler {
 			mechanics.valuesInserted(content, activePlayer.getNick());
 			return "VALUESSUCC";
 		} else if (command.startsWith("CREDIT")) {
-			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
+			mechanics.newCreditOffer(content, activePlayer.getNick()); // Höhe,
 			// Laufzeit
 		} else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
 			refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
@@ -159,13 +162,10 @@ public class Handler {
 			String answer = "ERROR";
 			System.out.println(content);
 			clientdata = content.split(":");
-			System.out.println("Arraydaten: 1. Länge " + clientdata.length
-					+ " 2. Inhalt " + Arrays.toString(clientdata));
 			try {
 				// 1. Nutzername überprüfen
 				if (checkNickName(clientdata[0])) {
 					String name = clientdata[0];
-					System.out.println("My name is ... " + name);
 					activePlayer.setNick(name);
 					answer = "CHECKNICK";
 				} else {
@@ -194,6 +194,67 @@ public class Handler {
 		}
 
 		return "INVALIDESTRING";
+	}
+
+	private String getCostensValues() {
+		// activen Player bekommen
+		Player[] players = mechanics.getPlayers();
+		Player player = null;
+		for(Player play : players){
+			if (play.getId() == activePlayer.getId()) {
+				player = play;
+			}
+		}
+		// object variable costs
+		DashboardIcon variableCosts = new DashboardIcon("variable costs");
+		variableCosts.setIcon("align-left");
+		variableCosts.setColor("turquoise");
+		try {
+			variableCosts.setValue(Double.toString(player.getData().lastElement().getVarCosts()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		//object fix costs
+		DashboardIcon cumulativeCosts = new DashboardIcon("fix costs");
+		cumulativeCosts.setIcon("sort-alpha-asc");
+		cumulativeCosts.setColor("red");
+		try {
+			cumulativeCosts.setValue(Double.toString(player.getData().lastElement().getFixCosts()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		//object price per Airplane
+		DashboardIcon costsPerPlane = new DashboardIcon("price per Airplane");
+		costsPerPlane.setIcon("plane");
+		costsPerPlane.setColor("grey");
+		try {
+			costsPerPlane.setValue(Double.toString(player.getData().lastElement().getPricePerAirplane()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		// object overhead costs
+		DashboardIcon overheadCosts = new DashboardIcon("overhead costs");
+		overheadCosts.setIcon("align-justify");
+		overheadCosts.setColor("purple");
+		try {
+			overheadCosts.setValue(Double.toString(player.getData().lastElement().getCosts()));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(variableCosts);
+		dashboard.add(cumulativeCosts);
+		dashboard.add(costsPerPlane);
+		dashboard.add(overheadCosts);
+		String s = "";
+		try {
+			s = ow.writeValueAsString(dashboard);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return s;
 	}
 
 	private String getDashboardValues() {
