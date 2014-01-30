@@ -25,7 +25,7 @@ public class Bank {
 		{
 			try
 			{
-				dataOfCredit[i] = Double.parseDouble(substring.split(";")[i]);
+				dataOfCredit[i] = Double.parseDouble(substring.split(",")[i]);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			}
