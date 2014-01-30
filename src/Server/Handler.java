@@ -87,9 +87,6 @@ public class Handler {
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
 			String s = getDashboardValues();
 			return s;
-		}else if(command.equals("GETCOSTENS")) {
-			String s = getCostensValues();
-			return s;
 		} else if (command.startsWith("VALUES")) { // String:
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
@@ -118,7 +115,6 @@ public class Handler {
 			try {
 				tmp = ow.writeValueAsString(acceptedOrders);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return tmp;
@@ -146,7 +142,6 @@ public class Handler {
 						try {
 							values = ow.writeValueAsString(data);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} // end try catch
 					return values;
@@ -188,7 +183,6 @@ public class Handler {
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return answer;
@@ -248,7 +242,7 @@ public class Handler {
 		return dashboard;
 	}
 
-	private String getCostensValues() {
+	private Vector<DashboardIcon> getCostensValues() {
 		// activen Player bekommen
 		Player[] players = mechanics.getPlayers();
 		Player player = null;
@@ -275,7 +269,6 @@ public class Handler {
 		try {
 			cumulativeCosts.setValue(Double.toString(player.getData().lastElement().getFixCosts()));
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		//object price per Airplane
 		DashboardIcon costsPerPlane = new DashboardIcon();
@@ -303,14 +296,8 @@ public class Handler {
 		dashboard.add(cumulativeCosts);
 		dashboard.add(costsPerPlane);
 		dashboard.add(overheadCosts);
-		String s = "";
-		try {
-			s = ow.writeValueAsString(dashboard);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return s;
+		
+		return dashboard;
 	}
 
 	private String getDashboardValues() {
@@ -393,6 +380,7 @@ public class Handler {
 		ArrayList<Vector<DashboardIcon>> tmp = new ArrayList<Vector<DashboardIcon>>();
 		tmp.add(dashboard);
 		tmp.add(createStringBasicdashboarForNewRound());
+		tmp.add(getCostensValues());
 		try {
 			s = ow.writeValueAsString(tmp);
 		} catch (Exception e) {
