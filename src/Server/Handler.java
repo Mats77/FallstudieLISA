@@ -405,7 +405,8 @@ public class Handler {
 			short1.setInterestsForQuarter(Double.toString(player.getShortTimeCredit().getInterestsForQuarter()));
 		} catch (Exception e) {
 			
-		}finally{
+		}
+		if (short1 != null) {
 			dashboard.add(short1);
 		}
 		for (LongTimeCredit credit : player.getCredits()) {
