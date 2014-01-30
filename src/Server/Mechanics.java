@@ -315,7 +315,7 @@ public class Mechanics {
 		return false;
 	}
 
-	public void newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
+	public double[] newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
 		// TODO Kreditaufnahme (langfristig)
 		Player player = getPlayerByNick(nick);
 		double[] offer = new double[3];
@@ -323,7 +323,7 @@ public class Mechanics {
 		{
 			offer = bank.getCreditOffer(player, substring);
 		}
-		handler.offerCredit(offer, nick);
+		return offer;
 	}
 	
 	public static int getQuartal(){

@@ -49,9 +49,11 @@ public class Handler {
 			// Dem Client muss die Game-ID und die Player-ID zugewiesen werden
 			System.out.println("Start Athorization");
 			connections.add(new Conn(this));
-			connections.lastElement().setId(this.getID(connections.lastElement()));
+			connections.lastElement().setId(
+					this.getID(connections.lastElement()));
 			System.out.println("ID gesetzt");
-			System.out.println(connections.lastElement().getId() + " " + this.gameID);
+			System.out.println(connections.lastElement().getId() + " "
+					+ this.gameID);
 			result = connections.lastElement().getId() + " " + this.gameID;
 			if (connections.size() == 4) {
 				// start game
@@ -79,11 +81,11 @@ public class Handler {
 			return "WAITFORPLAYER";
 		} else if (command.startsWith("GETACTIVEPLAYER")) {
 			String s = "";
-			for(Conn conn:connections){
+			for (Conn conn : connections) {
 				s += conn.getNick() + ":";
 			}
 			return s;
-		} else if (command.equals("GETREADYPLAYERS")){
+		} else if (command.equals("GETREADYPLAYERS")) {
 			String s = "";
 			for (Conn conn : connections) {
 				if (conn.getReady()) {
@@ -94,7 +96,7 @@ public class Handler {
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
 			String s = getDashboardValues();
 			return s;
-		} else if (command.startsWith("VALUES")) { // String:
+		} else if (command.startsWith("VALUES")) { // String:-->
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
 			Player[] players = mechanics.getPlayers();
@@ -106,10 +108,10 @@ public class Handler {
 					for (Conn conn : connections) {
 						if (conn.getReady()) {
 							newRound = true;
-						}else{
+						} else {
 							newRound = false;
 							break;
-						}//end inner if
+						}// end inner if
 					}// end inner-for
 				} // end if
 			} // end for
@@ -120,17 +122,25 @@ public class Handler {
 			mechanics.valuesInserted(content, activePlayer.getNick());
 			return "VALUESSUCC";
 		} else if (command.startsWith("CREDIT")) {
-			mechanics.newCreditOffer(content, activePlayer.getNick()); // Höhe,
-			// Laufzeit
+			double[] tmp = mechanics.newCreditOffer(content, activePlayer.getNick()); // Höhe,Laufzeit
+			String s = "NOOFFER";
+			try {
+				s = ow.writeValueAsString(tmp);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+			return s;
 		} else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
 			refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			return "ORDERSACCEPTED";
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
-			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
+			mechanics.creditOfferAccepted(txt.substring(18),
+					activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
 			System.out.println("Get Orders");
 			refreshPlayerProduceOrderPool();
-			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
+			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer
+					.getAcceptedOrders();
 			String tmp = "";
 			try {
 				tmp = ow.writeValueAsString(acceptedOrders);
@@ -138,7 +148,7 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return tmp;
-		} else if (command.equals("PRODUCE")){
+		} else if (command.equals("PRODUCE")) {
 			setOrdersToProduce();
 			return "PRODUCESUCC";
 		} else if (command.startsWith("GETSALES")) {
@@ -159,11 +169,11 @@ public class Handler {
 			for (int i = 0; i < tmp.length; i++) {
 				if (activePlayer.getId() == tmp[i].getId()) {
 					Vector<PlayerData> data = tmp[i].getData();
-						try {
-							values = ow.writeValueAsString(data);
-						} catch (Exception e) {
-							e.printStackTrace();
-						} // end try catch
+					try {
+						values = ow.writeValueAsString(data);
+					} catch (Exception e) {
+						e.printStackTrace();
+					} // end try catch
 					return values;
 				}// end if
 			} // end for players
@@ -211,36 +221,39 @@ public class Handler {
 		return "INVALIDESTRING";
 	}
 
-	private Vector<DashboardIcon> createStringBasicdashboarForNewRound(Player player) {
+	private Vector<DashboardIcon> createStringBasicdashboarForNewRound(
+			Player player) {
 		// object round
 		DashboardIcon round = new DashboardIcon();
 		round.setTitle("Round");
 		round.setIcon("calendar");
 		round.setColor("success");
 		round.setValue(Integer.toString(mechanics.getQuartal()));
-		
-		//object reliability
+
+		// object reliability
 		DashboardIcon reli = new DashboardIcon();
 		reli.setTitle("Reliability");
 		reli.setIcon("thumbs-up");
 		reli.setColor("success");
 		reli.setValue(Double.toString(player.getReliability()));
-		
+
 		// object Active Orders
 		DashboardIcon acOrd = new DashboardIcon();
 		acOrd.setTitle("Active Orders");
 		acOrd.setIcon("wrench");
 		acOrd.setColor("important");
-		acOrd.setValue(Integer.toString(player.getPlayerOrderPool().getAcceptedOrders().size()));
-		
+		acOrd.setValue(Integer.toString(player.getPlayerOrderPool()
+				.getAcceptedOrders().size()));
+
 		// object Loans
 		DashboardIcon loans = new DashboardIcon();
-		try{
-		loans.setTitle("Loans");
-		loans.setIcon("credit-card");
-		loans.setColor("important");
-		loans.setValue(Double.toString(player.getShortTimeCredit().getAmount()));
-		}catch(Exception e){
+		try {
+			loans.setTitle("Loans");
+			loans.setIcon("credit-card");
+			loans.setColor("important");
+			loans.setValue(Double.toString(player.getShortTimeCredit()
+					.getAmount()));
+		} catch (Exception e) {
 			System.out.println("Keine Kredite vorhanden");
 			loans.setValue("0");
 		}
@@ -248,9 +261,8 @@ public class Handler {
 		dashboard.add(round);
 		dashboard.add(reli);
 		dashboard.add(acOrd);
-		dashboard.add(loans);	
+		dashboard.add(loans);
 
-		
 		return dashboard;
 	}
 
@@ -261,25 +273,28 @@ public class Handler {
 		variableCosts.setIcon("align-left");
 		variableCosts.setColor("turquoise");
 		try {
-			variableCosts.setValue(Double.toString(player.getData().lastElement().getVarCosts()));
+			variableCosts.setValue(Double.toString(player.getData()
+					.lastElement().getVarCosts()));
 		} catch (Exception e) {
 		}
-		//object fix costs
+		// object fix costs
 		DashboardIcon cumulativeCosts = new DashboardIcon();
 		cumulativeCosts.setTitle("fix costs");
 		cumulativeCosts.setIcon("sort-alpha-asc");
 		cumulativeCosts.setColor("red");
 		try {
-			cumulativeCosts.setValue(Double.toString(player.getData().lastElement().getFixCosts()));
+			cumulativeCosts.setValue(Double.toString(player.getData()
+					.lastElement().getFixCosts()));
 		} catch (Exception e) {
 		}
-		//object price per Airplane
+		// object price per Airplane
 		DashboardIcon costsPerPlane = new DashboardIcon();
 		costsPerPlane.setTitle("price per Airplane");
 		costsPerPlane.setIcon("plane");
 		costsPerPlane.setColor("gray");
 		try {
-			costsPerPlane.setValue(Double.toString(player.getData().lastElement().getPricePerAirplane()));
+			costsPerPlane.setValue(Double.toString(player.getData()
+					.lastElement().getPricePerAirplane()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -289,7 +304,8 @@ public class Handler {
 		overheadCosts.setIcon("align-justify");
 		overheadCosts.setColor("purple");
 		try {
-			overheadCosts.setValue(Double.toString(player.getData().lastElement().getCosts()));
+			overheadCosts.setValue(Double.toString(player.getData()
+					.lastElement().getCosts()));
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -299,7 +315,7 @@ public class Handler {
 		dashboard.add(cumulativeCosts);
 		dashboard.add(costsPerPlane);
 		dashboard.add(overheadCosts);
-		
+
 		return dashboard;
 	}
 
@@ -307,7 +323,7 @@ public class Handler {
 		// activen Player bekommen
 		Player[] players = mechanics.getPlayers();
 		Player player = null;
-		for(Player play : players){
+		for (Player play : players) {
 			if (play.getId() == activePlayer.getId()) {
 				player = play;
 			}
@@ -317,19 +333,20 @@ public class Handler {
 		cash.setTitle("Cash");
 		cash.setColor("green");
 		cash.setIcon("usd");
-		try{
-		cash.setValue(Double.toString(player.getCash()));
-		}catch(Exception e){
+		try {
+			cash.setValue(Double.toString(player.getCash()));
+		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
-		//objekt für MarketShare
+		// objekt für MarketShare
 		DashboardIcon marketShare = new DashboardIcon();
 		marketShare.setTitle("Market Share");
 		marketShare.setIcon("globe");
 		marketShare.setColor("turquoise");
-		try{
-		cash.setValue(Double.toString(player.getData().lastElement().getMarketshare()));
-		}catch(Exception e){
+		try {
+			cash.setValue(Double.toString(player.getData().lastElement()
+					.getMarketshare()));
+		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für Capacity
@@ -337,9 +354,10 @@ public class Handler {
 		capacity.setTitle("Capacity");
 		capacity.setIcon("wrench");
 		capacity.setColor("gray");
-		try{
-		cash.setValue(Double.toString(player.getData().lastElement().getCapacity()));
-		}catch(Exception e){
+		try {
+			cash.setValue(Double.toString(player.getData().lastElement()
+					.getCapacity()));
+		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für marketing
@@ -347,9 +365,10 @@ public class Handler {
 		marketing.setTitle("Marketing");
 		marketing.setIcon("bullhorn");
 		marketing.setColor("purple");
-		try{
-		cash.setValue(Double.toString(player.getData().lastElement().getMarketing()));
-		}catch(Exception e){
+		try {
+			cash.setValue(Double.toString(player.getData().lastElement()
+					.getMarketing()));
+		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für R&D
@@ -357,9 +376,10 @@ public class Handler {
 		research.setTitle("R&D");
 		research.setIcon("flask");
 		research.setColor("blue");
-		try{
-		cash.setValue(Double.toString(player.getData().lastElement().getResearch()));
-		}catch(Exception e){
+		try {
+			cash.setValue(Double.toString(player.getData().lastElement()
+					.getResearch()));
+		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für earnings
@@ -367,9 +387,10 @@ public class Handler {
 		earnings.setTitle("Earnings");
 		earnings.setIcon("money");
 		earnings.setColor("green");
-		try{
-		cash.setValue(Double.toString(player.getData().lastElement().getProfit()));
-		}catch(Exception e){
+		try {
+			cash.setValue(Double.toString(player.getData().lastElement()
+					.getProfit()));
+		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
 		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
@@ -400,22 +421,26 @@ public class Handler {
 		DashboardLoans short1 = new DashboardLoans();
 		try {
 			short1.setPeriod("short-term");
-			short1.setRate(Double.toString(player.getShortTimeCredit().getInterestRate()));
-			short1.setSum(Double.toString(player.getShortTimeCredit().getAmount()));
-			short1.setInterestsForQuarter(Double.toString(player.getShortTimeCredit().getInterestsForQuarter()));
+			short1.setRate(Double.toString(player.getShortTimeCredit()
+					.getInterestRate()));
+			short1.setSum(Double.toString(player.getShortTimeCredit()
+					.getAmount()));
+			short1.setInterestsForQuarter(Double.toString(player
+					.getShortTimeCredit().getInterestsForQuarter()));
 		} catch (Exception e) {
-			
+
 		}
 		if (short1 != null) {
 			dashboard.add(short1);
 		}
 		for (LongTimeCredit credit : player.getCredits()) {
-		DashboardLoans long1 = new DashboardLoans();	
-		long1.setPeriod("long-term");
-		long1.setRate(Double.toString(credit.getInterestRate()));
-		long1.setSum(Double.toString(credit.getAmount()));
-		long1.setInterestsForQuarter(Double.toString(credit.getInterestsForQuarter()));
-		dashboard.add(long1);
+			DashboardLoans long1 = new DashboardLoans();
+			long1.setPeriod("long-term");
+			long1.setRate(Double.toString(credit.getInterestRate()));
+			long1.setSum(Double.toString(credit.getAmount()));
+			long1.setInterestsForQuarter(Double.toString(credit
+					.getInterestsForQuarter()));
+			dashboard.add(long1);
 		}
 		return dashboard;
 	}
@@ -426,19 +451,21 @@ public class Handler {
 		cash.setIcon("money");
 		cash.setColor("green");
 		cash.setValue(Double.toString(player.getData().lastElement().getCash()));
-		
+
 		DashboardIcon revenue = new DashboardIcon();
 		revenue.setTitle("Revenue");
 		revenue.setIcon("repeat");
 		revenue.setColor("blue");
-		revenue.setValue(Double.toString(player.getData().lastElement().getProfit()));
-		
+		revenue.setValue(Double.toString(player.getData().lastElement()
+				.getProfit()));
+
 		DashboardIcon price = new DashboardIcon();
 		price.setTitle("Price per Airplane");
 		price.setIcon("usd");
 		price.setColor("red");
-		price.setValue(Double.toString(player.getData().lastElement().getPricePerAirplane()));
-		
+		price.setValue(Double.toString(player.getData().lastElement()
+				.getPricePerAirplane()));
+
 		Vector<DashboardIcon> tmp = new Vector<DashboardIcon>();
 		tmp.add(cash);
 		tmp.add(revenue);
@@ -463,10 +490,10 @@ public class Handler {
 	private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
-		//System.out.println(content);
+		// System.out.println(content);
 		clientdata = content.split(":");
 		String message = clientdata[0];
-		//System.out.println("Nachricht: " + clientdata[0]);
+		// System.out.println("Nachricht: " + clientdata[0]);
 		String avatar = clientdata[1];
 		String direction;
 		for (Conn con : connections) {
@@ -573,13 +600,13 @@ public class Handler {
 		System.out.println("Get Player ID!");
 		int toReturn = -1;
 		System.out.println(connections.indexOf(connections.lastElement()));
-		toReturn = connections.indexOf(connections.lastElement())+1;
-	//	for (Conn con : connections) {
-	//		System.out.println(con.getId());
-	//		if (con.equals(connection)) {
-	//			toReturn = connections.indexOf(con) + 1;
-	//		}
-	//	}
+		toReturn = connections.indexOf(connections.lastElement()) + 1;
+		// for (Conn con : connections) {
+		// System.out.println(con.getId());
+		// if (con.equals(connection)) {
+		// toReturn = connections.indexOf(con) + 1;
+		// }
+		// }
 		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;
 	}
@@ -625,7 +652,7 @@ public class Handler {
 				}
 			}
 		}
-		}
+	}
 
 	// Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die
 	// Abhandlung der orders gewartet wird.
@@ -652,9 +679,10 @@ public class Handler {
 																	// f�r
 																	// player
 																	// holen
-				CopyOnWriteArrayList<Order> newOrders = pool.getOrdersToDisplay(); // neuen
-																				// bestellungen
-																				// holen
+				CopyOnWriteArrayList<Order> newOrders = pool
+						.getOrdersToDisplay(); // neuen
+												// bestellungen
+												// holen
 				activePlayer.setAcceptedOrders(newOrders);
 				try {
 					answer = ow.writeValueAsString(newOrders); // Bestellungen
@@ -664,7 +692,7 @@ public class Handler {
 					// TODO: handle exception
 				}
 			}
-	}
+		}
 	}
 
 	public void newRoundStarted() {
