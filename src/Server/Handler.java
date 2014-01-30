@@ -83,6 +83,14 @@ public class Handler {
 				s += conn.getNick() + ":";
 			}
 			return s;
+		} else if (command.equals("GETREADYPLAYERS")){
+			String s = "";
+			for (Conn conn : connections) {
+				if (conn.getReady()) {
+					s += conn.getNick() + ":";
+				}
+			}
+			return s;
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
 			String s = getDashboardValues();
 			return s;
@@ -90,10 +98,23 @@ public class Handler {
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
 			Player[] players = mechanics.getPlayers();
+			Boolean newRound = false;
 			for (Player player : players) {
 				if (player.getId() == activePlayer.getId()) {
 					player.saveNextRoundValues(content, mechanics.getQuartal());
-				}
+					activePlayer.setReady(true);
+					for (Conn conn : connections) {
+						if (conn.getReady()) {
+							newRound = true;
+						}else{
+							newRound = false;
+							break;
+						}//end inner if
+					}// end inner-for
+				} // end if
+			} // end for
+			if (newRound) {
+				newRoundStarted();
 			}
 			// Flugzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(content, activePlayer.getNick());
@@ -242,7 +263,6 @@ public class Handler {
 		try {
 			variableCosts.setValue(Double.toString(player.getData().lastElement().getVarCosts()));
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		//object fix costs
 		DashboardIcon cumulativeCosts = new DashboardIcon();
@@ -382,6 +402,7 @@ public class Handler {
 			short1.setPeriod("short-term");
 			short1.setRate(Double.toString(player.getShortTimeCredit().getInterestRate()));
 			short1.setSum(Double.toString(player.getShortTimeCredit().getAmount()));
+			short1.setInterestsForQuarter(Double.toString(player.getShortTimeCredit().getInterestsForQuarter()));
 		} catch (Exception e) {
 			
 		}finally{
@@ -392,6 +413,7 @@ public class Handler {
 		long1.setPeriod("long-term");
 		long1.setRate(Double.toString(credit.getInterestRate()));
 		long1.setSum(Double.toString(credit.getAmount()));
+		long1.setInterestsForQuarter(Double.toString(credit.getInterestsForQuarter()));
 		dashboard.add(long1);
 		}
 		return dashboard;

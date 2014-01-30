@@ -5,7 +5,9 @@ public class DashboardLoans {
 	private String period;
 	private String rate;
 	private String sum;
+	private String interestsForQuarter;
 	
+
 	public DashboardLoans() {
 		// TODO Auto-generated constructor stub
 	}	
@@ -33,6 +35,11 @@ public class DashboardLoans {
 		this.sum = sum;
 	}
 
-
+	public String getInterestsForQuarter() {
+		return interestsForQuarter;
+	}
+	public void setInterestsForQuarter(String interestsForQuarter) {
+		this.interestsForQuarter = interestsForQuarter;
+	}
 
 }
