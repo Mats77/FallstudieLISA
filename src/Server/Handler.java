@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -129,7 +130,24 @@ public class Handler {
 			} catch (Exception e) {
 			}
 			return s;
-		} else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
+		} else if (command.startsWith("ACCEPTCREDIT")) {
+			// get activ Player calss Player
+			// activen Player bekommen
+			Player[] players = mechanics.getPlayers();
+			Player player = null;
+			for (Player play : players) {
+				if (play.getId() == activePlayer.getId()) {
+					player = play;
+				}
+			}
+			double[] tmp = new double[3];
+			String[] e = content.split(":");
+			tmp[0] = Double.parseDouble(e[0]);
+			tmp[1] = Double.parseDouble(e[1]);
+			tmp[2] = Double.parseDouble(e[2]);
+			mechanics.getBank().generateLongTimeCredit(player, tmp );
+			return "CREDITACCEPTED";
+		}else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
 			refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			return "ORDERSACCEPTED";
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
