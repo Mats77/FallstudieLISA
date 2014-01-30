@@ -464,12 +464,13 @@ public class Handler {
 		System.out.println("Get Player ID!");
 		int toReturn = -1;
 		System.out.println(connections.indexOf(connections.lastElement()));
-		for (Conn con : connections) {
-			System.out.println(con.getId());
-			if (con.equals(connection)) {
-				toReturn = connections.indexOf(con) + 1;
-			}
-		}
+		toReturn = connections.indexOf(connections.lastElement());
+	//	for (Conn con : connections) {
+	//		System.out.println(con.getId());
+	//		if (con.equals(connection)) {
+	//			toReturn = connections.indexOf(con) + 1;
+	//		}
+	//	}
 		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;
 	}
