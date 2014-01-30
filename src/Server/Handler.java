@@ -214,9 +214,26 @@ public class Handler {
 		round.setColor("success");
 		round.setValue(Integer.toString(mechanics.getQuartal()));
 		
-		//object rtliebility
+		//object reliability
 		DashboardIcon reli = new DashboardIcon();
+		reli.setTitle("Reliability");
+		reli.setIcon("thumbs-up");
+		reli.setColor("success");
+		reli.setValue(Double.toString(player.getReliability()));
 		
+		// object Active Orders
+		DashboardIcon acOrd = new DashboardIcon();
+		acOrd.setTitle("Active Orders");
+		acOrd.setIcon("wrench");
+		acOrd.setColor("important");
+		acOrd.setValue(Integer.toString(player.getPlayerOrderPool().getAcceptedOrders().size()));
+		
+		// object Loans
+		DashboardIcon loans = new DashboardIcon();
+		loans.setTitle("Loans");
+		loans.setIcon("credit-card");
+		loans.setColor("important");
+		loans.setValue(Double.toString(player.getShortTimeCredit().getAmount()));
 		return null;
 	}
 
