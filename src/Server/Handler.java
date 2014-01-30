@@ -360,11 +360,12 @@ public class Handler {
 		dashboard.add(research);
 		dashboard.add(earnings);
 		String s = "";
-		ArrayList<Vector<DashboardIcon>> tmp = new ArrayList<Vector<DashboardIcon>>();
+		ArrayList<Vector> tmp = new ArrayList<Vector>();
 		tmp.add(dashboard);
 		tmp.add(createStringBasicdashboarForNewRound(player));
 		tmp.add(getCostensValues(player));
 		tmp.add(getEarnings(player));
+		tmp.add(getLoans(player));
 		try {
 			s = ow.writeValueAsString(tmp);
 		} catch (Exception e) {
@@ -372,6 +373,28 @@ public class Handler {
 			e.printStackTrace();
 		}
 		return s;
+	}
+
+	private Vector<DashboardLoans> getLoans(Player player) {
+		Vector<DashboardLoans> dashboard = new Vector<DashboardLoans>();
+		DashboardLoans short1 = new DashboardLoans();
+		try {
+			short1.setPeriod("short-term");
+			short1.setRate(Double.toString(player.getShortTimeCredit().getInterestRate()));
+			short1.setSum(Double.toString(player.getShortTimeCredit().getAmount()));
+		} catch (Exception e) {
+			
+		}finally{
+			dashboard.add(short1);
+		}
+		for (LongTimeCredit credit : player.getCredits()) {
+		DashboardLoans long1 = new DashboardLoans();	
+		long1.setPeriod("long-term");
+		long1.setRate(Double.toString(credit.getInterestRate()));
+		long1.setSum(Double.toString(credit.getAmount()));
+		dashboard.add(long1);
+		}
+		return dashboard;
 	}
 
 	private Vector<DashboardIcon> getEarnings(Player player) {
