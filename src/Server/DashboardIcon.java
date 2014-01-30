@@ -7,8 +7,7 @@ public class DashboardIcon {
 	private String value;
 	private String percent;	
 	
-	public DashboardIcon(String title) {
-		this.title = title;
+	public DashboardIcon() {
 	}
 
 	public String getTitle(String title) {

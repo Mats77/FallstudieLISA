@@ -206,7 +206,8 @@ public class Handler {
 			}
 		}
 		// object variable costs
-		DashboardIcon variableCosts = new DashboardIcon("variable costs");
+		DashboardIcon variableCosts = new DashboardIcon();
+		variableCosts.setTitle("variable costs");
 		variableCosts.setIcon("align-left");
 		variableCosts.setColor("turquoise");
 		try {
@@ -215,7 +216,8 @@ public class Handler {
 			// TODO: handle exception
 		}
 		//object fix costs
-		DashboardIcon cumulativeCosts = new DashboardIcon("fix costs");
+		DashboardIcon cumulativeCosts = new DashboardIcon();
+		cumulativeCosts.setTitle("fix costs");
 		cumulativeCosts.setIcon("sort-alpha-asc");
 		cumulativeCosts.setColor("red");
 		try {
@@ -224,7 +226,8 @@ public class Handler {
 			// TODO: handle exception
 		}
 		//object price per Airplane
-		DashboardIcon costsPerPlane = new DashboardIcon("price per Airplane");
+		DashboardIcon costsPerPlane = new DashboardIcon();
+		costsPerPlane.setTitle("price per Airplane");
 		costsPerPlane.setIcon("plane");
 		costsPerPlane.setColor("grey");
 		try {
@@ -233,7 +236,8 @@ public class Handler {
 			// TODO: handle exception
 		}
 		// object overhead costs
-		DashboardIcon overheadCosts = new DashboardIcon("overhead costs");
+		DashboardIcon overheadCosts = new DashboardIcon();
+		overheadCosts.setTitle("overhead costs");
 		overheadCosts.setIcon("align-justify");
 		overheadCosts.setColor("purple");
 		try {
@@ -267,7 +271,8 @@ public class Handler {
 			}
 		}
 		// objekt für Geld
-		DashboardIcon cash = new DashboardIcon("Cash");
+		DashboardIcon cash = new DashboardIcon();
+		cash.setTitle("Cash");
 		cash.setColor("green");
 		cash.setIcon("usd");
 		try{
@@ -276,7 +281,8 @@ public class Handler {
 			return "PLAYERDONTEXIST";
 		}
 		//objekt für MarketShare
-		DashboardIcon marketShare = new DashboardIcon("Market Share");
+		DashboardIcon marketShare = new DashboardIcon();
+		marketShare.setTitle("Market Share");
 		marketShare.setIcon("globe");
 		marketShare.setColor("turquoise");
 		try{
@@ -285,7 +291,8 @@ public class Handler {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für Capacity
-		DashboardIcon capacity = new DashboardIcon("Capacity");
+		DashboardIcon capacity = new DashboardIcon();
+		capacity.setTitle("Capacity");
 		capacity.setIcon("wrench");
 		capacity.setColor("gray");
 		try{
@@ -294,7 +301,8 @@ public class Handler {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für marketing
-		DashboardIcon marketing = new DashboardIcon("Marketing");
+		DashboardIcon marketing = new DashboardIcon();
+		marketing.setTitle("Marketing");
 		marketing.setIcon("bullhorn");
 		marketing.setColor("purple");
 		try{
@@ -303,7 +311,8 @@ public class Handler {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für R&D
-		DashboardIcon research = new DashboardIcon("R&D");
+		DashboardIcon research = new DashboardIcon();
+		research.setTitle("R&D");
 		research.setIcon("flask");
 		research.setColor("blue");
 		try{
@@ -312,7 +321,8 @@ public class Handler {
 			return "PLAYERDONTEXIST";
 		}
 		// objekt für earnings
-		DashboardIcon earnings = new DashboardIcon("Earnings");
+		DashboardIcon earnings = new DashboardIcon();
+		earnings.setTitle("Earnings");
 		earnings.setIcon("money");
 		earnings.setColor("green");
 		try{
