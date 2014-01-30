@@ -2,6 +2,7 @@ package Server;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
@@ -191,14 +192,12 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return answer;
-		} else if (command.equals("GETBASICDASHBOARD2")) {
-			String s = createStringBasicdashboarForNewRound();
 		}
 
 		return "INVALIDESTRING";
 	}
 
-	private String createStringBasicdashboarForNewRound() {
+	private Vector createStringBasicdashboarForNewRound() {
 		// activen Player bekommen
 		Player[] players = mechanics.getPlayers();
 		Player player = null;
@@ -239,14 +238,8 @@ public class Handler {
 		dashboard.add(reli);
 		dashboard.add(acOrd);
 		dashboard.add(loans);
-		String s = "";
-		try {
-			s = ow.writeValueAsString(dashboard);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return s;
+		
+		return dashboard;
 	}
 
 	private String getCostensValues() {
@@ -391,8 +384,11 @@ public class Handler {
 		dashboard.add(research);
 		dashboard.add(earnings);
 		String s = "";
+		ArrayList<Vector> tmp = new ArrayList<Vector>();
+		tmp.add(dashboard);
+		tmp.add(createStringBasicdashboarForNewRound());
 		try {
-			s = ow.writeValueAsString(dashboard);
+			s = ow.writeValueAsString(tmp);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
