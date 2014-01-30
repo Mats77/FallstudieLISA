@@ -47,11 +47,11 @@ public class Handler {
 		// AUTHORIZEME
 		if (command.equals("AUTHORIZEME")) {
 			// Dem Client muss die Game-ID und die Player-ID zugewiesen werden
+			System.out.println("Start Athorization");
 			connections.add(new Conn(this));
-			connections.lastElement().setId(
-					this.getID(connections.lastElement()));
-			System.out.println(connections.lastElement().getId() + " "
-					+ this.gameID);
+			connections.lastElement().setId(this.getID(connections.lastElement()));
+			System.out.println("ID gesetzt");
+			System.out.println(connections.lastElement().getId() + " " + this.gameID);
 			result = connections.lastElement().getId() + " " + this.gameID;
 			if (connections.size() == 4) {
 				// start game
@@ -416,7 +416,7 @@ public class Handler {
 			int end = mes.indexOf("$");
 			String message = "";
 			message = mes.substring(0, end);
-			System.out.println("Reason =  " + message);
+			System.out.println("Reason = " + message);
 			return message;
 		}
 		return result;
@@ -463,6 +463,7 @@ public class Handler {
 	public int getID(Conn connection) {
 		System.out.println("Get Player ID!");
 		int toReturn = -1;
+		System.out.println(connections.indexOf(connections.lastElement()));
 		for (Conn con : connections) {
 			System.out.println(con.getId());
 			if (con.equals(connection)) {
