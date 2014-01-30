@@ -88,7 +88,7 @@ public class Handler {
 			return s;
 		}else if(command.equals("GETCOSTENS")) {
 			String s = getCostensValues();
-		
+			return s;
 		} else if (command.startsWith("VALUES")) { // String:
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
@@ -191,9 +191,33 @@ public class Handler {
 				e.printStackTrace();
 			}
 			return answer;
+		} else if (command.equals("GETBASICDASHBOARD2")) {
+			String s = createStringBasicdashboarForNewRound();
 		}
 
 		return "INVALIDESTRING";
+	}
+
+	private String createStringBasicdashboarForNewRound() {
+		// activen Player bekommen
+		Player[] players = mechanics.getPlayers();
+		Player player = null;
+		for(Player play : players){
+			if (play.getId() == activePlayer.getId()) {
+				player = play;
+			}
+		}
+		// object round
+		DashboardIcon round = new DashboardIcon();
+		round.setTitle("Round");
+		round.setIcon("calendar");
+		round.setColor("success");
+		round.setValue(Integer.toString(mechanics.getQuartal()));
+		
+		//object rtliebility
+		DashboardIcon reli = new DashboardIcon();
+		
+		return null;
 	}
 
 	private String getCostensValues() {
