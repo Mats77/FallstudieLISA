@@ -57,7 +57,7 @@ public class Handler {
 				// start game
 				mechanics.startGame(connections);
 				newRoundStarted();
-
+				return result;
 			} else {
 				return result;
 			}
@@ -464,7 +464,7 @@ public class Handler {
 		System.out.println("Get Player ID!");
 		int toReturn = -1;
 		System.out.println(connections.indexOf(connections.lastElement()));
-		toReturn = connections.indexOf(connections.lastElement());
+		toReturn = connections.indexOf(connections.lastElement())+1;
 	//	for (Conn con : connections) {
 	//		System.out.println(con.getId());
 	//		if (con.equals(connection)) {
