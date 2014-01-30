@@ -1,16 +1,16 @@
 package Server;
 
 public class DashboardIcon {
-	private String title;
 	private String icon;
 	private String color;
 	private String value;
 	private String percent;	
+	private String title;
 	
 	public DashboardIcon() {
 	}
 
-	public String getTitle(String title) {
+	public String getTitle() {
 		return title;
 	}
 	public void setTitle(String title) {
