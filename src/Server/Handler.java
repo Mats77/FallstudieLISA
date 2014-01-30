@@ -197,7 +197,7 @@ public class Handler {
 		return "INVALIDESTRING";
 	}
 
-	private Vector createStringBasicdashboarForNewRound() {
+	private Vector<DashboardIcon> createStringBasicdashboarForNewRound() {
 		// activen Player bekommen
 		Player[] players = mechanics.getPlayers();
 		Player player = null;
@@ -390,7 +390,7 @@ public class Handler {
 		dashboard.add(research);
 		dashboard.add(earnings);
 		String s = "";
-		ArrayList<Vector> tmp = new ArrayList<Vector>();
+		ArrayList<Vector<DashboardIcon>> tmp = new ArrayList<Vector<DashboardIcon>>();
 		tmp.add(dashboard);
 		tmp.add(createStringBasicdashboarForNewRound());
 		try {
