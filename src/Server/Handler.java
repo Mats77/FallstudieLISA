@@ -127,7 +127,6 @@ public class Handler {
 			try {
 				s = ow.writeValueAsString(tmp);
 			} catch (Exception e) {
-				// TODO: handle exception
 			}
 			return s;
 		} else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
@@ -296,7 +295,6 @@ public class Handler {
 			costsPerPlane.setValue(Double.toString(player.getData()
 					.lastElement().getPricePerAirplane()));
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		// object overhead costs
 		DashboardIcon overheadCosts = new DashboardIcon();
@@ -307,7 +305,6 @@ public class Handler {
 			overheadCosts.setValue(Double.toString(player.getData()
 					.lastElement().getCosts()));
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 
 		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
@@ -410,7 +407,6 @@ public class Handler {
 		try {
 			s = ow.writeValueAsString(tmp);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return s;
@@ -516,7 +512,6 @@ public class Handler {
 	}
 
 	private String getCommand(String txt) {
-		// TODO Auto-generated method stub
 		String mes = txt;
 		String result = "";
 		// get payload
@@ -579,7 +574,6 @@ public class Handler {
 			answer = ow.writeValueAsString(tmp);
 			System.out.println(answer);
 		} catch (Exception e) {
-			// TODO: handle exception
 			answer = "NONEWS";
 		}
 		return answer;
@@ -587,7 +581,6 @@ public class Handler {
 	}
 
 	private boolean anzPlayer() {
-		// TODO Auto-generated method stub
 		if (connections.size() == 4) {
 			return true;
 		} else {
@@ -648,7 +641,6 @@ public class Handler {
 																// in String
 																// abspeichern
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
 		}
@@ -689,7 +681,6 @@ public class Handler {
 																// in String
 																// abspeichern
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
 		}
