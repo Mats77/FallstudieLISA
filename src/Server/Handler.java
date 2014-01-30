@@ -757,4 +757,9 @@ public class Handler {
 		}
 		return answer;
 	}
+	
+	public Vector<Conn> getConnections() {
+		return connections;
+	}
+
 }
