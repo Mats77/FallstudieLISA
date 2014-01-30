@@ -229,15 +229,21 @@ public class Handler {
 		
 		// object Loans
 		DashboardIcon loans = new DashboardIcon();
+		try{
 		loans.setTitle("Loans");
 		loans.setIcon("credit-card");
 		loans.setColor("important");
 		loans.setValue(Double.toString(player.getShortTimeCredit().getAmount()));
+		}catch(Exception e){
+			System.out.println("Keine Kredite vorhanden");
+			loans.setValue("0");
+		}
 		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
 		dashboard.add(round);
 		dashboard.add(reli);
 		dashboard.add(acOrd);
-		dashboard.add(loans);
+		dashboard.add(loans);	
+
 		
 		return dashboard;
 	}
