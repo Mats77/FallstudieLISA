@@ -1,11 +1,11 @@
 package Server;
 
 public class DashboardIcon {
+	private String percent;	
+	private String title;
 	private String icon;
 	private String color;
 	private String value;
-	private String percent;	
-	private String title;
 	
 	public DashboardIcon() {
 	}

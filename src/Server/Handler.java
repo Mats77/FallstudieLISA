@@ -191,15 +191,7 @@ public class Handler {
 		return "INVALIDESTRING";
 	}
 
-	private Vector<DashboardIcon> createStringBasicdashboarForNewRound() {
-		// activen Player bekommen
-		Player[] players = mechanics.getPlayers();
-		Player player = null;
-		for(Player play : players){
-			if (play.getId() == activePlayer.getId()) {
-				player = play;
-			}
-		}
+	private Vector<DashboardIcon> createStringBasicdashboarForNewRound(Player player) {
 		// object round
 		DashboardIcon round = new DashboardIcon();
 		round.setTitle("Round");
@@ -242,15 +234,7 @@ public class Handler {
 		return dashboard;
 	}
 
-	private Vector<DashboardIcon> getCostensValues() {
-		// activen Player bekommen
-		Player[] players = mechanics.getPlayers();
-		Player player = null;
-		for(Player play : players){
-			if (play.getId() == activePlayer.getId()) {
-				player = play;
-			}
-		}
+	private Vector<DashboardIcon> getCostensValues(Player player) {
 		// object variable costs
 		DashboardIcon variableCosts = new DashboardIcon();
 		variableCosts.setTitle("variable costs");
@@ -274,7 +258,7 @@ public class Handler {
 		DashboardIcon costsPerPlane = new DashboardIcon();
 		costsPerPlane.setTitle("price per Airplane");
 		costsPerPlane.setIcon("plane");
-		costsPerPlane.setColor("grey");
+		costsPerPlane.setColor("gray");
 		try {
 			costsPerPlane.setValue(Double.toString(player.getData().lastElement().getPricePerAirplane()));
 		} catch (Exception e) {
@@ -379,8 +363,9 @@ public class Handler {
 		String s = "";
 		ArrayList<Vector<DashboardIcon>> tmp = new ArrayList<Vector<DashboardIcon>>();
 		tmp.add(dashboard);
-		tmp.add(createStringBasicdashboarForNewRound());
-		tmp.add(getCostensValues());
+		tmp.add(createStringBasicdashboarForNewRound(player));
+		tmp.add(getCostensValues(player));
+		tmp.add(getEarnings(player));
 		try {
 			s = ow.writeValueAsString(tmp);
 		} catch (Exception e) {
@@ -388,6 +373,32 @@ public class Handler {
 			e.printStackTrace();
 		}
 		return s;
+	}
+
+	private Vector<DashboardIcon> getEarnings(Player player) {
+		DashboardIcon cash = new DashboardIcon();
+		cash.setTitle("Cash");
+		cash.setIcon("money");
+		cash.setColor("green");
+		cash.setValue(Double.toString(player.getData().lastElement().getCash()));
+		
+		DashboardIcon revenue = new DashboardIcon();
+		revenue.setTitle("Revenue");
+		revenue.setIcon("repeat");
+		revenue.setColor("blue");
+		revenue.setValue(Double.toString(player.getData().lastElement().getProfit()));
+		
+		DashboardIcon price = new DashboardIcon();
+		price.setTitle("Price per Airplane");
+		price.setIcon("usd");
+		price.setColor("red");
+		price.setValue(Double.toString(player.getData().lastElement().getPricePerAirplane()));
+		
+		Vector<DashboardIcon> tmp = new Vector<DashboardIcon>();
+		tmp.add(cash);
+		tmp.add(revenue);
+		tmp.add(price);
+		return tmp;
 	}
 
 	public Mechanics getMechanics() {
