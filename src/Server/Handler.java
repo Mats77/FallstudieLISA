@@ -234,7 +234,19 @@ public class Handler {
 		loans.setIcon("credit-card");
 		loans.setColor("important");
 		loans.setValue(Double.toString(player.getShortTimeCredit().getAmount()));
-		return null;
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(round);
+		dashboard.add(reli);
+		dashboard.add(acOrd);
+		dashboard.add(loans);
+		String s = "";
+		try {
+			s = ow.writeValueAsString(dashboard);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return s;
 	}
 
 	private String getCostensValues() {
