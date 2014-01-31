@@ -700,7 +700,7 @@ public class Handler {
 		System.out.println(content); // 8
 		String accepted = content.substring(9);
 		int orderId = Integer.parseInt(accepted);
-		mechanics.acceptOrder(activePlayer.getId(), orderId);
+		mechanics.produceOrder(activePlayer.getId(), orderId);
 	}
 
 	private void refreshPlayerProduceOrderPool() {
