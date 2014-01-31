@@ -404,8 +404,7 @@ public class Handler {
 		marketing.setIcon("bullhorn");
 		marketing.setColor("purple");
 		try {
-			marketing.setValue(Double.toString(player.getData().lastElement()
-					.getMarketing()) + " in mio.");
+			marketing.setValue(Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
 			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
@@ -416,7 +415,7 @@ public class Handler {
 		research.setIcon("flask");
 		research.setColor("blue");
 		try {
-			research.setValue(Double.toString(player.getData().lastElement().getResearch()));
+			research.setValue(Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
 			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
