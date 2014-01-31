@@ -18,6 +18,7 @@ public class Player {
 	private double cash;
 	private int capacityLeft;
 	private int reliability=0;	//Pro Quartal 1
+	private String event;
 	
 	//Konstruktor
 	public Player(long id, String name, PlayerDataCalculator pdc, Mechanics m) {
@@ -218,5 +219,15 @@ public class Player {
 
 	public void insertNewTurnover(double turnover) {
 		data.get(data.size()-1).setTurnover(turnover);
+	}
+
+
+	public String getEvent() {
+		return event;
+	}
+
+
+	public void setEvent(String event) {
+		this.event = event;
 	}
 }
