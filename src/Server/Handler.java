@@ -180,6 +180,20 @@ public class Handler {
 				}
 			}// End of For
 			return result;
+		} else if (command.equals("GETEVENT")){
+			String answer = "NOEVENT";
+			// activen Player bekommen
+			Player[] players = mechanics.getPlayers();
+			Player player = null;
+			for (Player play : players) {
+				if (play.getId() == activePlayer.getId()) {
+					player = play;
+				}
+			}
+			if (player.getEvent() != null) {
+				answer = player.getEvent();
+			}
+			return answer;
 		} else if (command.equals("GETSTATS")) {
 			String values = "";
 			Player[] tmp = mechanics.getPlayers();

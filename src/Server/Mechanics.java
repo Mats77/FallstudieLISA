@@ -217,6 +217,10 @@ public class Mechanics {
 //		for (int i = 0; i < players.length; i++) {
 //			handler.setStatusForInputValues(true, i);
 //		}
+		// Events aufrufen
+		for(Player player : players){
+			player.setEvent(Event.rollEvent(player));
+		}
 		ordersForNewRound();		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
