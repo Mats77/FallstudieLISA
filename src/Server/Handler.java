@@ -516,7 +516,8 @@ public class Handler {
 	}
 
 	private Boolean setOrdersToProduce() {
-		return mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(content));
+		String[] tmp = content.split(";");
+		return mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(tmp[1]));
 	}
 
 	private void setStatusForNewRoundFalse() {
