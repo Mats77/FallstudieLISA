@@ -93,6 +93,7 @@ public class Handler {
 					s += conn.getNick() + ":";
 				}
 			}
+			s = s.substring(0, s.length()-1);
 			return s;
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
 			String s = getDashboardValues();
