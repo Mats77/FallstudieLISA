@@ -364,7 +364,7 @@ public class Handler {
 		cash.setColor("green");
 		cash.setIcon("usd");
 		try {
-			cash.setValue(Double.toString(player.getCash()));
+			cash.setValue(Double.toString(player.getCash()) + " in mio.");
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -374,7 +374,8 @@ public class Handler {
 		marketShare.setIcon("globe");
 		marketShare.setColor("turquoise");
 		try {
-			marketShare.setValue(Double.toString(player.getData().lastElement().getMarketshare()));
+			marketShare.setValue(Double.toString(player.getData().lastElement().getMarketshare()) + " %");
+			marketShare.setPercent(Double.toString(player.getData().lastElement().getMarketshare()));
 			System.out.println("Marketshare = " + Double.toString(player.getData().lastElement().getMarketshare()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
@@ -398,7 +399,7 @@ public class Handler {
 		marketing.setColor("purple");
 		try {
 			marketing.setValue(Double.toString(player.getData().lastElement()
-					.getMarketing()));
+					.getMarketing()) + " in mio.");
 			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
@@ -410,7 +411,7 @@ public class Handler {
 		research.setColor("blue");
 		try {
 			research.setValue(Double.toString(player.getData().lastElement().getResearch()));
-			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()));
+			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -418,7 +419,13 @@ public class Handler {
 		DashboardIcon earnings = new DashboardIcon();
 		earnings.setTitle("Earnings");
 		earnings.setIcon("money");
+		if (player.getData().lastElement().getProfit() < 0) {
+			earnings.setColor("red");
+		}else if (player.getData().lastElement().getProfit() == 0) {
+			earnings.setColor("yellow");
+		}else{
 		earnings.setColor("green");
+		}
 		try {
 			earnings.setValue(Double.toString(player.getData().lastElement().getProfit()));
 			System.out.println("Profit = " + Double.toString(player.getData().lastElement().getProfit()));
