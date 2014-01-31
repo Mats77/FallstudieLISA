@@ -111,6 +111,7 @@ public class Handler {
 					for (Conn conn : connections) {
 						if (conn.getReady()) {
 							newRound = true;
+							System.out.println("Spieler bereit : " + conn.getId() + getCurrentTimeAsString());
 						} else {
 							newRound = false;
 							break;
