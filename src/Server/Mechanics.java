@@ -217,10 +217,7 @@ public class Mechanics {
 //		for (int i = 0; i < players.length; i++) {
 //			handler.setStatusForInputValues(true, i);
 //		}
-		for (Player player : players) {
-			String tmp = null;
-			if((tmp = Event.rollEvent(player)) != null) handler.
-		}
+		// Events aufrufen
 		ordersForNewRound();		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
@@ -319,7 +316,7 @@ public class Mechanics {
 		return false;
 	}
 
-	public void newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
+	public double[] newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
 		// TODO Kreditaufnahme (langfristig)
 		Player player = getPlayerByNick(nick);
 		double[] offer = new double[3];
@@ -327,7 +324,7 @@ public class Mechanics {
 		{
 			offer = bank.getCreditOffer(player, substring);
 		}
-		handler.offerCredit(offer, nick);
+		return offer;
 	}
 	
 	public static int getQuartal(){
