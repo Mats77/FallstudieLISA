@@ -132,10 +132,10 @@ public class CreditTest {
 		player2.spendMoney(2500);
 		player3.spendMoney(100000000);
 		
-		double[] results0 = mechanics.getBank().getCreditOffer(player0,"1000;5");
-		double[] results1 = mechanics.getBank().getCreditOffer(player1,"1000;5");
-		double[] results2 = mechanics.getBank().getCreditOffer(player2,"1000;5");
-		double[] results3 = mechanics.getBank().getCreditOffer(player3, "1000;5");
+		double[] results0 = mechanics.getBank().getCreditOffer(player0,"1000,5");
+		double[] results1 = mechanics.getBank().getCreditOffer(player1,"1000,5");
+		double[] results2 = mechanics.getBank().getCreditOffer(player2,"1000,5");
+		double[] results3 = mechanics.getBank().getCreditOffer(player3, "1000,5");
 		
 		assertEquals(0.09, results0[2],0.1);
 		assertEquals(0.11, results1[2],0.1);
@@ -146,7 +146,7 @@ public class CreditTest {
 	@Test
 	public void testGetLongTimeCreditOffer()
 	{
-		mechanics.newCreditOffer("1000;2", "Mats1");
+		mechanics.newCreditOffer("1000,2", "Mats1");
 	}
 	
 	@Test

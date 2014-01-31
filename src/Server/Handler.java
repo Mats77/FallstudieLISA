@@ -1,18 +1,14 @@
 package Server;
 
-import java.io.IOException;
+import java.security.cert.CertPathValidatorException.Reason;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.TimeZone;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
@@ -52,9 +48,11 @@ public class Handler {
 		// AUTHORIZEME
 		if (command.equals("AUTHORIZEME")) {
 			// Dem Client muss die Game-ID und die Player-ID zugewiesen werden
+			System.out.println("Start Athorization");
 			connections.add(new Conn(this));
 			connections.lastElement().setId(
 					this.getID(connections.lastElement()));
+			System.out.println("ID gesetzt");
 			System.out.println(connections.lastElement().getId() + " "
 					+ this.gameID);
 			result = connections.lastElement().getId() + " " + this.gameID;
@@ -62,7 +60,7 @@ public class Handler {
 				// start game
 				mechanics.startGame(connections);
 				newRoundStarted();
-
+				return result;
 			} else {
 				return result;
 			}
@@ -82,70 +80,132 @@ public class Handler {
 				return s;
 			}
 			return "WAITFORPLAYER";
-		} else if (command.startsWith("VALUES")) { // String:
+		} else if (command.startsWith("GETACTIVEPLAYER")) {
+			String s = "";
+			for (Conn conn : connections) {
+				s += conn.getNick() + ":";
+			}
+			return s;
+		} else if (command.equals("GETREADYPLAYERS")) {
+			String s = "";
+			for (Conn conn : connections) {
+				if (conn.getReady()) {
+					s += conn.getNick() + ":";
+				}
+			}
+			s = s.substring(0, s.length()-1);
+			return s;
+		} else if (command.startsWith("GETBASICDASHBOARD")) {
+			String s = getDashboardValues();
+			return s;
+		} else if (command.startsWith("VALUES")) { // String:-->
 													// Marketing;Entwicklung;Materialstufe;Preis
 													// an Player
 			Player[] players = mechanics.getPlayers();
+			Boolean newRound = false;
 			for (Player player : players) {
 				if (player.getId() == activePlayer.getId()) {
 					player.saveNextRoundValues(content, mechanics.getQuartal());
-				}
+					activePlayer.setReady(true);
+					for (Conn conn : connections) {
+						if (conn.getReady()) {
+							newRound = true;
+						} else {
+							newRound = false;
+							break;
+						}// end inner if
+					}// end inner-for
+				} // end if
+			} // end for
+			if (newRound) {
+				newRoundStarted();
 			}
 			// Flugzeuge;Materialstufe;Preis
 			mechanics.valuesInserted(content, activePlayer.getNick());
 			return "VALUESSUCC";
 		} else if (command.startsWith("CREDIT")) {
-			mechanics.newCreditOffer(txt.substring(7), activePlayer.getNick()); // Höhe,
-			// Laufzeit
-		} else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
+			double[] tmp = mechanics.newCreditOffer(content, activePlayer.getNick()); // Höhe,Laufzeit
+			String s = "NOOFFER";
+			try {
+				s = ow.writeValueAsString(tmp);
+			} catch (Exception e) {
+			}
+			return s;
+		} else if (command.startsWith("ACCEPTCREDIT")) {
+			// get activ Player calss Player
+			// activen Player bekommen
+			Player[] players = mechanics.getPlayers();
+			Player player = null;
+			for (Player play : players) {
+				if (play.getId() == activePlayer.getId()) {
+					player = play;
+				}
+			}
+			double[] tmp = new double[3];
+			String[] e = content.split(":");
+			tmp[0] = Double.parseDouble(e[0]);
+			tmp[1] = Double.parseDouble(e[1]);
+			tmp[2] = Double.parseDouble(e[2]);
+			mechanics.getBank().generateLongTimeCredit(player, tmp );
+			return "CREDITACCEPTED";
+		}else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
 			refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
 			return "ORDERSACCEPTED";
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
-			mechanics.creditOfferAccepted(txt.substring(18),activePlayer.getNick());
+			mechanics.creditOfferAccepted(txt.substring(18),
+					activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
 			System.out.println("Get Orders");
 			refreshPlayerProduceOrderPool();
-			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer.getAcceptedOrders();
+			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer
+					.getAcceptedOrders();
 			String tmp = "";
 			try {
 				tmp = ow.writeValueAsString(acceptedOrders);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return tmp;
-		} else if (command.equals("PRODUCE")){
+		} else if (command.equals("PRODUCE")) {
 			setOrdersToProduce();
 			return "PRODUCESUCC";
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
-			Boolean newRound = false;
 			result = checkOpenMessages();
 			for (Conn conn : connections) {
 				if (conn.getReady() == false) {
-					newRound = false;
 					break;
 				} else {
-					newRound = true;
 					newRoundStarted();
 					setStatusForNewRoundFalse();
 				}
 			}// End of For
 			return result;
+		} else if (command.equals("GETEVENT")){
+			String answer = "NOEVENT";
+			// activen Player bekommen
+			Player[] players = mechanics.getPlayers();
+			Player player = null;
+			for (Player play : players) {
+				if (play.getId() == activePlayer.getId()) {
+					player = play;
+				}
+			}
+			if (player.getEvent() != null) {
+				answer = player.getEvent();
+			}
+			return answer;
 		} else if (command.equals("GETSTATS")) {
 			String values = "";
 			Player[] tmp = mechanics.getPlayers();
 			for (int i = 0; i < tmp.length; i++) {
 				if (activePlayer.getId() == tmp[i].getId()) {
 					Vector<PlayerData> data = tmp[i].getData();
-					for (PlayerData playerdata : data) {
-						try {
-							values += ow.writeValueAsString(playerdata);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						} // end try catch
-					}// end for playerdata
+					try {
+						values = ow.writeValueAsString(data);
+					} catch (Exception e) {
+						e.printStackTrace();
+					} // end try catch
 					return values;
 				}// end if
 			} // end for players
@@ -160,13 +220,10 @@ public class Handler {
 			String answer = "ERROR";
 			System.out.println(content);
 			clientdata = content.split(":");
-			System.out.println("Arraydaten: 1. Länge " + clientdata.length
-					+ " 2. Inhalt " + Arrays.toString(clientdata));
 			try {
 				// 1. Nutzername überprüfen
 				if (checkNickName(clientdata[0])) {
 					String name = clientdata[0];
-					System.out.println("My name is ... " + name);
 					activePlayer.setNick(name);
 					answer = "CHECKNICK";
 				} else {
@@ -187,20 +244,271 @@ public class Handler {
 			String answer = "";
 			try {
 				answer = ow.writeValueAsString(activePlayer.getChatMessages());
-			} catch (JsonGenerationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return answer;
 		}
 
 		return "INVALIDESTRING";
+	}
+
+	private Vector<DashboardIcon> createStringBasicdashboarForNewRound(
+			Player player) {
+		// object round
+		DashboardIcon round = new DashboardIcon();
+		round.setTitle("Round");
+		round.setIcon("calendar");
+		round.setColor("success");
+		round.setValue(Integer.toString(mechanics.getQuartal()));
+
+		// object reliability
+		DashboardIcon reli = new DashboardIcon();
+		reli.setTitle("Reliability");
+		reli.setIcon("thumbs-up");
+		reli.setColor("success");
+		reli.setValue(Double.toString(player.getReliability()));
+
+		// object Active Orders
+		DashboardIcon acOrd = new DashboardIcon();
+		acOrd.setTitle("Active Orders");
+		acOrd.setIcon("wrench");
+		acOrd.setColor("important");
+		acOrd.setValue(Integer.toString(player.getPlayerOrderPool()
+				.getAcceptedOrders().size()));
+
+		// object Loans
+		DashboardIcon loans = new DashboardIcon();
+		try {
+			loans.setTitle("Loans");
+			loans.setIcon("credit-card");
+			loans.setColor("important");
+			loans.setValue(Double.toString(player.getShortTimeCredit()
+					.getAmount()));
+		} catch (Exception e) {
+			System.out.println("Keine Kredite vorhanden");
+			loans.setValue("0");
+		}
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(round);
+		dashboard.add(reli);
+		dashboard.add(acOrd);
+		dashboard.add(loans);
+
+		return dashboard;
+	}
+
+	private Vector<DashboardIcon> getCostensValues(Player player) {
+		// object variable costs
+		DashboardIcon variableCosts = new DashboardIcon();
+		variableCosts.setTitle("variable costs");
+		variableCosts.setIcon("align-left");
+		variableCosts.setColor("turquoise");
+		try {
+			variableCosts.setValue(Double.toString(player.getData()
+					.lastElement().getVarCosts()));
+		} catch (Exception e) {
+		}
+		// object fix costs
+		DashboardIcon cumulativeCosts = new DashboardIcon();
+		cumulativeCosts.setTitle("fix costs");
+		cumulativeCosts.setIcon("sort-alpha-asc");
+		cumulativeCosts.setColor("red");
+		try {
+			cumulativeCosts.setValue(Double.toString(player.getData()
+					.lastElement().getFixCosts()));
+		} catch (Exception e) {
+		}
+		// object price per Airplane
+		DashboardIcon costsPerPlane = new DashboardIcon();
+		costsPerPlane.setTitle("price per Airplane");
+		costsPerPlane.setIcon("plane");
+		costsPerPlane.setColor("gray");
+		try {
+			costsPerPlane.setValue(Double.toString(player.getData()
+					.lastElement().getPricePerAirplane()));
+		} catch (Exception e) {
+		}
+		// object overhead costs
+		DashboardIcon overheadCosts = new DashboardIcon();
+		overheadCosts.setTitle("overhead costs");
+		overheadCosts.setIcon("align-justify");
+		overheadCosts.setColor("purple");
+		try {
+			overheadCosts.setValue(Double.toString(player.getData()
+					.lastElement().getCosts()));
+		} catch (Exception e) {
+		}
+
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(variableCosts);
+		dashboard.add(cumulativeCosts);
+		dashboard.add(costsPerPlane);
+		dashboard.add(overheadCosts);
+
+		return dashboard;
+	}
+
+	private String getDashboardValues() {
+		// activen Player bekommen
+		Player[] players = mechanics.getPlayers();
+		Player player = null;
+		for (Player play : players) {
+			if (play.getId() == activePlayer.getId()) {
+				player = play;
+			}
+		}
+		// objekt für Geld
+		DashboardIcon cash = new DashboardIcon();
+		cash.setTitle("Cash");
+		cash.setColor("green");
+		cash.setIcon("usd");
+		try {
+			cash.setValue(Double.toString(player.getCash()) + " in mio.");
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für MarketShare
+		DashboardIcon marketShare = new DashboardIcon();
+		marketShare.setTitle("Market Share");
+		marketShare.setIcon("globe");
+		marketShare.setColor("turquoise");
+		try {
+			marketShare.setValue(Double.toString(player.getData().lastElement().getMarketshare()) + " %");
+			marketShare.setPercent(Double.toString(player.getData().lastElement().getMarketshare()));
+			System.out.println("Marketshare = " + Double.toString(player.getData().lastElement().getMarketshare()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für Capacity
+		DashboardIcon capacity = new DashboardIcon();
+		capacity.setTitle("Capacity");
+		capacity.setIcon("wrench");
+		capacity.setColor("gray");
+		try {
+			capacity.setValue(Double.toString(player.getData().lastElement()
+					.getCapacity()));
+			System.out.println("Capacity = " + Double.toString(player.getData().lastElement().getCapacity()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für marketing
+		DashboardIcon marketing = new DashboardIcon();
+		marketing.setTitle("Marketing");
+		marketing.setIcon("bullhorn");
+		marketing.setColor("purple");
+		try {
+			marketing.setValue(Double.toString(player.getData().lastElement()
+					.getMarketing()) + " in mio.");
+			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für R&D
+		DashboardIcon research = new DashboardIcon();
+		research.setTitle("R&D");
+		research.setIcon("flask");
+		research.setColor("blue");
+		try {
+			research.setValue(Double.toString(player.getData().lastElement().getResearch()));
+			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für earnings
+		DashboardIcon earnings = new DashboardIcon();
+		earnings.setTitle("Earnings");
+		earnings.setIcon("money");
+		if (player.getData().lastElement().getProfit() < 0) {
+			earnings.setColor("red");
+		}else if (player.getData().lastElement().getProfit() == 0) {
+			earnings.setColor("yellow");
+		}else{
+		earnings.setColor("green");
+		}
+		try {
+			earnings.setValue(Double.toString(player.getData().lastElement().getProfit()));
+			System.out.println("Profit = " + Double.toString(player.getData().lastElement().getProfit()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(cash);
+		dashboard.add(marketShare);
+		dashboard.add(capacity);
+		dashboard.add(marketing);
+		dashboard.add(research);
+		dashboard.add(earnings);
+		String s = "";
+		ArrayList<Vector> tmp = new ArrayList<Vector>();
+		tmp.add(dashboard);
+		tmp.add(createStringBasicdashboarForNewRound(player));
+		tmp.add(getCostensValues(player));
+		tmp.add(getEarnings(player));
+		tmp.add(getLoans(player));
+		try {
+			s = ow.writeValueAsString(tmp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return s;
+	}
+
+	private Vector<DashboardLoans> getLoans(Player player) {
+		Vector<DashboardLoans> dashboard = new Vector<DashboardLoans>();
+		DashboardLoans short1 = new DashboardLoans();
+		try {
+			short1.setPeriod("short-term");
+			short1.setRate(Double.toString(player.getShortTimeCredit()
+					.getInterestRate()));
+			short1.setSum(Double.toString(player.getShortTimeCredit()
+					.getAmount()));
+			short1.setInterestsForQuarter(Double.toString(player
+					.getShortTimeCredit().getInterestsForQuarter()));
+		} catch (Exception e) {
+
+		}
+		if (short1 != null) {
+			dashboard.add(short1);
+		}
+		for (LongTimeCredit credit : player.getCredits()) {
+			DashboardLoans long1 = new DashboardLoans();
+			long1.setPeriod("long-term");
+			long1.setRate(Double.toString(credit.getInterestRate()));
+			long1.setSum(Double.toString(credit.getAmount()));
+			long1.setInterestsForQuarter(Double.toString(credit
+					.getInterestsForQuarter()));
+			dashboard.add(long1);
+		}
+		return dashboard;
+	}
+
+	private Vector<DashboardIcon> getEarnings(Player player) {
+		DashboardIcon cash = new DashboardIcon();
+		cash.setTitle("Cash");
+		cash.setIcon("money");
+		cash.setColor("green");
+		cash.setValue(Double.toString(player.getData().lastElement().getCash()));
+
+		DashboardIcon revenue = new DashboardIcon();
+		revenue.setTitle("Revenue");
+		revenue.setIcon("repeat");
+		revenue.setColor("blue");
+		revenue.setValue(Double.toString(player.getData().lastElement()
+				.getProfit()));
+
+		DashboardIcon price = new DashboardIcon();
+		price.setTitle("Price per Airplane");
+		price.setIcon("usd");
+		price.setColor("red");
+		price.setValue(Double.toString(player.getData().lastElement()
+				.getPricePerAirplane()));
+
+		Vector<DashboardIcon> tmp = new Vector<DashboardIcon>();
+		tmp.add(cash);
+		tmp.add(revenue);
+		tmp.add(price);
+		return tmp;
 	}
 
 	public Mechanics getMechanics() {
@@ -220,10 +528,10 @@ public class Handler {
 	private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
-		//System.out.println(content);
+		// System.out.println(content);
 		clientdata = content.split(":");
 		String message = clientdata[0];
-		//System.out.println("Nachricht: " + clientdata[0]);
+		// System.out.println("Nachricht: " + clientdata[0]);
 		String avatar = clientdata[1];
 		String direction;
 		for (Conn con : connections) {
@@ -246,7 +554,6 @@ public class Handler {
 	}
 
 	private String getCommand(String txt) {
-		// TODO Auto-generated method stub
 		String mes = txt;
 		String result = "";
 		// get payload
@@ -282,7 +589,7 @@ public class Handler {
 			int end = mes.indexOf("$");
 			String message = "";
 			message = mes.substring(0, end);
-			System.out.println("Reason =  " + message);
+			System.out.println("Reason = " + message);
 			return message;
 		}
 		return result;
@@ -309,7 +616,6 @@ public class Handler {
 			answer = ow.writeValueAsString(tmp);
 			System.out.println(answer);
 		} catch (Exception e) {
-			// TODO: handle exception
 			answer = "NONEWS";
 		}
 		return answer;
@@ -317,7 +623,6 @@ public class Handler {
 	}
 
 	private boolean anzPlayer() {
-		// TODO Auto-generated method stub
 		if (connections.size() == 4) {
 			return true;
 		} else {
@@ -329,12 +634,14 @@ public class Handler {
 	public int getID(Conn connection) {
 		System.out.println("Get Player ID!");
 		int toReturn = -1;
-		for (Conn con : connections) {
-			System.out.println(con.getId());
-			if (con.equals(connection)) {
-				toReturn = connections.indexOf(con) + 1;
-			}
-		}
+		System.out.println(connections.indexOf(connections.lastElement()));
+		toReturn = connections.indexOf(connections.lastElement()) + 1;
+		// for (Conn con : connections) {
+		// System.out.println(con.getId());
+		// if (con.equals(connection)) {
+		// toReturn = connections.indexOf(con) + 1;
+		// }
+		// }
 		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;
 	}
@@ -376,11 +683,10 @@ public class Handler {
 																// in String
 																// abspeichern
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
 		}
-		}
+	}
 
 	// Deaktiviert bzw. Aktiviert die Eingabefelder des Client wenn auf die
 	// Abhandlung der orders gewartet wird.
@@ -394,7 +700,7 @@ public class Handler {
 		System.out.println(content); // 8
 		String accepted = content.substring(9);
 		int orderId = Integer.parseInt(accepted);
-		mechanics.acceptOrder(activePlayer.getId(), orderId);
+		mechanics.produceOrder(activePlayer.getId(), orderId);
 	}
 
 	private void refreshPlayerProduceOrderPool() {
@@ -407,19 +713,19 @@ public class Handler {
 																	// f�r
 																	// player
 																	// holen
-				CopyOnWriteArrayList<Order> newOrders = pool.getOrdersToDisplay(); // neuen
-																				// bestellungen
-																				// holen
+				CopyOnWriteArrayList<Order> newOrders = pool
+						.getOrdersToDisplay(); // neuen
+												// bestellungen
+												// holen
 				activePlayer.setAcceptedOrders(newOrders);
 				try {
 					answer = ow.writeValueAsString(newOrders); // Bestellungen
 																// in String
 																// abspeichern
 				} catch (Exception e) {
-					// TODO: handle exception
 				}
 			}
-	}
+		}
 	}
 
 	public void newRoundStarted() {
@@ -493,4 +799,9 @@ public class Handler {
 		}
 		return answer;
 	}
+	
+	public Vector<Conn> getConnections() {
+		return connections;
+	}
+
 }
