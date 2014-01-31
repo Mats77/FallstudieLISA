@@ -8,7 +8,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URLDecoder;
 import java.util.ArrayList;
-import java.util.Vector;
 
 
 class Server{
@@ -25,10 +24,8 @@ class Server{
 		
 		//Server erstellt ein Handlerobjekt, ��ffnet den Server-Socket und beginnt Deamon Prozess
 		// Erzeugung einer Game-ID (Auf einmaligkeit der GameID wird erst einmal verzichtet)
-		int gameID = 1;
-		Vector<Handler> games = new Vector<Handler>();
+		int gameID = 3;
 		handler = new Handler(gameID);
-		games.add(handler);
     	port = 8080;
 		try {
 			server = new ServerSocket(port);
@@ -47,14 +44,11 @@ class Server{
 					// String entgegennehmen (können mehrere Zeilen sein)
 					try{
 					while(!(txtin = in.readLine()).equals("")) {
-						if (txtin.contains("GET")) {		// abfragen für schöner Debuganzeige
-							if (txtin.contains("CHATREFRESH")) { // abfragen für schöner Debuganzeige
+						if (txtin.contains("GET")) {
+							if (txtin.contains("CHATREFRESH")) {
 								
-							}else if(games.lastElement().getConnections().size() == 4 && games.size() != 10 && txtin.contains("AUTHORIZEME")){
-								gameID++;
-								games.add(new Handler(gameID));
 							}else{
-								System.out.println(txtin);									
+								System.out.println(txtin);		
 							}
 
 						}
@@ -64,14 +58,8 @@ class Server{
 					for (int i = 0; i < input.size(); i++) {
 						tmp += URLDecoder.decode(input.get(i), "utf-8");						
 					}
-					int activeGame = getGameID(tmp);
 					// Inhalt erstellen
-					if (activeGame != 99) {
-						txtout = games.elementAt(activeGame-1).handleString(tmp);
-					}else{
-						txtout = games.lastElement().handleString(tmp);
-					}
-
+					txtout = handler.handleString(tmp);
 					}catch(Exception e){
 						e.printStackTrace();
 						System.out.println("Keine Daten empfangen");
@@ -87,7 +75,7 @@ class Server{
 					out.flush();
 					// Inhalt senden
 					out.print(txtout);
-					//System.out.println(txtout);
+					System.out.println(txtout);
 					out.flush();
 					// Verbindung trennen
 					in.close();
@@ -99,21 +87,6 @@ class Server{
 			e.printStackTrace();
 		}
 	}//main
-
-	private static int getGameID(String txt) {
-		// get payload
-		int answer;
-		if (txt.contains("payload")) {
-			int tmpbeg = txt.lastIndexOf("payload");
-			tmpbeg = tmpbeg + 8;
-			String incomingGame = txt.substring(tmpbeg+2, tmpbeg + 3);
-			System.out.println("Abgeshnittene GameID = " + incomingGame);
-			answer = Integer.parseInt(incomingGame);
-		}else{
-			answer = 99;
-		}
-		return answer;
-	}
 
 	public static void close() {
 		try {
