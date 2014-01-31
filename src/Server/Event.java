@@ -7,7 +7,7 @@ public abstract class Event {
 	public static String rollEvent(Player player){
 		//Erstellen von 100 Zufallsmöglichkeiten. Die Fälle 0-09 werden mit Events belegt, wobei jedem Event eine 1% Chance zu Grunde liegt.
 		//Die Möglichkeiten 10-99 sind unbelegt, da in 90% der Fälle kein Event beim Spieler auftreten soll.
-		int random = (int) (Math.random() * 100);
+		int random = (int) (Math.random() * 50);
 		
 		switch(random) {
 			case 0:

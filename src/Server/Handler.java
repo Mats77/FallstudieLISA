@@ -406,7 +406,7 @@ public class Handler {
 		try {
 			marketing.setValue(Double.toString(player.getData().lastElement()
 					.getMarketing()) + " in mio.");
-			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()));
+			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
