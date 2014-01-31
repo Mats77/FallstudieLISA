@@ -87,7 +87,7 @@ class Server{
 					out.flush();
 					// Inhalt senden
 					out.print(txtout);
-					System.out.println(txtout);
+					//System.out.println(txtout);
 					out.flush();
 					// Verbindung trennen
 					in.close();
