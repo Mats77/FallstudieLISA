@@ -29,8 +29,8 @@ public class OrderTest {
 	public void testValidToDate(){
 		
 		for (int i = 0; i < 100; i++) {
-			Order order1 = new Order(100,1);
-			Order order2 = new Order(100,3);
+			Order order1 = new Order(100,1,true);
+			Order order2 = new Order(100,3,true);
 			
 			assertTrue("Das fällige Quartal ist zu hoch", order1.getQuartalValidTo()<=4);
 			assertTrue("Das fällige Quartal ist zu niedrig", order1.getQuartalValidTo()>=2);
