@@ -4,6 +4,7 @@ import java.security.cert.CertPathValidatorException.Reason;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
@@ -517,6 +518,7 @@ public class Handler {
 
 	private Boolean setOrdersToProduce() {
 		String[] tmp = content.split(";");
+		System.out.println("Array Produce: " + Arrays.toString(tmp));
 		return mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(tmp[1]));
 	}
 

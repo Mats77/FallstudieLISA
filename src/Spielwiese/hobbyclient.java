@@ -21,11 +21,11 @@ public class hobbyclient {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		String[] test = {"GET /reason=AUTHORIZEME$ HTTP/1.1",
-						 "GET /?payload=2+3:abc:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
+						 "GET /?payload=2+1:abc:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
 						 "GET /reason=AUTHORIZEME$ HTTP/1.1",
-						 "GET /?payload=3+3:abcd:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
+						 "GET /?payload=3+1:abcd:12:wintype2$&reason=STARTGAME$ HTTP/1.1",
 						 "GET /reason=AUTHORIZEME$ HTTP/1.1",
-						 "GET /?payload=4+3:abcde:12:wintype2$&reason=STARTGAME$ HTTP/1.1"};
+						 "GET /?payload=4+1:abcde:12:wintype2$&reason=STARTGAME$ HTTP/1.1"};
 		String user = "";
 		System.out.println("Client startet");
 		try {
