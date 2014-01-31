@@ -167,8 +167,8 @@ public class Handler {
 			}
 			return tmp;
 		} else if (command.equals("PRODUCE")) {
-			setOrdersToProduce();
-			return "PRODUCESUCC";
+			Boolean answer = setOrdersToProduce();
+			return Boolean.toString(answer);
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
 			result = checkOpenMessages();
@@ -515,8 +515,8 @@ public class Handler {
 		return mechanics;
 	}
 
-	private void setOrdersToProduce() {
-		mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(content));
+	private Boolean setOrdersToProduce() {
+		return mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(content));
 	}
 
 	private void setStatusForNewRoundFalse() {
