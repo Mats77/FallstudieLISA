@@ -217,10 +217,6 @@ public class Mechanics {
 //		for (int i = 0; i < players.length; i++) {
 //			handler.setStatusForInputValues(true, i);
 //		}
-		for (Player player : players) {
-			String tmp = null;
-			if((tmp = Event.rollEvent(player)) != null) handler.
-		}
 		ordersForNewRound();		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
