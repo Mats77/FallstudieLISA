@@ -94,7 +94,11 @@ public class Handler {
 					s += conn.getNick() + ":";
 				}
 			}
-			s = s.substring(0, s.length()-1);
+			try {
+				s = s.substring(0, s.length()-1);	
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			return s;
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
 			String s = getDashboardValues();
