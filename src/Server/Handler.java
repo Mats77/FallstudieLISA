@@ -374,6 +374,7 @@ public class Handler {
 		try {
 			cash.setValue(Double.toString(player.getData().lastElement()
 					.getMarketshare()));
+			System.out.println("Marketshare = " + Double.toString(player.getData().lastElement().getMarketshare()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -385,6 +386,7 @@ public class Handler {
 		try {
 			cash.setValue(Double.toString(player.getData().lastElement()
 					.getCapacity()));
+			System.out.println("Capacity = " + Double.toString(player.getData().lastElement().getCapacity()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -396,6 +398,7 @@ public class Handler {
 		try {
 			cash.setValue(Double.toString(player.getData().lastElement()
 					.getMarketing()));
+			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -405,8 +408,8 @@ public class Handler {
 		research.setIcon("flask");
 		research.setColor("blue");
 		try {
-			cash.setValue(Double.toString(player.getData().lastElement()
-					.getResearch()));
+			cash.setValue(Double.toString(player.getData().lastElement().getResearch()));
+			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -416,8 +419,8 @@ public class Handler {
 		earnings.setIcon("money");
 		earnings.setColor("green");
 		try {
-			cash.setValue(Double.toString(player.getData().lastElement()
-					.getProfit()));
+			cash.setValue(Double.toString(player.getData().lastElement().getProfit()));
+			System.out.println("Profit = " + Double.toString(player.getData().lastElement().getProfit()));
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
