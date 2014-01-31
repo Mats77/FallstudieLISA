@@ -106,7 +106,8 @@ class Server{
 		if (txt.contains("payload")) {
 			int tmpbeg = txt.lastIndexOf("payload");
 			tmpbeg = tmpbeg + 8;
-			String incomingGame = txt.substring(tmpbeg+2, tmpbeg + 2);
+			String incomingGame = txt.substring(tmpbeg+2, tmpbeg + 3);
+			System.out.println("Abgeshnittene GameID = " + incomingGame);
 			answer = Integer.parseInt(incomingGame);
 		}else{
 			answer = 99;
