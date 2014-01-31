@@ -47,7 +47,7 @@ class Server{
 					// String entgegennehmen (können mehrere Zeilen sein)
 					try{
 					while(!(txtin = in.readLine()).equals("")) {
-						if (txtin.contains("GET")) {		// abfragen für schöner Debuganzeige
+						if (txtin.contains("GET")) {		// abfragen für schöner Debuganzeige //änderung um commiten zu können
 							if (txtin.contains("CHATREFRESH")) { // abfragen für schöner Debuganzeige
 								
 							}else if(games.lastElement().getConnections().size() == 4 && games.size() != 10 && txtin.contains("AUTHORIZEME")){
