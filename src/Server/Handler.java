@@ -149,8 +149,8 @@ public class Handler {
 			mechanics.getBank().generateLongTimeCredit(player, tmp );
 			return "CREDITACCEPTED";
 		}else if (command.startsWith("ORDERINPUT")) { // Nachricht vom Client :
-			Boolean answer = refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
-			return Boolean.toString(answer);
+			refreshPlayerAcceptedOrderPool();// "ORDERINPUT ACCEPTED OrderID,OrderID... PRODUCE OrderId,OrderId"
+			return "ORDERSACCEPTED";
 		} else if (command.startsWith("ACCEPTCREDITOFFER")) {
 			mechanics.creditOfferAccepted(txt.substring(18),
 					activePlayer.getNick());
@@ -516,7 +516,7 @@ public class Handler {
 	}
 
 	private void setOrdersToProduce() {
-
+		mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(content));
 	}
 
 	private void setStatusForNewRoundFalse() {
@@ -696,11 +696,11 @@ public class Handler {
 
 	// Aktualisiert den PlayerOrderPool der Spieler mit den neu angenommen und
 	// den kommend produzierenden Orders
-	private Boolean refreshPlayerAcceptedOrderPool() {
+	private void refreshPlayerAcceptedOrderPool() {
 		System.out.println(content); // 8
 		String accepted = content.substring(9);
 		int orderId = Integer.parseInt(accepted);
-		 return mechanics.produceOrder(activePlayer.getId(), orderId);
+		mechanics.acceptOrder(activePlayer.getId(), orderId);
 	}
 
 	private void refreshPlayerProduceOrderPool() {
@@ -734,6 +734,11 @@ public class Handler {
 		for (Conn conn : connections) {
 			setPlayerOrderPoolNewOrders(conn);
 		}
+		
+		// event
+		for (Player player : players) {
+			Event.rollEvent(player);
+		}		
 		for (Player player : players) {
 			PlayerData newData = player.getData().lastElement(); // Hier sind
 																	// die Daten
