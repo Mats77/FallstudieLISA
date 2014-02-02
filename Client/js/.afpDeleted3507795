@@ -1,0 +1,275 @@
+lisaApp.controller("loginController", function ($scope, $http, $cookieStore, $location, cfpLoadingBar, $notification) { //
+
+    $notification.success("Willkommen","Willkommen bei LISA! Bitte trag' deine Daten ein");
+
+    $scope.oneAtATime = true;
+    $scope.chosenAvatar = "img/photo.jpg";
+
+    $scope.userData = {};
+    //var serverBackendURL = "/lisa/json/fakeServer.php";
+     var serverBackendURL = "http://digifurt.de:8080";
+
+    $http.get('/lisa/json/avatars.php').success(function (data) {
+        $scope.avatars = data;
+    });
+
+    $scope.debugRemoveAllCookies = function () {
+        $cookieStore.remove('authCookie');
+        $cookieStore.remove('lisaAvatar');
+        $notification.warning("Debug", "Cookies successfully removed");
+        $scope.userData.name = "Airbus";
+        $scope.userData.rounds = "12";
+        $scope.userData.win = "wintype2";
+        $notification.warning("Debug", "User-Daten gesetzt");
+    }
+
+    $scope.setImage = function (imageUrl) {
+        $scope.chosenAvatar = imageUrl;
+        $cookieStore.put('lisaAvatar', imageUrl);
+
+    }
+    $scope.checkOut = function (user) {
+        var authCookie = $cookieStore.get('authCookie');
+
+         $scope.userData = angular.copy(user);
+
+
+        if (authCookie == null) {
+            $notification.warning("Debug",'authCookie ist nich vorhanden, feuere get-Request ab');
+            $http.get( serverBackendURL, {params: { reason: "AUTHORIZEME$"}}).success(function(data){
+                $notification.warning("Debug","Antwort vom AUTHORIZEME reqest: "+data);
+                var authData = data;
+                $cookieStore.put('authCookie', authData);
+                $notification.warning("Debug","Im cookie steht: "+$cookieStore.get('authCookie'));
+                $scope.startGame($cookieStore.get('authCookie'));
+             })
+            .error(function() {
+            $notification.error("Debug","AUTHORIZEME failed");
+            });
+        } else {
+            $notification.warning("Debug","Active authCookie found: verifying...");
+            $http.get(serverBackendURL, {params: { reason: "VERIFY$", payload: authCookie+"$"}}).success(function(data){
+                if (data.indexOf("OK")) {
+                    $notification.warning("Debug","Cookie OK, redirecting...");
+                
+                    $location.path("main");
+                   
+                    
+            } else {
+                $notification.warning("Debug","Bad cookie! Shame on you!");
+                $cookieStore.remove('authCookie');
+            }
+            }).error(function(){$notification.error("Debug","VERIFY failed")});
+        }   
+          
+    }
+
+    $scope.startGame = function (cookie){
+
+            function isEmpty(str) {
+            return (!str || 0 === str.length);
+        }
+
+        if (isEmpty($scope.userData.name) || 
+            isEmpty($scope.userData.rounds) || 
+            isEmpty($scope.userData.win)) { 
+            //hier darf der wert des cookies nicht "undefined" sein!
+            $notification.error("Fehler","Bitte setze alle erforderlichen Werte!")
+
+
+        } else {
+            $http.get(serverBackendURL, {params: {reason: "STARTGAME$", payload: cookie+":"+$scope.userData.name+":"+$scope.userData.rounds+":"+$scope.userData.win+"$" }})
+            .success(function(data){
+                console.log(data);
+                if (data.indexOf("CHECKNICK") >= 0) {
+                    console.log(data);
+                    $cookieStore.put('lisaUserName', $scope.userData.name);
+                    $location.path("main"); 
+                } else {
+                    $notification.error("Debug","kein OK vom Server");
+                }
+            })
+            .error(function(){
+                $notification.error("Debug","STARTGAME failed");
+            });
+        }
+    }
+
+});
+
+lisaApp.controller("mainController", 
+    function ($scope, $http, $cookieStore, $location, $log, pollingService, $templateCache, cfpLoadingBar, $notification) {
+
+    $scope.clearCache = function() { 
+        $templateCache.remove('/lisa/templates/chat.html');
+    }
+    $scope.userName = $cookieStore.get('lisaUserName');
+    $scope.avatar = $cookieStore.get('lisaAvatar');
+    $scope.template = '/lisa/templates/dashboard.html';
+
+    $scope.toggleNavbar = function(){
+        $scope.navBarState = ($scope.navBarState) ? false : true;
+        return $scope.navBarState;
+    };
+    $scope.userEntry = {};
+    $scope.userEntry.planePrice = "";
+    $scope.userEntry.research = "";
+    $scope.userEntry.marketing = "";
+    $scope.userEntry.material = "";
+    $scope.userEntry.capacity = "";
+    $scope.label = "";
+    $scope.loadingBarDebug = "";
+
+        $scope.debug = function(){
+
+
+        //get Sales
+        $http.get( serverBackendURL2, {params: { reason: "GETSALES$", payload: $cookieStore.get('authCookie')+"$"}})
+            .success(function(data){
+                $scope.recentOrders = data; 
+                $log.log($scope.recentOrders);
+                $notification.success("Sales", "Sales erfolgreich geladen");
+            })
+            .error(function() {$notification.error("GetSales failed", "Verbindung kaputt");});
+
+
+                $http.get( serverBackendURL2, {params: { reason: "GETPRODUCEORDERS$", payload: $cookieStore.get('authCookie')+"$"}})
+            .success(function(data){
+                $scope.manufacturingPipeline = data; 
+                $log.log($scope.manufacturingPipeline);
+                $notification.success("Produktion", "Pipeline erfolgreich geladen");
+
+            })
+            .error(function() {$notification.error("GetProduction failed", "Verbindung kaputt");});
+
+        };
+
+        //get Production
+        /*
+            var manURL = "/lisa/json/fakeServer.php?reason=PIPELINE";
+    $scope.manR = pollingService.startPolling("man", manURL, 30000, function(result){
+             $scope.manufacturingPipeline = result.data;
+         });  */
+
+
+        
+
+    random = function(){
+        return Math.round(new Date().getTime() / 1000 + Math.random()*100);
+    }; 
+
+    $scope.includes =
+        [ { name: 'Dashboard', url: '/lisa/templates/dashboard.html?v='+random(), icon: 'dashboard'}
+        , { name: 'Statistics', url: '/lisa/templates/statistics.html?v='+random(), icon: 'signal'} 
+        , { name: 'Sales', url: '/lisa/templates/sales.html?v='+random(), icon: 'usd'} 
+        , { name: 'R&D', url: '/lisa/templates/rd.html?v='+random(), icon: 'flask'} 
+        , { name: 'Marketing', url: '/lisa/templates/marketing.html?v='+random(), icon: 'bullhorn'} 
+        , { name: 'Procurement', url: '/lisa/templates/procurement.html?v='+random(), icon: 'shopping-cart'} 
+        , { name: 'Chat', url: '/lisa/templates/chat.html?v='+random(), icon: 'comments'} 
+        , { name: 'Manufacturing', url: '/lisa/templates/manufacturing.html?v='+random(), icon: 'wrench'} 
+        , { name: 'Financials', url: '/lisa/templates/financials.html?v='+random(), icon: 'money'} 
+        ];
+
+    $scope.setTemplate = function (template) {
+        $scope.template = template;
+        //$log.log($scope.template);
+    };
+
+    //  var serverBackendURL = "/lisa/json/fakeServer.php?reason=GETSTATS$&payload=";
+    // $scope.dashStatR = pollingService.startPolling("dash", serverBackendURL+$cookieStore.get('authCookie'), 4000, function(result){
+    //          $scope.dashStatsC = result.data;
+    //          $log.log(result.data);
+    //      });
+
+     var serverBackendURL2 = "http://digifurt.de:8080";
+    // $scope.dashStats2 = pollingService.startPolling("dash2", serverBackendURL2+"?reason=REFRESH$", 2000, function(result){
+    //          $scope.dashStatsOverview = result.data;
+    //          $log.log(result.data);
+    //      });
+
+     var serverBackendURL3 = "/lisa/json/fakeServer.php?reason=Financials";
+     $scope.finR = pollingService.startPolling("financials", serverBackendURL3, 10000, function(result){
+              $scope.financialOverview = result.data;
+          });
+
+    var chatURL = "http://digifurt.de:8080/?reason=CHATREFRESH$&payload="+$cookieStore.get('authCookie');
+    pollingService.startPolling("chat", chatURL, 10000, function(result){ //Refresh-Value ändern
+           $scope.chatJSON = result.data;
+           decodeURI($scope.chatJSON);
+           //console.log(result.data);
+          });
+
+
+     
+
+    $scope.sendChat = function(msg){
+        var message = $cookieStore.get('authCookie')+":"+msg+":"+$scope.avatar+"$";
+            $http.get(serverBackendURL2, {params: { reason: "CHATSEND$", payload: message}})
+            .success(function(data){
+                $notification.info("Antwort CHAT: ",data); 
+            })
+            .error(function() {$notification.error("Chat", "Sending your Message failed");});
+    };
+
+    $scope.endRound = function() {
+        var message = $cookieStore.get('authCookie') +":"+ $scope.userEntry.capacity +";"+ $scope.userEntry.marketing + ";" + $scope.userEntry.research +";"+ $scope.userEntry.material +";"+ $scope.userEntry.planePrice + "$";
+        ////String: ProduktionInvestment;Marketing;Entwicklung;Materialstufe;Preis
+
+        $http.get(serverBackendURL2 ,{params: {reason: "VALUES$", payload: message }} )
+        .success(function (data){
+            $notification.info("Antwort ENDROUND: ",data);
+        }).error(function(){$notification.error("Endround", "Sending failed");})
+    };
+
+    $scope.orderAction = function(id, action, index){
+        
+        if (action == "accept") {
+            var param = $cookieStore.get('authCookie') +":"+"ACCEPTED;"+id+"$";
+            $http.get( serverBackendURL2, {params: { reason: "ORDERINPUT$", payload: param}})
+            .success(function(data){
+                $notification.success("Sales", "Auftrag angenommen"); 
+                $scope.recentOrders.splice(index, 1);
+
+            })
+            .error(function() {$notification.error("Sales",  "Laden der Aufträge gescheitert");});
+        }else{
+            $scope.recentOrders.splice(index, 1);  
+            $notification.warning("Sales", "Auftrag abgelehnt");          
+    };
+            
+    };
+    /*
+    Für die Aufträge:
+ORDERINPUT;ACCEPTED OrderID,OrderID... PRODUCE;OrderId,OrderId
+Der wird so aufgebaut
+Also reason=ORDERINPUT 
+payload=player-Game-ID:Accepted;OrderID,OrderID,...;PRODUCE;OrderID,...
+
+
+
+    */
+
+    $scope.manufactureJob = function(id, action){
+        var param = $cookieStore.get('authCookie') +":"+"PRODUCE;"+id+"$";
+            $http.get( serverBackendURL2, {params: { reason: "PRODUCE$", payload: param}})
+            .success(function(data){
+                $notification.success("Produktion", "Auftrag erfolgreich gesendet"); 
+                console.log(data);
+            })
+            .error(function() {console.log("manufactureJob failed");});
+    };
+
+
+    $scope.loanCalc = {};
+    $scope.calculateLoan = function(){
+        $http.get(serverBackendURL2, {params: {reason: "CALCLOAN$", payload: $scope.loanCalc}})
+        .success(function (data){
+            console.log(data);
+        }).error(function(){console.log("CALCLOAN$ failed");})
+    }
+
+});
+
+lisaApp.controller("lobbyController", function ($scope, $http, $cookieStore, $location, cfpLoadingBar, $notification){
+
+});

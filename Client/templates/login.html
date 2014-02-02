@@ -1,0 +1,77 @@
+<div notifications="top right"></div>
+<!-- BEGIN StartScreen -->
+<div id="viewStartScreen">
+    <div class="lock-header">
+        <!-- BEGIN LOGO -->
+        <a id="logo" class="center">
+            <img src="img/logo.png" ng-click="debugRemoveAllCookies()" alt="logo" class="center" />
+        </a>
+        <!-- END LOGO -->
+    </div>
+
+    <!-- BEGIN LOCK -->
+    <div id="lock"> <!-- ng-controller="loginController" -->
+        <!-- BEGIN LOCK FORM -->
+        <form id="lockform" class="form-vertical no-padding no-margin" action="index.html">
+            <div class="lock-title">
+                <i class="fa fa-trophy"></i>
+                <h3>Let's play!</h3>
+                <i class="fa fa-trophy"></i>
+
+            </div>
+            <div class="lock-avatar-row">
+                <img id="avatarPreview" ng-src="{{chosenAvatar}}" width="120px" height="120px">
+                <br />
+            </div>
+            <div class="control-wrap lock-identity">
+                <h3></h3>
+                <span></span>
+                <div class="lock-form-row">
+
+
+                    <accordion close-others="oneAtATime">
+                        <accordion-group heading="Step 1: Choose a logo" is-open="false">
+                            <img ng-repeat="img in avatars.image" height="80px" width="80px" ng-src="{{img}}" ng-click="setImage(img)">
+                        </accordion-group>
+                        <accordion-group heading="Step 2: Enter some data">
+                            <label class="control-label">Enter your companies name</label>
+
+                            <div class="input-append">
+                                <input id="companyName" type="text" placeholder="Airbus" class="m-wrap" ng-model="userData.name">
+                            </div>
+
+                            <label class="control-label">How many rounds? Enter a Number between 4 an 30.</label>
+                            <input class="input-small" type="number" step="1" name="quantity" min="4" max="30" ng-model="userData.rounds">
+                            <br />
+                            <label class="control-label">How do you want to win?</label>
+
+                            <select class="input-large m-wrap" tabindex="1" ng-model="userData.win">
+                                <option value="wintype0">Build most Planes</option>
+                                <option value="wintype1">Achieve highest market share</option>
+                                <option value="wintype2">Achieve highest revenue</option>
+                                <option value="wintype3">Achieve highest earnings</option>
+                                <option value="wintype4">have the highest stack of cash</option>
+                            </select>
+                            <br />
+
+                        </accordion-group>
+
+                        <accordion-group heading="Step 3: Let's fly!">
+
+                            <a ng-click="checkOut(userData)"><i class="fa fa-plane fa-5x"></i></a>
+                        </accordion-group>
+                    </accordion>
+
+        </form>
+        </div>
+        </div>
+
+        </form>
+        <!-- END LOCK FORM -->
+
+    </div>
+    <!-- END LOCK -->
+
+</div>
+
+<!-- END StartScreen -->

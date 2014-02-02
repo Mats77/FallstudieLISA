@@ -1,0 +1,42 @@
+<div class="row-fluid">
+    <div class="span12">
+
+        <!-- BEGIN PAGE TITLE-->
+        <h3 class="page-title">Dashboard
+            <small> General Information </small>
+        </h3>
+
+        <!-- END PAGE TITLE-->
+    </div>
+</div>
+<!-- BEGIN PAGE CONTENT-->
+<div id="page" class="dashboard">
+    <div class="row-fluid metro-overview-cont">
+        <div class="span2 responsive" ng-repeat="stats in dashStatsC">
+            <div class="metro-overview {{stats.color}}-color clearfix">
+                <div class="display">
+                    <i class="fa fa-{{stats.icon}}"></i>
+                    <div class="percent">{{stats.percent}}%</div>
+                </div>
+                <div class="details">
+                    <div class="numbers">{{stats.value}}</div>
+                    <div class="title">{{stats.title}}</div>
+                </div>
+                <div class="progress progress-info">
+                    <div style="width: {{stats.percent}}%" class="bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="square-state">
+        <div class="row-fluid">
+            <a class="icon-btn span3" ng-repeat="ov in dashStatOverview">
+                <i class="fa fa-{{ov.icon}}"></i>
+                <div>{{ov.title}}</div>
+                <span class="badge badge-{{ov.color}}">{{ov.value}}</span>
+            </a>
+        </div>
+
+    </div>
+    <!-- END SQUARE STATISTIC BLOCKS-->
+</div>

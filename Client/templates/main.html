@@ -1,0 +1,102 @@
+<div notifications="top right"></div>
+<div id="mainView" ng-controller="mainController">
+	<!-- BEGIN HEADER -->
+	<div id="header" class="navbar navbar-inverse navbar-fixed-top">
+		<!-- BEGIN TOP NAVIGATION BAR -->
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<!-- BEGIN LOGO -->
+				<a class="brand" href="#/main" tooltip="Luftfahrtindustrie Simulations Applikation" tooltip-placement="bottom">
+				    <img src="img/logo.png" alt="Luftfahrtindustrie Simulations Applikation"  />
+				</a>
+				<!-- END LOGO -->
+				<!-- BEGIN RESPONSIVE MENU TOGGLER -->
+				<a class="btn btn-navbar" id="main_menu_trigger">
+				<span class="fa fa-bars"></span>
+				<span class="fa fa-bars"></span>
+				<span class="fa fa-bars"></span>
+				<span class="arrow"></span>
+				</a>
+				<!-- END RESPONSIVE MENU TOGGLER -->
+				<div id="top_menu" class="nav notify-row">
+                    <!-- BEGIN NOTIFICATION -->
+					<ul class="nav top-menu">
+                        <!-- BEGIN SETTINGS -->
+                        
+                         <li class="dropdown">
+                            <a class="dropdown-toggle element" tooltip-placement="bottom" ng-click="endRound()" tooltip="End Round">
+                                <i class="fa fa-gamepad"></i>
+                            </a>
+                        </li>
+                                               <li class="dropdown">
+                            <a class="dropdown-toggle element" tooltip-placement="bottom" ng-click="debug()" tooltip="debug">
+                                <i class="fa fa-terminal"></i>
+                            </a>
+                            
+                        </li>
+                        <!-- END SETTINGS -->
+                        <!-- BEGIN INBOX DROPDOWN -->
+  
+                        <!-- END INBOX DROPDOWN -->
+						<!-- BEGIN NOTIFICATION DROPDOWN -->
+						<!-- END NOTIFICATION DROPDOWN -->
+
+					</ul>
+                </div>
+                    <!-- END  NOTIFICATION -->
+                <div class="top-nav ">
+                    <ul class="nav pull-right top-menu" >
+
+						<!-- BEGIN USER LOGIN DROPDOWN -->
+						<li class="dropdown">
+							<a  class="dropdown-toggle" >
+                            <img ng-src="{{avatar}}" height="29px" width="29px"  alt="">
+                                <span class="username">{{userName}}</span>
+							</a>
+
+						</li>
+						<!-- END USER LOGIN DROPDOWN -->
+					</ul>
+					<!-- END TOP NAVIGATION MENU -->
+				</div>
+			</div>
+		</div>
+		<!-- END TOP NAVIGATION BAR -->
+	</div>
+	<!-- END HEADER -->
+	<!-- BEGIN CONTAINER -->
+	<div id="container" class="row-fluid" ng-class="{true: 'sidebar-closed', false: ''}[navBarState]">
+		<!-- BEGIN SIDEBAR -->
+		<div id="sidebar" class="nav-collapse collapse">
+			<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+			<div class="sidebar-toggler hidden-phone angular-link" ng-click="toggleNavbar()"></div>
+			<!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+
+			
+			<!-- BEGIN SIDEBAR MENU -->
+			<ul class="sidebar-menu">
+				<li class="" ng-model="template" ng-repeat="sites in includes">
+					<a class="angular-link" ng-click="setTemplate(sites.url); random()">
+					    <span class="icon-box"> <i class="fa fa-{{sites.icon}}"></i></span>{{sites.name}}
+                        <span class="arrow"></span>
+                    </a>
+                </li>
+			</ul>
+			<!-- END SIDEBAR MENU -->
+		</div>
+		<!-- END SIDEBAR -->
+		<!-- BEGIN PAGE -->
+		<div id="main-content">
+			<!-- BEGIN PAGE CONTAINER-->
+			<div class="container-fluid">
+				<!-- BEGIN PAGE HEADER-->
+				<div ng-include="template"></div>
+
+				<!-- END PAGE CONTENT-->
+			</div>
+			<!-- END PAGE CONTAINER-->
+		</div>
+		<!-- END PAGE -->
+	</div>
+	<!-- END CONTAINER -->
+</div>

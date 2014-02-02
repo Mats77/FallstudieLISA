@@ -1,0 +1,235 @@
+lisaApp.controller("loginController", function ($scope, $http, $cookieStore, $location) { //
+
+    $scope.oneAtATime = true;
+    $scope.chosenAvatar = "img/photo.jpg";
+    $scope.userData = {};
+    var serverBackendURL = "/lisa/json/fakeServer.php";
+    // var serverBackendURL = "http://digifurt.de:8080";
+
+    $http.get('/lisa/json/avatars.php').success(function (data) {
+        $scope.avatars = data;
+    });
+
+    $scope.setImage = function (imageUrl) {
+        $scope.chosenAvatar = imageUrl;
+        $cookieStore.put('lisaAvatar', imageUrl);
+
+    }
+    $scope.checkOut = function (user) {
+        var authCookie = $cookieStore.get('authCookie');
+
+         $scope.userData = angular.copy(user);
+
+
+        if (authCookie == null) {
+            console.log('authCookie ist nich vorhanden, feuere get-Request ab')
+            $http.get( serverBackendURL, {params: { reason: "AUTHORIZEME"}}).success(function(data){
+                console.log("Antwort vom AUTHORIZEME reqest: "+data);
+                var authData = data;
+                $cookieStore.put('authCookie', authData);
+             })
+            .error(function() {
+            console.log("AUTHORIZEME failed");
+            });
+        } else {
+            console.log("Active authCookie found: verifying...");
+            $http.get(serverBackendURL, {params: { reason: "VERIFY", payload: authCookie}}).success(function(data){
+                if (data.indexOf("OK")) {
+                    console.log("Cookie OK, redirecting...");
+                    $location.path("main");
+            } else {
+                console.log("Bad cookie! Shame on you!");
+                $cookieStore.remove('authCookie');
+            }
+            }).error(function(){console.log("VERIFY failed")});
+        }   
+
+        function isEmpty(str) {
+            return (!str || 0 === str.length);
+        }
+ 
+        if (isEmpty($scope.userData.name) || isEmpty($scope.userData.rounds) || isEmpty($scope.userData.win)) { //hier darf der wert des cookies nicht "undefined" sein!
+            console.log("Nicht alle Werte gesetzt")
+
+
+        } else {
+            $http.get(serverBackendURL, {params: {reason: "STARTGAME", payload: authCookie+":"+$scope.userData.name+":"+$scope.userData.rounds+":"+$scope.userData.win }})
+            .success(function(data){
+                if (data.indexOf("OK") >= 0) {
+                    console.log(data);
+                    $cookieStore.put('lisaUserName', $scope.userData.name);
+                    $location.path("main"); 
+                } else {
+                    console.log("kein OK vom Server");
+                }
+            })
+            .error(function(){
+                console.log("STARTGAME failed");
+            });
+        }
+          
+    }
+});
+
+lisaApp.controller("mainController", function ($scope, $http, $cookieStore, $location, $modal, $log, pollingService, $templateCache) {
+
+    $scope.clearCache = function() { 
+        $templateCache.remove('/lisa/templates/chat.html');
+    }
+    $scope.userName = $cookieStore.get('lisaUserName');
+    $scope.avatar = $cookieStore.get('lisaAvatar');
+    $scope.template = '/lisa/templates/dashboard.html';
+
+    $scope.toggleNavbar = function(){
+        $scope.navBarState = ($scope.navBarState) ? false : true;
+        return $scope.navBarState;
+    };
+
+    random = function(){
+        return Math.round(new Date().getTime() / 1000 + Math.random()*100);
+    };  
+    $scope.includes =
+        [ { name: 'Dashboard', url: '/lisa/templates/dashboard.html?v='+random(), icon: 'dashboard'}
+        , { name: 'Statistics', url: '/lisa/templates/statistics.html?v='+random(), icon: 'signal'} 
+        , { name: 'Sales', url: '/lisa/templates/sales.html?v='+random(), icon: 'usd'} 
+        , { name: 'Chat', url: '/lisa/templates/chat.html?v='+random(), icon: 'comments'} 
+        , { name: 'Manufacturing', url: '/lisa/templates/manufacturing.html?v='+random(), icon: 'wrench'} 
+        , { name: 'Financials', url: '/lisa/templates/financials.html?v='+random(), icon: 'money'} 
+        ];
+
+    $scope.setTemplate = function (template) {
+        $scope.template = template;
+        $log.log($scope.template);
+    };
+
+    $scope.modalIncludes = 
+        [ { name: 'R&D', fn: 'rd', icon: 'flask'}
+        , { name: 'Marketing', fn: 'marketing', icon: 'bullhorn'}
+        , { name: 'Procurement', fn: 'procurement', icon: 'shopping-cart'}
+        ];
+
+
+   $scope.openModal = function (which) {
+    var template = which;
+    var random =  Math.round(new Date().getTime() / 1000);
+    var modalInstance = $modal.open({
+      templateUrl: '/lisa/templates/'+template+'.html?v='+random,
+      controller: template+'Controller',
+      resolve: {
+        items: function(){
+            return $scope.items;
+        }
+      }
+    });
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+
+  
+
+     var serverBackendURL = "/lisa/json/fakeServer.php?reason=BASICDASHBOARD";
+    $scope.dashStatR = pollingService.startPolling("dash", serverBackendURL, 10000, function(result){
+             $scope.dashStatsC = result.data;
+         });
+
+    var serverBackendURL2 = "/lisa/json/fakeServer.php?reason=BASICDASHBOARD2";
+    $scope.dashStats2 = pollingService.startPolling("dash2", serverBackendURL2, 10000, function(result){
+             $scope.dashStatsOverview = result.data;
+         });
+
+    var serverBackendURL3 = "/lisa/json/fakeServer.php?reason=Financials";
+    $scope.finR = pollingService.startPolling("financials", serverBackendURL3, 10000, function(result){
+             $scope.financialOverview = result.data;
+         });
+
+    var chatURL = "/lisa/json/fakeServer.php?reason=CHATREFRESH";
+    $scope.chatR = pollingService.startPolling("chat", chatURL, 4000, function(result){
+             $scope.chatJSON = result.data;
+         });
+
+    $scope.recentOrderR = $http.get( '/lisa/json/fakeServer.php', {params: { reason: "RECENTORDERS"}})
+            .success(function(data){
+                $scope.recentOrders = data; 
+            })
+            .error(function() {console.log("RECENTORDERS failed");});
+
+    // $scope.pipelineR = $http.get( '/lisa/json/fakeServer.php', {params: { reason: "PIPELINE"}})
+            // .success(function(data){
+                // $scope.manufacturingPipeline = data; 
+            // })
+            // .error(function() {console.log("PIPELINE failed");});
+    var manURL = "/lisa/json/fakeServer.php?reason=PIPELINE";
+    $scope.manR = pollingService.startPolling("man", manURL, 30000, function(result){
+             $scope.manufacturingPipeline = result.data;
+         });       
+
+    $scope.sendChat = function(msg){
+        var message = msg;
+        $scope.commentForm.$setPristine();
+            $http.get( '/lisa/json/fakeServer.php', {params: { reason: "CHATSEND", payload: message}})
+            .success(function(data){
+                console.log("Antwort CHATSEND: "+data); 
+            })
+            .error(function() {console.log("CHATSEND failed");});
+    };
+
+    $scope.orderAction = function(id, action, index){
+        var param = id+"_"+action;
+            $http.get( '/lisa/json/fakeServer.php', {params: { reason: "ORDERACTION", payload: param}})
+            .success(function(data){
+                console.log("Antwort ORDERACTION: "+data); 
+                $scope.recentOrders.splice(index, 1);
+
+            })
+            .error(function() {console.log("ORDERACTION failed");});
+    };
+
+    $scope.manufactureJob = function(id, action){
+        var param = id+"_"+action;
+            $http.get( '/lisa/json/fakeServer.php', {params: { reason: "manufactureJob", payload: param}})
+            .success(function(data){
+                console.log("Antwort manufactureJob: "+data); 
+            })
+            .error(function() {console.log("manufactureJob failed");});
+    };
+});
+
+
+lisaApp.controller("rdController", function ($scope, $modalInstance){
+$scope.items = ['item1', 'item2', 'item3'];
+
+  $scope.ok = function () {
+    $modalInstance.close($scope.selected.Item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+lisaApp.controller("marketingController", function ($scope, $modalInstance){
+
+
+  $scope.ok = function () {
+    $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
+
+lisaApp.controller("procurementController", function ($scope, $modalInstance){
+
+
+  $scope.ok = function () {
+    $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+});
