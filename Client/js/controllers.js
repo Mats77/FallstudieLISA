@@ -12,7 +12,7 @@ lisaApp.controller("loginController", function ($scope, $http, $cookieStore, $lo
 
     $scope.userData = {};
     //URL zum Backend: wenn Änderungen nötig sind, entweder CORS im Browser abschalten oder den Accepted-Header in Server.java ändern
-     var serverBackendURL = "http://digifurt.de:8080";
+     var serverBackendURL = "http://localhost:8080";
 
     //PHP-Krücke zum Anzeigen der Logos, TODO!
     $http.get('/lisa/json/avatars.php').success(function (data) {
@@ -131,7 +131,7 @@ lisaApp.controller("mainController",
             return (!str || 0 === str.length);
         }
 
-    var serverBackendURL2 = "http://www.digifurt.de:8080";
+    var serverBackendURL2 = "http://localhost:8080";
     //Objekte für Usereingaben: R&D, Marketing usw.
     $scope.userEntry = {};
     $scope.userEntry.planePrice = "";
