@@ -149,7 +149,7 @@ public class Mechanics {
 		round.setTitle("Round");
 		round.setIcon("calendar");
 		round.setColor("success");
-		round.setValue(Integer.toString(quartal));
+		round.setValue(Integer.toString(quartal+1));
 
 		// object reliability
 		DashboardIcon reli = new DashboardIcon();
