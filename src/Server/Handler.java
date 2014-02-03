@@ -59,8 +59,8 @@ public class Handler {
 			result = connections.lastElement().getId() + " " + this.gameID;
 			if (connections.size() == 4) {
 				// start game
-				mechanics.startGame(connections);
-				newRoundStarted();
+				//mechanics.startGame(connections);
+				//newRoundStarted();
 				return result;
 			} else {
 				return result;
@@ -238,6 +238,10 @@ public class Handler {
 				// 2. Rundenanzahl ( gewüschte Anzahl an Runden)
 				activePlayer.setPrefRound(Integer.parseInt(clientdata[1]));
 				// 3. Siegbedingung
+				if (connections.size() == 4) {
+					mechanics.startGame(connections);
+					newRoundStarted();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
