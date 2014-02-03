@@ -16,7 +16,7 @@ public class Market {
 	public void calcMarketSharePerPlayer(Player [] players){
 		double totalTurnover = 0;
 		for (Player player : players) {
-			totalTurnover = player.getData().lastElement().getTurnover();
+			totalTurnover += player.getData().lastElement().getTurnover();
 		}
 		for (Player player : players) {
 			double value = player.getData().lastElement().getTurnover() / totalTurnover;
