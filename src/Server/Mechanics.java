@@ -495,6 +495,9 @@ public class Mechanics {
 		
 		ordersForNewRound();	//Aufträge verteilen
 		quartal++;
+		for (Conn conn : handler.getConnections()) {
+			conn.setDashboard(this.getDashboardValues(conn));
+		}
 	}
 
 	//wird aufgerufen, sobald ein Spiel gestartet wird, erstellt die Spieler
