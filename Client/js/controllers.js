@@ -12,7 +12,7 @@ lisaApp.controller("loginController", function ($scope, $http, $cookieStore, $lo
 
     $scope.userData = {};
     //URL zum Backend: wenn Änderungen nötig sind, entweder CORS im Browser abschalten oder den Accepted-Header in Server.java ändern
-     var serverBackendURL = "http://localhost:8080";
+     var serverBackendURL = "http://digifurt.de:8080";
 
     //PHP-Krücke zum Anzeigen der Logos, TODO!
     $http.get('/lisa/json/avatars.php').success(function (data) {
@@ -29,6 +29,10 @@ lisaApp.controller("loginController", function ($scope, $http, $cookieStore, $lo
         $scope.userData.win = "wintype2";
         $scope.setImage("img/avatars/airbus.png");
         $notification.warning("Debug", "User-Daten gesetzt");
+        pollingService.stopPolling("activePlayers");
+        pollingService.stopPolling("dash");
+        pollingService.stopPolling("chat");
+        pollingService.stopPolling("readyPlayers");
     }
 
     $scope.setImage = function (imageUrl) {
@@ -119,7 +123,7 @@ lisaApp.controller("mainController",
     //Hole Username, Bild aus den cookies; setze Standarttemplate auf dashboard
     $scope.userName = $cookieStore.get('lisaUserName');
     $scope.avatar = $cookieStore.get('lisaAvatar');
-    $scope.template = '/lisa/templates/dashboard.html';
+    $scope.template = '../templates/dashboard.html';
 
     //Wirklich nötig?
     $scope.toggleNavbar = function(){
@@ -131,7 +135,7 @@ lisaApp.controller("mainController",
             return (!str || 0 === str.length);
         }
 
-    var serverBackendURL2 = "http://localhost:8080";
+    var serverBackendURL2 = "http://www.digifurt.de:8080";
     //Objekte für Usereingaben: R&D, Marketing usw.
     $scope.userEntry = {};
     $scope.userEntry.planePrice = "";
@@ -166,7 +170,10 @@ lisaApp.controller("mainController",
             .error(function() {$notification.error("GetSales failed", "Verbindung kaputt");});
 
         //TODO: entfernen wenn nicht mehr nötig
-        $scope.debug = function(){};
+        $scope.debug = function(){
+            $notification.info("Nachrichten", "Eines Ihrer Flugzeuge wurde entführt. Tracking-Systeme waren wohl nicht notwendig, was?");
+
+        };
 
 
         
@@ -176,14 +183,14 @@ lisaApp.controller("mainController",
     }; 
 
     $scope.includes =
-        [ { name: 'Dashboard', url: '/lisa/templates/dashboard.html?v='+$scope.random(), icon: 'dashboard'}
-        , { name: 'Sales', url: '/lisa/templates/sales.html?v='+$scope.random(), icon: 'usd'} 
-        , { name: 'R&D', url: '/lisa/templates/rd.html?v='+$scope.random(), icon: 'flask'} 
-        , { name: 'Marketing', url: '/lisa/templates/marketing.html?v='+$scope.random(), icon: 'bullhorn'} 
-        , { name: 'Procurement', url: '/lisa/templates/procurement.html?v='+$scope.random(), icon: 'shopping-cart'} 
-        , { name: 'Manufacturing', url: '/lisa/templates/manufacturing.html?v='+$scope.random(), icon: 'wrench'} 
-        , { name: 'Financials', url: '/lisa/templates/financials.html?v='+$scope.random(), icon: 'money'} 
-        , { name: 'Chat', url: '/lisa/templates/chat.html?v='+$scope.random(), icon: 'comments'} 
+        [ { name: 'Dashboard', url: '../templates/dashboard.html?v='+$scope.random(), icon: 'dashboard'}
+        , { name: 'Sales', url: '../templates/sales.html?v='+$scope.random(), icon: 'usd'} 
+        , { name: 'R&D', url: '../templates/rd.html?v='+$scope.random(), icon: 'flask'} 
+        , { name: 'Marketing', url: '../templates/marketing.html?v='+$scope.random(), icon: 'bullhorn'} 
+        , { name: 'Procurement', url: '../templates/procurement.html?v='+$scope.random(), icon: 'shopping-cart'} 
+        , { name: 'Manufacturing', url: '../templates/manufacturing.html?v='+$scope.random(), icon: 'wrench'} 
+        , { name: 'Financials', url: '../templates/financials.html?v='+$scope.random(), icon: 'money'} 
+        , { name: 'Chat', url: '../templates/chat.html?v='+$scope.random(), icon: 'comments'} 
 
         ];
 
