@@ -30,7 +30,7 @@
 lisaApp.factory('pollingService', ['$http', function($http){
         var defaultPollingTime = 3000;
         var polls = {};
-        var serverBackendURL = "http://localhost:8080/"
+        var serverBackendURL = "http://www.digifurt.de:8080/"
 
         return {
             startPolling: function(name, pollingReason, payloadAndStuff, pollingTime, callback) {
