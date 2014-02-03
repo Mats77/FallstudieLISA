@@ -144,7 +144,7 @@ public class MarketTest {
 		
 		market.calcTotalTurnover(players);
 		market.calcMarketSharePerPlayer(players);
-		assertEquals(0.25, mechanics.getPlayers()[0].getData().get(1).getMarketshare(), 0.01);
+		assertEquals(25, mechanics.getPlayers()[0].getData().get(1).getMarketshare(), 0.01);
 		
 		
 		player0Data.add(new PlayerData(mechanics.getPlayers()[0].getId(),2,2000));
@@ -159,7 +159,7 @@ public class MarketTest {
 		//TotalTurnover = 7500*4+400 (Runde 1) + 2000 runde 2
 		// Turnover Player1 7500+100+2000 = 96000
 		//9600/32400= 29,63%
-		assertEquals(0.2963, mechanics.getPlayers()[0].getData().get(2).getMarketshare(), 0.1);
+		assertEquals(100, mechanics.getPlayers()[0].getData().get(2).getMarketshare(), 0.1);
 		
 		
 	}
