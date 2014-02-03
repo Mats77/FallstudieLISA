@@ -174,8 +174,8 @@ public class Handler {
 			}
 			return tmp;
 		} else if (command.equals("PRODUCE")) {
-			Boolean answer = setOrdersToProduce();
-			return Boolean.toString(answer);
+			int answer = setOrdersToProduce();
+			return Integer.toString(answer);
 		} else if (command.startsWith("GETSALES")) {
 			result = "";
 			result = checkOpenMessages();
@@ -421,7 +421,7 @@ public class Handler {
 		return mechanics;
 	}
 
-	private Boolean setOrdersToProduce() {
+	private int setOrdersToProduce() {
 		String[] tmp = content.split(";");
 		System.out.println("Array Produce: " + Arrays.toString(tmp));
 		return mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(tmp[1]));
