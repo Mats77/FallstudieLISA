@@ -1,6 +1,10 @@
 package Server;
 
+import java.util.ArrayList;
 import java.util.Vector;
+
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 
 public class Mechanics {
 	private Market market = new Market();
@@ -37,12 +41,260 @@ public class Mechanics {
 			endRound();
 			startNewRound();
 		}
-//		if(allPlayerReadyForOrderSelection())
-//		{	
-//			ordersForNewRound();
-//		}
 	}
 	
+	private String getDashboardValues(Conn conn) {
+		// activen Player bekommen
+		Player player = players[conn.getId()-1];
+		// objekt für Geld
+		DashboardIcon cash = new DashboardIcon();
+		cash.setTitle("Cash");
+		cash.setColor("green");
+		cash.setIcon("usd");
+		try {
+			cash.setValue(Double.toString(player.getCash()) + " in mio.");
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für MarketShare
+		DashboardIcon marketShare = new DashboardIcon();
+		marketShare.setTitle("Market Share");
+		marketShare.setIcon("globe");
+		marketShare.setColor("turquoise");
+		try {
+			marketShare.setValue(Double.toString(player.getData().lastElement().getMarketshare()) + " %");
+			marketShare.setPercent(Double.toString(player.getData().lastElement().getMarketshare()));
+			System.out.println("Marketshare = " + Double.toString(player.getData().lastElement().getMarketshare()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für Capacity
+		DashboardIcon capacity = new DashboardIcon();
+		capacity.setTitle("Capacity");
+		capacity.setIcon("wrench");
+		capacity.setColor("gray");
+		try {
+			capacity.setValue(Double.toString(player.getData().lastElement()
+					.getCapacity()));
+			System.out.println("Capacity = " + Double.toString(player.getData().lastElement().getCapacity()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für marketing
+		DashboardIcon marketing = new DashboardIcon();
+		marketing.setTitle("Marketing");
+		marketing.setIcon("bullhorn");
+		marketing.setColor("purple");
+		try {
+			marketing.setValue(Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
+			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für R&D
+		DashboardIcon research = new DashboardIcon();
+		research.setTitle("R&D");
+		research.setIcon("flask");
+		research.setColor("blue");
+		try {
+			research.setValue(Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
+			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		// objekt für earnings
+		DashboardIcon earnings = new DashboardIcon();
+		earnings.setTitle("Earnings");
+		earnings.setIcon("money");
+		if (player.getData().lastElement().getProfit() < 0) {
+			earnings.setColor("red");
+		}else if (player.getData().lastElement().getProfit() == 0) {
+			earnings.setColor("yellow");
+		}else{
+		earnings.setColor("green");
+		}
+		try {
+			earnings.setValue(Double.toString(player.getData().lastElement().getProfit()));
+			System.out.println("Profit = " + Double.toString(player.getData().lastElement().getProfit()));
+		} catch (Exception e) {
+			return "PLAYERDONTEXIST";
+		}
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(cash);
+		dashboard.add(marketShare);
+		dashboard.add(capacity);
+		dashboard.add(marketing);
+		dashboard.add(research);
+		dashboard.add(earnings);
+		String s = "";
+		ArrayList<Vector> tmp = new ArrayList<Vector>();
+		tmp.add(dashboard);
+		tmp.add(createStringBasicdashboarForNewRound(player));
+		tmp.add(getCostensValues(player));
+		tmp.add(getEarnings(player));
+		tmp.add(getLoans(player));
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		try {
+			s = ow.writeValueAsString(tmp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return s;
+	}
+	
+	private Vector<DashboardIcon> createStringBasicdashboarForNewRound(
+			Player player) {
+		// object round
+		DashboardIcon round = new DashboardIcon();
+		round.setTitle("Round");
+		round.setIcon("calendar");
+		round.setColor("success");
+		round.setValue(Integer.toString(quartal));
+
+		// object reliability
+		DashboardIcon reli = new DashboardIcon();
+		reli.setTitle("Reliability");
+		reli.setIcon("thumbs-up");
+		reli.setColor("success");
+		reli.setValue(Double.toString(player.getReliability()));
+
+		// object Active Orders
+		DashboardIcon acOrd = new DashboardIcon();
+		acOrd.setTitle("Active Orders");
+		acOrd.setIcon("wrench");
+		acOrd.setColor("important");
+		acOrd.setValue(Integer.toString(player.getPlayerOrderPool()
+				.getAcceptedOrders().size()));
+
+		// object Loans
+		DashboardIcon loans = new DashboardIcon();
+		try {
+			loans.setTitle("Loans");
+			loans.setIcon("credit-card");
+			loans.setColor("important");
+			loans.setValue(Double.toString(player.getShortTimeCredit()
+					.getAmount()));
+		} catch (Exception e) {
+			System.out.println("Keine Kredite vorhanden");
+			loans.setValue("0");
+		}
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(round);
+		dashboard.add(reli);
+		dashboard.add(acOrd);
+		dashboard.add(loans);
+
+		return dashboard;
+	}
+
+	private Vector<DashboardIcon> getCostensValues(Player player) {
+		// object variable costs
+		DashboardIcon variableCosts = new DashboardIcon();
+		variableCosts.setTitle("variable costs");
+		variableCosts.setIcon("align-left");
+		variableCosts.setColor("turquoise");
+		try {
+			variableCosts.setValue(Double.toString(player.getData()
+					.lastElement().getVarCosts()));
+		} catch (Exception e) {
+		}
+		// object fix costs
+		DashboardIcon cumulativeCosts = new DashboardIcon();
+		cumulativeCosts.setTitle("fix costs");
+		cumulativeCosts.setIcon("sort-alpha-asc");
+		cumulativeCosts.setColor("red");
+		try {
+			cumulativeCosts.setValue(Double.toString(player.getData()
+					.lastElement().getFixCosts()));
+		} catch (Exception e) {
+		}
+		// object price per Airplane
+		DashboardIcon costsPerPlane = new DashboardIcon();
+		costsPerPlane.setTitle("price per Airplane");
+		costsPerPlane.setIcon("plane");
+		costsPerPlane.setColor("gray");
+		try {
+			costsPerPlane.setValue(Double.toString(player.getData()
+					.lastElement().getPricePerAirplane()));
+		} catch (Exception e) {
+		}
+		// object overhead costs
+		DashboardIcon overheadCosts = new DashboardIcon();
+		overheadCosts.setTitle("overhead costs");
+		overheadCosts.setIcon("align-justify");
+		overheadCosts.setColor("purple");
+		try {
+			overheadCosts.setValue(Double.toString(player.getData()
+					.lastElement().getCosts()));
+		} catch (Exception e) {
+		}
+
+		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
+		dashboard.add(variableCosts);
+		dashboard.add(cumulativeCosts);
+		dashboard.add(costsPerPlane);
+		dashboard.add(overheadCosts);
+
+		return dashboard;
+	}
+	
+	private Vector<DashboardLoans> getLoans(Player player) {
+		Vector<DashboardLoans> dashboard = new Vector<DashboardLoans>();
+		DashboardLoans short1 = new DashboardLoans();
+		try {
+			short1.setPeriod("short-term");
+			short1.setRate(Double.toString(player.getShortTimeCredit()
+					.getInterestRate()));
+			short1.setSum(Double.toString(player.getShortTimeCredit()
+					.getAmount()));
+			short1.setInterestsForQuarter(Double.toString(player
+					.getShortTimeCredit().getInterestsForQuarter()));
+		} catch (Exception e) {
+
+		}
+		if (short1 != null) {
+			dashboard.add(short1);
+		}
+		for (LongTimeCredit credit : player.getCredits()) {
+			DashboardLoans long1 = new DashboardLoans();
+			long1.setPeriod("long-term");
+			long1.setRate(Double.toString(credit.getInterestRate()));
+			long1.setSum(Double.toString(credit.getAmount()));
+			long1.setInterestsForQuarter(Double.toString(credit
+					.getInterestsForQuarter()));
+			dashboard.add(long1);
+		}
+		return dashboard;
+	}
+
+	private Vector<DashboardIcon> getEarnings(Player player) {
+		DashboardIcon cash = new DashboardIcon();
+		cash.setTitle("Cash");
+		cash.setIcon("money");
+		cash.setColor("green");
+		cash.setValue(Double.toString(player.getData().lastElement().getCash()));
+
+		DashboardIcon revenue = new DashboardIcon();
+		revenue.setTitle("Revenue");
+		revenue.setIcon("repeat");
+		revenue.setColor("blue");
+		revenue.setValue(Double.toString(player.getData().lastElement()
+				.getProfit()));
+
+		DashboardIcon price = new DashboardIcon();
+		price.setTitle("Price per Airplane");
+		price.setIcon("usd");
+		price.setColor("red");
+		price.setValue(Double.toString(player.getData().lastElement()
+				.getPricePerAirplane()));
+
+		Vector<DashboardIcon> tmp = new Vector<DashboardIcon>();
+		tmp.add(cash);
+		tmp.add(revenue);
+		tmp.add(price);
+		return tmp;
+	}
+
 	
 	
 	private boolean allPlayerReadyForNextRound() {
@@ -92,6 +344,10 @@ public class Mechanics {
 		market.calcMarketSharePerPlayer(players); //Berechnet für jeden Spieler den Marketshare und schreiben es in die PlayerData
 		//Quartalsabschluss ---> Jemand muss noch anhand der hier schon vollsätndigen Daten die Jahresabschlüsse erstellen
 		//außerdem könnte im Zuge dessen auch ein berichtswesen eingebaut werden
+		for (Conn conn : handler.getConnections()) {
+			conn.setDashboard(this.getDashboardValues(conn));
+		}
+		
 		if(roundsToPlay == quartal)
 		{
 			endGame();

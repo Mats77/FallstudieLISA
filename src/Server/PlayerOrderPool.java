@@ -182,6 +182,10 @@ public class PlayerOrderPool {
 				order.setStatus(3);
 			}
 		}
+		for (Order order : newOrders) {
+			newOrders.remove(order);
+			orderPool.addOneOrderToPool(order);
+		}
 	}
 
 	public CopyOnWriteArrayList<Order> getToProduceNextRound() {

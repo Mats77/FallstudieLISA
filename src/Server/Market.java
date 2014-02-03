@@ -14,14 +14,13 @@ public class Market {
 	private int totalTurnover = 30000; //Init mit 30.000 weil der Init Wert pro Player 75000 ist.
  
 	public void calcMarketSharePerPlayer(Player [] players){
+		double totalTurnover = 0;
 		for (Player player : players) {
-			Vector<PlayerData> data = player.getData();
-			
-			int totalTurnoverSinglePlayer= 0;
-			for (int i = 0; i < data.size(); i++) {
-				totalTurnoverSinglePlayer += data.elementAt(i).getTurnover();
-			}
-				data.lastElement().setMarketshare((double) totalTurnoverSinglePlayer/totalTurnover);
+			totalTurnover = player.getData().lastElement().getTurnover();
+		}
+		for (Player player : players) {
+			double value = player.getData().lastElement().getTurnover() / totalTurnover;
+			player.getData().lastElement().setMarketshare(value);
 		}
 	}
 	

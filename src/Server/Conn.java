@@ -23,6 +23,15 @@ public class Conn {
 	private CopyOnWriteArrayList<Order> acceptedOrders = new CopyOnWriteArrayList<Order>();
 	private String openMessage;
 	private int prefRound; //bevorzugte Rundenanzahl von Spieler
+	private String dashboard;
+
+	public String getDashboard() {
+		return dashboard;
+	}
+
+	public void setDashboard(String dashboard) {
+		this.dashboard = dashboard;
+	}
 
 	public Conn(Handler handler) {
 		this.handler = handler;

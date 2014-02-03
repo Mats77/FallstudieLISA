@@ -101,7 +101,8 @@ public class Handler {
 			}
 			return s;
 		} else if (command.startsWith("GETBASICDASHBOARD")) {
-			String s = getDashboardValues();
+			
+			String s = activePlayer.getDashboard();
 			return s;
 		} else if (command.startsWith("VALUES")) { // String:-->
 													// Marketing;Entwicklung;Materialstufe;Preis
@@ -357,110 +358,6 @@ public class Handler {
 		dashboard.add(overheadCosts);
 
 		return dashboard;
-	}
-
-	private String getDashboardValues() {
-		// activen Player bekommen
-		Player[] players = mechanics.getPlayers();
-		Player player = null;
-		for (Player play : players) {
-			if (play.getId() == activePlayer.getId()) {
-				player = play;
-			}
-		}
-		// objekt für Geld
-		DashboardIcon cash = new DashboardIcon();
-		cash.setTitle("Cash");
-		cash.setColor("green");
-		cash.setIcon("usd");
-		try {
-			cash.setValue(Double.toString(player.getCash()) + " in mio.");
-		} catch (Exception e) {
-			return "PLAYERDONTEXIST";
-		}
-		// objekt für MarketShare
-		DashboardIcon marketShare = new DashboardIcon();
-		marketShare.setTitle("Market Share");
-		marketShare.setIcon("globe");
-		marketShare.setColor("turquoise");
-		try {
-			marketShare.setValue(Double.toString(player.getData().lastElement().getMarketshare()) + " %");
-			marketShare.setPercent(Double.toString(player.getData().lastElement().getMarketshare()));
-			System.out.println("Marketshare = " + Double.toString(player.getData().lastElement().getMarketshare()));
-		} catch (Exception e) {
-			return "PLAYERDONTEXIST";
-		}
-		// objekt für Capacity
-		DashboardIcon capacity = new DashboardIcon();
-		capacity.setTitle("Capacity");
-		capacity.setIcon("wrench");
-		capacity.setColor("gray");
-		try {
-			capacity.setValue(Double.toString(player.getData().lastElement()
-					.getCapacity()));
-			System.out.println("Capacity = " + Double.toString(player.getData().lastElement().getCapacity()));
-		} catch (Exception e) {
-			return "PLAYERDONTEXIST";
-		}
-		// objekt für marketing
-		DashboardIcon marketing = new DashboardIcon();
-		marketing.setTitle("Marketing");
-		marketing.setIcon("bullhorn");
-		marketing.setColor("purple");
-		try {
-			marketing.setValue(Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
-			System.out.println("Cash = " + Double.toString(player.getData().lastElement().getMarketing()) + " in mio.");
-		} catch (Exception e) {
-			return "PLAYERDONTEXIST";
-		}
-		// objekt für R&D
-		DashboardIcon research = new DashboardIcon();
-		research.setTitle("R&D");
-		research.setIcon("flask");
-		research.setColor("blue");
-		try {
-			research.setValue(Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
-			System.out.println("R&D = " + Double.toString(player.getData().lastElement().getResearch()) + " in mio.");
-		} catch (Exception e) {
-			return "PLAYERDONTEXIST";
-		}
-		// objekt für earnings
-		DashboardIcon earnings = new DashboardIcon();
-		earnings.setTitle("Earnings");
-		earnings.setIcon("money");
-		if (player.getData().lastElement().getProfit() < 0) {
-			earnings.setColor("red");
-		}else if (player.getData().lastElement().getProfit() == 0) {
-			earnings.setColor("yellow");
-		}else{
-		earnings.setColor("green");
-		}
-		try {
-			earnings.setValue(Double.toString(player.getData().lastElement().getProfit()));
-			System.out.println("Profit = " + Double.toString(player.getData().lastElement().getProfit()));
-		} catch (Exception e) {
-			return "PLAYERDONTEXIST";
-		}
-		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
-		dashboard.add(cash);
-		dashboard.add(marketShare);
-		dashboard.add(capacity);
-		dashboard.add(marketing);
-		dashboard.add(research);
-		dashboard.add(earnings);
-		String s = "";
-		ArrayList<Vector> tmp = new ArrayList<Vector>();
-		tmp.add(dashboard);
-		tmp.add(createStringBasicdashboarForNewRound(player));
-		tmp.add(getCostensValues(player));
-		tmp.add(getEarnings(player));
-		tmp.add(getLoans(player));
-		try {
-			s = ow.writeValueAsString(tmp);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return s;
 	}
 
 	private Vector<DashboardLoans> getLoans(Player player) {
