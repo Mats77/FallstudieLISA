@@ -45,7 +45,7 @@ public class Mechanics {
 	
 	private String getDashboardValues(Conn conn) {
 		// activen Player bekommen
-		Player player = players[conn.getId()];
+		Player player = players[conn.getId()+1];
 		// objekt für Geld
 		DashboardIcon cash = new DashboardIcon();
 		cash.setTitle("Cash");
