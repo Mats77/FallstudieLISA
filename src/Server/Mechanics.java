@@ -302,15 +302,18 @@ public class Mechanics {
 		}
 	}
 	
-	public int produceOrder(int playerID, int orderID){		//liefert true, falls mehr produziert werden dürfen
-		int toReturn = -1;
+	public boolean produceOrder(int playerID, int orderID){		//liefert true, falls mehr produziert werden dürfen
 		for (Player player : players) {
 			if(player.getId() == playerID)
 			{
-				toReturn = player.produceOrder(orderID);
+				if(player.produceOrder(orderID)){
+					return true;
+				} else {
+					return false;
+				}
 			}
 		}
-		return toReturn;
+		return false;
 	}
 
 	public double[] newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
