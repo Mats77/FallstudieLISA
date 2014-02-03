@@ -81,14 +81,13 @@ class Server{
 					result += "HTTP/1.1 200 OK \n";
 					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
 					result += "Access-Control-Allow-Origin: http://digifurt.de" + "\n";
-					result += "Access-Control-Allow-Origin: http://localhost" + "\n";
 					result += "Content-type: text/html \n";
 					result += " \n";
 					out.println(result);
 					System.out.println(result);
 					out.flush();
 					// Inhalt senden
-					out.print(txtout);
+					out.println(txtout);
 					System.out.println(txtout);
 					out.flush();
 					// Verbindung trennen
