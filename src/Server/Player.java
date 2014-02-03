@@ -27,7 +27,7 @@ public class Player {
 		this.nick = name;
 		this.capacityLeft = 26;
 		data.add(new PlayerData((int)id, 0
-				, 5000, 25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
+				, 5000, 0.25, 500, 500, 500, 7500, 25, 300));	//5000 ist Startbetrag
 		mechanics = m;
 		this.cash = data.lastElement().getCash();
 		
