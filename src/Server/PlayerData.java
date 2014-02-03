@@ -8,7 +8,7 @@ public class PlayerData {
 	private int playerID;
 	private int quartal;
 	private double cash;
-	private double marketshare; // TODO im Klassendiagramm aendern
+	private int marketshare; // TODO im Klassendiagramm aendern
 	private double production;	//Fortlaufend
 	private double research;
 	private double marketing;
@@ -27,7 +27,7 @@ public class PlayerData {
 		this.playerID = pid;
 		this.quartal = quartal;
 		this.cash = money;
-		this.marketshare = marketshare;
+		this.marketshare = (int)(marketshare*100);
 		this.production += production;
 		this.research = research;
 		this.marketing = marketing;
@@ -166,7 +166,7 @@ public class PlayerData {
 	}
 
 	public void setMarketshare(double marketshare) {
-		this.marketshare = marketshare;
+		this.marketshare = (int)(marketshare*100);
 	}
 
 	public void setTurnover(double turnover) {

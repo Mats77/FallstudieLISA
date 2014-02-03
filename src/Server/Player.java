@@ -199,21 +199,21 @@ public class Player {
 		return this.shortTimeCredit;
 	}
 	
-	public boolean produceOrder(int orderID){
+	public int produceOrder(int orderID){
 		for (Order order : orderPool.getAcceptedOrders()) {
 			if(order.getOrderId()==orderID){
 				if(this.capacityLeft > order.getQuantityLeft()){
 					orderPool.produceOrder(orderID);
 					this.capacityLeft -= order.getQuantityLeft();
-					return true;
+					return this.capacityLeft;
 				} else {
 					orderPool.produceOrder(orderID);
 					this.capacityLeft = 0;
-					return false;
+					return this.capacityLeft;
 				}
 			}
 		}
-		return false;
+		return -1;
 	}
 
 

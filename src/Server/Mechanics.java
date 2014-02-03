@@ -14,6 +14,7 @@ public class Mechanics {
 	private Bank bank = new Bank();
 	private static int quartal = 0;
 	private int roundsToPlay;
+	private boolean firstRound = true;
 	private int conditionToWin;	// 	0: die meisten Flugzeuge gewinnen	1: Der höchste Marktanteil gewinnt
 								//	2: der höchste Umsatz gewinnt		3: der höchste Gewinn gewinnt
 								//	4: die meiste Kohle gewinnt
@@ -149,7 +150,12 @@ public class Mechanics {
 		round.setTitle("Round");
 		round.setIcon("calendar");
 		round.setColor("success");
+		if(firstRound){
+			round.setValue(Integer.toString(quartal));
+			firstRound = false;
+		} else {
 		round.setValue(Integer.toString(quartal+1));
+		}
 
 		// object reliability
 		DashboardIcon reli = new DashboardIcon();
@@ -561,18 +567,15 @@ public class Mechanics {
 		}
 	}
 	
-	public boolean produceOrder(int playerID, int orderID){		//liefert true, falls mehr produziert werden dürfen
+	public int produceOrder(int playerID, int orderID){		//liefert true, falls mehr produziert werden dürfen
 		for (Player player : players) {
 			if(player.getId() == playerID)
 			{
-				if(player.produceOrder(orderID)){
-					return true;
-				} else {
-					return false;
-				}
+				int value = player.produceOrder(orderID);
+				return value;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 	public double[] newCreditOffer(String substring, String nick) {	//Höhe, Laufzeit		
