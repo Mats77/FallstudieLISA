@@ -79,7 +79,14 @@ class Server{
 
 					String result = "";// Verbindung akzeptieren
 					result += "HTTP/1.1 200 OK \n";
-					result += "Access-Control-Allow-Origin: http://www.digifurt.de" + "\n";
+					/* 
+					 * WICHTIG!!!!!
+					 * Beim Testen des Clients, darf beim Access-Control Header nur
+					 * EINE (!!!!!) URL stehen.
+					 * Also: wenn euer Webserver auf localhost:8888 (MAMP)
+					 * läuft, dann nur EINEN Header setzen mit http://localhost:8888 + \n
+					 * */
+					result += "Access-Control-Allow-Origin: http://localhost:8888" + "\n";
 					result += "Content-type: text/html \n";
 					result += " \n";
 					out.println(result);
