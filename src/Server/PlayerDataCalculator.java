@@ -109,8 +109,6 @@ public class PlayerDataCalculator {
 			}			
 			player.getPlayerOrderPool().refreshData();
 			player.insertNewTurnover(turnover);
-			//player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
-
 			player.addCash(turnover);//geld erhöhen
 		}
 	}

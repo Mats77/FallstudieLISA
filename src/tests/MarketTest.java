@@ -78,7 +78,7 @@ public class MarketTest {
 		players[2].setCompanyValue(1);
 		players[3].setCompanyValue(1);
 		
-		Order order[] = new Order[4];
+		Order order[] = new Order[100];
 		
 		for (int i = 0; i < order.length; i++) {
 			order[i] = new Order(100, 0);
@@ -87,8 +87,8 @@ public class MarketTest {
 		
 		market.splitOrders(players);
 		
-		assertEquals(2, mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().size());
-		assertEquals(2, mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().size());
+		assertEquals("Eine Abweichung von <= -3 ist zulässig -> bedingt durch Zufall", 50, mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().size());
+		assertEquals("Eine Abweichung von <= -3 ist zulässig -> bedingt durch Zufall", 50, mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().size());
 		assertEquals(0, mechanics.getPlayers()[2].getPlayerOrderPool().getNewOrders().size());
 		assertEquals(0, mechanics.getPlayers()[3].getPlayerOrderPool().getNewOrders().size());
 		
@@ -96,9 +96,37 @@ public class MarketTest {
 		assertEquals(order[1], mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().get(0));
 		assertEquals(order[2], mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().get(1));
 		assertEquals(order[3], mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().get(1));
-
+	}
+	
+	@Test
+	public void testSplitOrdersForTooHighPrices(){
+		players[0].setCompanyValue(100);
+		players[1].setCompanyValue(100);
+		players[2].setCompanyValue(100);
+		players[3].setCompanyValue(100);
+		
+		players[2].getData().lastElement().setPricePerAirplane(4000);
+		players[3].getData().lastElement().setPricePerAirplane(4000);
 		
 		
+		Order order[] = new Order[100];
+		
+		for (int i = 0; i < order.length; i++) {
+			order[i] = new Order(100, 0);
+			orderPool.addOneOrderToPool(order[i]);
+		}
+		
+		market.splitOrders(players);
+		
+		assertEquals(50, mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().size());
+		assertEquals(50, mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().size());
+		assertEquals(0, mechanics.getPlayers()[2].getPlayerOrderPool().getNewOrders().size());
+		assertEquals(0, mechanics.getPlayers()[3].getPlayerOrderPool().getNewOrders().size());
+		
+		assertEquals(order[0], mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().get(0));
+		assertEquals(order[1], mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().get(0));
+		assertEquals(order[2], mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().get(1));
+		assertEquals(order[3], mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().get(1));
 	}
 	
 	

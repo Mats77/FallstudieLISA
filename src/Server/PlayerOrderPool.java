@@ -118,6 +118,10 @@ public class PlayerOrderPool {
 		}
 	}
 	
+	/**
+	 * Füg die Order in die AcceptedOrder List
+	 * @param orderID
+	 */
 	public void produceOrder(int orderID)
 	{
 		for (Order order : acceptedOrders) {
@@ -147,41 +151,59 @@ public class PlayerOrderPool {
 		return toProduce;
 	}
 
+	
+	/**
+	 *1. Verschiebt die zu produziernden Orders in die finischedOrder List;
+	 * 2.Prüft ob die zu produzierde Menge mit der Kapaziät übereinstimmt und falls die zu prod. Menge größe ist
+	 *	 werden die noch zu prod. Stück in die AcceptedOrder list mit der verringerten QuanityLeft zurückgegeben;
+	 * 3.Prüft ob AcceptedOrders verspätet sind und setzt dann entsprechend den Status 3 in der Order
+	 * 4.Gibt alle nicht angenommenen Orders in den Makrt-OrderPool zurück zur erneuten Verteilung.;
+	 */
 	@SuppressWarnings("unchecked")
 	public void refreshData() {
 		int ctr=0;
+		//Aufaddieren der Produktionsmenge
 		for (Order order : toProduce) {
 			ctr += order.getQuantityLeft();
 		}
+		//Vergleichen der zu produzierenden Menge mit der Vorheringen Kapazität
 		if(ctr <= player.getData().get(player.getData().size()-2).getCapacity() )
 		{
+			//Verschieben der Orders von toProduce in finisched Orders
 			for (Order order : toProduce) {
 				finishedOrders.add(order);
 				toProduce.remove(order);
 			}
+			//Verschieben der toProduceNextRound Orders in toProduceOrders
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
 			for (Order order : toProduce) {
 				order.setStatus(1);
 			}
 			toProduceNextRound = new CopyOnWriteArrayList<Order>();
+			
+		//Else: Die zu produzierende Menge ist größer, als die Kapazität
 		} else {
-			for(int i = 0; i < toProduce.size() - 1; i++){
+			for(int i = 0; i < toProduce.size() - 1; i++){ //Die letzte Order bleibt in der toProduce Liste stehen (For -Bedingung < & -1)
 				finishedOrders.add(toProduce.get(i));
 				toProduce.get(i).setQuantityLeft(0);
 				toProduce.remove(i);
 			}
+			//Die noch zu produzierende Quantity der lezten Order wird berechnet. (Weil sie nicht komplett produziert werden kann)
 			toProduce.get(0).setQuantityLeft(ctr - player.getData().lastElement().getCapacity());
-			acceptedOrders.add(toProduce.get(0));
+			acceptedOrders.add(toProduce.get(0));//Verschieben der übrig gebliebenden Order in Accepted OrdersList
 			toProduce.clear();
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
 			toProduceNextRound = new CopyOnWriteArrayList<Order>();
 		}
+		//Prüfen ob angenommene Orders, die noch nicht produziert werden verspätet sind.
 		for (Order order : acceptedOrders) {
 			if(Mechanics.getQuartal() > order.getQuartalValidTo())
 			{
 				order.setStatus(3);
 			}
 		}
+		/*Alle nicht angenommennen Oders, die einem Player vorgeschlagen wurden, werden automarisch zurück in den OrderPool gegeben und im nächsten 
+		Quartal erneut verteilt.*/
 		for (Order order : newOrders) {
 			newOrders.remove(order);
 			orderPool.addOneOrderToPool(order);

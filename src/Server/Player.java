@@ -41,6 +41,11 @@ public class Player {
 
 	
 	@SuppressWarnings("static-access")
+	/**
+	 * 
+	 * @param values (Produktion;Marketing;Entwicklung;Materialstufe;Preis)
+	 * @param quartal
+	 */
 	public void saveNextRoundValues(String values, int quartal) {	//String: Produktion;Marketing;Entwicklung;Materialstufe;Preis
 		readyForNextRound = true;
 		int[] insertedValues = new int[values.split(";").length];

@@ -25,16 +25,19 @@ public class Mechanics {
 		playerDataCalculator = new PlayerDataCalculator(this);
 		this.handler = h;	
 	}
-
+	/**
+	 * 
+	 * @param values (Produktion;Marketing;Entwicklung;Materialstufe;Preis)
+	 * @param nick
+	 */
 	//wird vom Handler aufgerufen, sobald ein Spieler seine Werte eingegeben hat
 	public void valuesInserted(String values, String nick) {
 		for(int i=0; i<players.length; i++)
 		{
 			String tmp = players[i].getNick();
 			if(tmp.equalsIgnoreCase(nick))
-			{
+			{ 
 				players[i].saveNextRoundValues(values, quartal);
-				//handler.setStatusForInputValues(false, i); //Deaktiviert die Eingabe des Players im GUI 
 				break;
 			}
 		}
@@ -337,7 +340,7 @@ public class Mechanics {
 
 		for (int i = 0; i < players.length; i++) {
 			players[i].setReadyForNextRound(false);
-	//		players[i].setReadyForOrderSelection(false);
+
 		}		
 
 		
@@ -460,26 +463,10 @@ public class Mechanics {
 	{	
 		market.genOrdersForNewRound(); 
 		market.splitOrders(players);
-		
-		//An Client die Aufträge des Players senden UND die CapacityLeft im Player erneuern
-//		for (int i = 0; i < players.length; i++) {
-//			//Jede Runde wird die noch verfügbare Capazity auf die Gesamt Cap. des Player gesetzt. 
-//			//Diese wird dann jeweils abgebaut durch Erfüllung eines Auftrags. Wenn die Ges. Capazity höher
-//			//als die angenommen Aufträge liegt geht der Cap. Überschuss in der nächsten Periode verloren.
-//			players[i].setCapacityLeft(players[i].getData().get(quartal).getCapacity());
-//			// die Daten müssen in der Conn Klasse zwischengespeichert werden
-//			handler.sendPlayerOrderPool(players[i].getId(), players[i].getPlayerOrderPool());
-//		}
 	}
 	
 	private void startNewRound() {
 		quartal ++; //auf nächstes Quartal gehen.
-		
-		//Die Eingabe für den User reaktivieren
-//		for (int i = 0; i < players.length; i++) {
-//			handler.setStatusForInputValues(true, i);
-//		}
-		// Events aufrufen
 		ordersForNewRound();		
 		handler.newRoundStarted();//hier müssen die User informiert werden und können ihre Aufträge annhemen oder ablehen
 		//außerdem werden hier Berichte übermittelt etc.
@@ -531,20 +518,6 @@ public class Mechanics {
 		return null;
 	}
 	
-	//Wird vom Handler aufgerufen wenn der Client mit der Selektion seiner Orders fertig ist.
-	public void refreshPlayerOrderPool(int playerID, int [] orderByIdToProduce, int [] orderByIdAccepted){
-		players[playerID].setReadyForNextRound(true);
-		players[playerID].newOrdersToProduce(orderByIdToProduce);
-		players[playerID].newOrdersAccepted(orderByIdAccepted);
-		
-		//Wenn alle Spieler mit ihrer Auftragsbearbeitung fertig sind, wird die Runde ausgwertet und eine neue gestartet.
-		if(allPlayerReadyForNextRound())
-		{	
-			endRound();
-			startNewRound();
-		}
-		
-}
 	
 	public void acceptOrder(int playerID, int orderID)
 	{
@@ -567,7 +540,7 @@ public class Mechanics {
 		}
 	}
 	
-	public int produceOrder(int playerID, int orderID){		//liefert true, falls mehr produziert werden dürfen
+	public int produceOrder(int playerID, int orderID){		
 		for (Player player : players) {
 			if(player.getId() == playerID)
 			{
