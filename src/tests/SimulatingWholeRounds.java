@@ -165,9 +165,20 @@ public class SimulatingWholeRounds {
 		assertEquals(26*100, player[3].getData().lastElement().getFixCosts(), 0);
 		
 		//Gesamtkosen prüfen => Fixe Kosten + varCOsts *Airplane + interests
-		assertEquals(30*100 + 120*26, player[0].getData().lastElement().getCosts(), 0);
+		double kredit = Math.abs((5650 - 2000-1000-1000-120*26 - 30*100));
+		double costsPlayer0 = 30*100 + 120*26 + (kredit*0.15)/4;
+		assertEquals(costsPlayer0, player[0].getData().lastElement().getCosts(), 0.1);
+		kredit = Math.abs((5650 - 5000-100-100-110*26 - 36*100));
+		double costsPlayer1 = 36*100 + 110*26 + (kredit*0.15)/4;
+		assertEquals(costsPlayer1, player[1].getData().lastElement().getCosts(), 0.1);
+		kredit = Math.abs((5650 - 100-100-100-110*26 - 26*100));
+		double costsPlayer2 = 26*100 + 110*26 + (kredit*0.15)/4;
+		assertEquals(costsPlayer2, player[2].getData().lastElement().getCosts(), 0.1);
+		double costsPlayer3 =costsPlayer2;
+		assertEquals(costsPlayer3, player[3].getData().lastElement().getCosts(), 0.1);
 		
-		
+		//Turnover berechnen (Bei allen Spielern gelich = da allge gleiche Aufträge angenommen)
+		assertEquals(300*10*1.1, player[1].getData().lastElement().getTurnover(), 0);
 	}
 	
 	@Test
