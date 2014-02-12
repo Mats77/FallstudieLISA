@@ -18,7 +18,8 @@ public class Bank {
 		player.getCredits().add(new LongTimeCredit(player, creditData[0], creditData[1], creditData[2]));
 	}
 
-	public double[] getCreditOffer(Player player, String substring) {		//Höhe, Laufzeit
+	//generiert das Kreditangebot, das der Spieler annehmen oder ablehnen kann
+	public double[] getCreditOffer(Player player, String substring) {		//Substring: Höhe;Laufzeit
 		double[] dataOfCredit = new double[2];
 		
 		for(int i=0; i<2; i++)
@@ -33,15 +34,25 @@ public class Bank {
 
 		double amount = dataOfCredit[0];
 		double runtime = dataOfCredit[1];
-		double creditRating = getCreditRating(player);
+		double creditRating = 0;
+		
+		//Falls der gewünschte Betrag den Wert 5000 übersteigt, wird er sofort abgelehnt 
+		if(amount < 5000)
+		{
+			creditRating = getCreditRating(player);
+		} else {
+			amount = 0;
+			runtime = 0;
+		}
 		
 		double[] toReturn = {amount, runtime, creditRating};
 		return toReturn;
 	}
 
+	
+	//berechnet den Verschuldungsgrad des Spielers und gibt anhand dessen das Kreditrating aus
 	private double getCreditRating(Player player) {
 		double interestToReturn = 0;
-		
 		//Daten auslesen
 		Vector<PlayerData> data = player.getData();
 		double playerCash = player.getCash();
@@ -53,7 +64,7 @@ public class Bank {
 			totalAmountOfCredits += credit.getAmount();
 		}
 		
-		//Vertikale Finanzierungsregeln
+		//Vertikale Finanzierungsregeln lt. Finanzierungsskript
 		if(debtRatio < 0.5)
 		{
 			interestToReturn = 0.09;

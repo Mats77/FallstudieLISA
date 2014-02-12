@@ -62,10 +62,10 @@ public class CompanyValueTest {
 		double[] values = pdc.generateNewCompanyValues(mechanics.getPlayers());
 		
 		Player[] players= mechanics.getPlayers();
-		assertEquals(444.52, values[0],10);
-		assertEquals(468.29, values[1],10);
-		assertEquals(407.86, values[2],10);
-		assertEquals(381.66, values[3],10);
+		assertEquals(4.76, values[0],10);
+		assertEquals(3.02, values[1],10);
+		assertEquals(3.09, values[2],10);
+		assertEquals(3.13, values[3],10);
 	}
 	
 	@Test

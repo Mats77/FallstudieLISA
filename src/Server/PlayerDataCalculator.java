@@ -14,7 +14,6 @@ public class PlayerDataCalculator {
 	{
 		double overheadCostsPerPlan = calcOverHeadCostsPerPlane(values);
 		double individualCostsPerPlan = calcIndividualCostsPerPlan(values);
-		//System.out.println(overheadCostsPerPlan+"+"+individualCostsPerPlan);
 		
 		return overheadCostsPerPlan + individualCostsPerPlan;
 	}//calcCostPerAirplane
@@ -59,8 +58,8 @@ public class PlayerDataCalculator {
 		double[] companyValues = new double[players.length];
 		for(int i=0; i<companyValues.length; i++)
 		{
-			double research = researchData[i];
-			double marketing = marketingData[i];
+			double research = researchData[i]/researchOverall*100;
+			double marketing = marketingData[i]/marketingOverall*100;
 			double erg;
 			if(marketing < research)
 			{
@@ -85,7 +84,7 @@ public class PlayerDataCalculator {
 				ctr++;
 				value += data.getQualityOfMaterial();
 			}
-			companyValues[i] += (value/ctr)*10;
+			companyValues[i] += value;
 			// muss noch mit dem Preis in Verbindung gebracht werden;
 		}//for Schleife, die Werte aufaddiert, hier müssen später noch die Verhältnisse rein
 		return companyValues;

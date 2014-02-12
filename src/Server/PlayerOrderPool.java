@@ -153,7 +153,7 @@ public class PlayerOrderPool {
 
 	
 	/**
-	 *1. Verschiebt die zu produziernden Orders in die finischedOrder List;
+	 *1. Verschiebt die zu produziernden Orders in die finishedOrder List;
 	 * 2.Prüft ob die zu produzierde Menge mit der Kapaziät übereinstimmt und falls die zu prod. Menge größe ist
 	 *	 werden die noch zu prod. Stück in die AcceptedOrder list mit der verringerten QuanityLeft zurückgegeben;
 	 * 3.Prüft ob AcceptedOrders verspätet sind und setzt dann entsprechend den Status 3 in der Order
@@ -173,6 +173,17 @@ public class PlayerOrderPool {
 			for (Order order : toProduce) {
 				finishedOrders.add(order);
 				toProduce.remove(order);
+				
+				//Rufgewinn, -verlust des Spielers wird berechnet
+				int quartal = Mechanics.getQuartal();
+				if(quartal == order.getQuartalValidTo())
+				{
+					player.addReliability(1);
+				} else if(quartal < order.getQuartalValidTo()) {
+					player.addReliability(1 + (order.getQuartalValidTo() - quartal));
+				} else if (quartal > order.getQuartalValidTo()) {
+					player.addReliability((order.getQuartalValidTo()-quartal));
+				}
 			}
 			//Verschieben der toProduceNextRound Orders in toProduceOrders
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
@@ -195,11 +206,15 @@ public class PlayerOrderPool {
 			toProduce = (CopyOnWriteArrayList<Order>) toProduceNextRound.clone();
 			toProduceNextRound = new CopyOnWriteArrayList<Order>();
 		}
-		//Prüfen ob angenommene Orders, die noch nicht produziert werden verspätet sind.
+		//Prüfen ob angenommene Orders, die noch nicht produziert werden verspätet sind. Und verwirft die, die mindestens 3 Perioden zu spät sind
 		for (Order order : acceptedOrders) {
 			if(Mechanics.getQuartal() > order.getQuartalValidTo())
 			{
 				order.setStatus(3);
+			}
+			if(Mechanics.getQuartal()-3 > order.getQuartalValidTo()) {
+				acceptedOrders.remove(order);
+				player.addReliability(-10);
 			}
 		}
 		/*Alle nicht angenommennen Oders, die einem Player vorgeschlagen wurden, werden automarisch zurück in den OrderPool gegeben und im nächsten 

@@ -5,7 +5,7 @@ public abstract class Credit {
 	protected double amount;
 	protected double interesRate;
 	
-
+	//Abstrakte Klasse, die nur das grundlegende Gerüst eines Kredits für die anderen Kredite darstellt
 	public double getInterestsForQuarter()
 	{
 		return amount*(0.25*interesRate);

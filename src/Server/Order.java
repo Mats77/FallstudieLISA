@@ -3,7 +3,7 @@ package Server;
 
 public class Order {
 	private final String [] AIRLINENAMES = {"China Eastern Airlines", "Lufthansa" , "United Airlines",	"Delta Air Lines",
-			"Southwest Airlines", "American Airlines", "US Airways", "Ryanai", "China Southern Airlines", "Air China"};
+			"Southwest Airlines", "American Airlines", "US Airways", "Ryanair", "China Southern Airlines", "Air China"};
 	private static int orderCount = 0;
 	private int orderId; //Eigentlich final, wegen Tests kein final
 	private int totalQuantity; // bis zu 1/4 der totalQuantity sind optionale Orders, der Rest sind fixedOrders
@@ -77,17 +77,12 @@ public class Order {
 			this.totalQuantity = totalQuantity-optOrders;
 			this.quantityLeft = totalQuantity;
 		}
-		
-		
 		setClient();
 	}
 	
-	private void setClient() {
-		
-			int rnd = (int) (Math.random() * AIRLINENAMES.length);
-			clientName = AIRLINENAMES[rnd];
-		
-
+	private void setClient() {	
+		int rnd = (int) (Math.random() * AIRLINENAMES.length);
+		clientName = AIRLINENAMES[rnd];
 	}
 
 	public int getQuartalValidTo() {

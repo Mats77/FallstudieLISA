@@ -49,7 +49,7 @@ public class WinnerTest {
 		mechanics.setEndOfGame(4, 1);
 		mechanics.endGame();
 		
-		assertEquals(0, handler.getWinnersDouble()[0][1],0);
+		assertEquals(0, handler.getWinnersDouble()[0][1],0);		//winnerMap
 		assertEquals(1, handler.getWinnersDouble()[1][1],0);
 		assertEquals(2, handler.getWinnersDouble()[2][1],0);
 		assertEquals(3, handler.getWinnersDouble()[3][1],0);
