@@ -53,7 +53,7 @@ public class PlayerDataCalculatorTest {
 		mechanics.getPlayers()[0].getData().lastElement().setAirplanes(20);
 		pdc.calcCosts(mechanics.getPlayers());
 		
-		assertEquals(12400, mechanics.getPlayers()[0].getData().lastElement().getCosts(),1);
+		assertEquals(12653.125, mechanics.getPlayers()[0].getData().lastElement().getCosts(),1);
 	}
 	
 	@Test
@@ -77,7 +77,7 @@ public class PlayerDataCalculatorTest {
 		
 		pdc.calcCosts(mechanics.getPlayers());
 		
-		assertEquals(12425, mechanics.getPlayers()[0].getData().lastElement().getCosts(),0.1);
+		assertEquals(12640.625, mechanics.getPlayers()[0].getData().lastElement().getCosts(),0.1);
 	}
 
 }

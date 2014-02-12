@@ -157,7 +157,7 @@ public class Mechanics {
 			round.setValue(Integer.toString(quartal));
 			firstRound = false;
 		} else {
-		round.setValue(Integer.toString(quartal+1));
+		round.setValue(Integer.toString(quartal));
 		}
 
 		// object reliability

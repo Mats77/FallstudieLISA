@@ -86,7 +86,7 @@ class Server{
 					 * Also: wenn euer Webserver auf localhost:8888 (MAMP)
 					 * läuft, dann nur EINEN Header setzen mit http://localhost:8888 + \n
 					 * */
-					result += "Access-Control-Allow-Origin: http://localhost" + "\n";
+					result += "Access-Control-Allow-Origin: http://localhost:8888" + "\n";
 					result += "Content-type: text/html \n";
 					result += " \n";
 					out.println(result);
