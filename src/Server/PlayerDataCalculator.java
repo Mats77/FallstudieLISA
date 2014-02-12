@@ -14,7 +14,6 @@ public class PlayerDataCalculator {
 	{
 		double overheadCostsPerPlan = calcOverHeadCostsPerPlane(values);
 		double individualCostsPerPlan = calcIndividualCostsPerPlan(values);
-		//System.out.println(overheadCostsPerPlan+"+"+individualCostsPerPlan);
 		
 		return overheadCostsPerPlan + individualCostsPerPlan;
 	}//calcCostPerAirplane

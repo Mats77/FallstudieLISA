@@ -235,4 +235,9 @@ public class Player {
 	public void setEvent(String event) {
 		this.event = event;
 	}
+
+
+	public void addReliability(int amount) {
+		this.reliability += amount;
+	}
 }
