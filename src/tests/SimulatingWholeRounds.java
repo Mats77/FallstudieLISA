@@ -84,7 +84,7 @@ public class SimulatingWholeRounds {
 		assertEquals(26, data.getCapacity(),0);
 		assertEquals(26, player[0].getCapacityLeft(),0);
 		assertEquals(5650, data.getCash(), 1);
-		assertEquals(45, player[0].getCompanyValue(), 1);
+		assertEquals(2, player[0].getCompanyValue(), 1);
 		assertEquals(25, data.getMarketshare(), 0.1);
 		
 		//Neue Orders generieren und dem User als neue Order vorschlagen
@@ -238,7 +238,7 @@ public class SimulatingWholeRounds {
 		mechanics.valuesInserted("2000;1000;1000;2;250", "Mats1");
 		mechanics.valuesInserted("5000;100;100;1;200", "Mats2");
 		mechanics.valuesInserted("100;100;100;1;500", "Mats3");
-		mechanics.valuesInserted("10000;100;100;1;300", "Mats4");
+		mechanics.valuesInserted("10000;100;100;1;300", "Mats4"); 
 		
 		//Prüfen ob nicht angenommene Orders zurück in den OrderPool gelaufen sind und neu verteilt wurden:
 		assertTrue("Nicht angenommene Orders wurden nicht erneut verteilt", searchForOrderInNewOrders(304));
@@ -336,7 +336,7 @@ public class SimulatingWholeRounds {
 		}
 		double cash2Round3 = turnoverPlayer2Round3;
 		if(cash2Round3>0){
-		assertEquals(cash2Round3, player[2].getCash(), 0.1);
+		assertEquals(cash2Round3 + cash2 - costsPlayer2round3 - 300, player[2].getCash(), 0.1);
 		}else{
 			assertEquals(Math.abs(cash2Round3), player[2].getShortTimeCredit().getAmount(), 0.1);
 		}
