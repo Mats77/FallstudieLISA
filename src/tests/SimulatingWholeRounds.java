@@ -35,7 +35,7 @@ public class SimulatingWholeRounds {
 		mechanics = handler.getMechanics();
 		pdc = new PlayerDataCalculator(mechanics);
 		connections = new Vector<Conn>();
-		market = new Market();
+		market =  mechanics.getMarket();
 		orderPool = market.getOrderPool();
 		
 		connections.add(new Conn(new Socket(), handler));
@@ -165,20 +165,48 @@ public class SimulatingWholeRounds {
 		assertEquals(26*100, player[3].getData().lastElement().getFixCosts(), 0);
 		
 		//Gesamtkosen prüfen => Fixe Kosten + varCOsts *Airplane + interests
-		double kredit = Math.abs((5650 - 2000-1000-1000-120*26 - 30*100));
-		double costsPlayer0 = 30*100 + 120*26 + (kredit*0.15)/4;
+		double kredit0 = Math.abs((5650 - 2000-1000-1000-120*26 - 30*100));
+		double costsPlayer0 = 30*100 + 120*26 + (kredit0*0.15)/4;
 		assertEquals(costsPlayer0, player[0].getData().lastElement().getCosts(), 0.1);
-		kredit = Math.abs((5650 - 5000-100-100-110*26 - 36*100));
-		double costsPlayer1 = 36*100 + 110*26 + (kredit*0.15)/4;
+		double kredit1 = Math.abs((5650 - 5000-100-100-110*26 - 36*100));
+		double costsPlayer1 = 36*100 + 110*26 + (kredit1*0.15)/4;
 		assertEquals(costsPlayer1, player[1].getData().lastElement().getCosts(), 0.1);
-		kredit = Math.abs((5650 - 100-100-100-110*26 - 26*100));
-		double costsPlayer2 = 26*100 + 110*26 + (kredit*0.15)/4;
+		double kredit2 = Math.abs((5650 - 100-100-100-110*26 - 26*100));
+		double costsPlayer2 = 26*100 + 110*26 + (kredit2*0.15)/4;
 		assertEquals(costsPlayer2, player[2].getData().lastElement().getCosts(), 0.1);
 		double costsPlayer3 =costsPlayer2;
 		assertEquals(costsPlayer3, player[3].getData().lastElement().getCosts(), 0.1);
 		
-		//Turnover berechnen (Bei allen Spielern gelich = da allge gleiche Aufträge angenommen)
-		assertEquals(300*10*1.1, player[1].getData().lastElement().getTurnover(), 0);
+		//Turnover berechnen (Bei allen Spielern gelich = da allge gleiche Aufträge zu Beginn haben!)
+		double turnover = 300*26*0.85;
+		assertEquals(turnover, player[0].getData().lastElement().getTurnover(), 0);
+
+		
+		//Profit berechnen
+		double profit0 = turnover - costsPlayer0 - 2000-1000-1000;
+		assertEquals(profit0, player[0].getData().lastElement().getProfit(), 0);
+		double profit1 = turnover - costsPlayer1 - 5000-100-100;
+		assertEquals(profit1, player[1].getData().lastElement().getProfit(), 0);
+		double profit2 = turnover - costsPlayer2 - 100-100-100;
+		assertEquals(profit2, player[2].getData().lastElement().getProfit(), 0);
+		double profit3 = turnover - costsPlayer3 - 100-100-100;
+		assertEquals(profit3, player[3].getData().lastElement().getProfit(), 0);
+		
+		// + 30000 => Turnover aus dem Vorjahr
+		double totalTurnover = turnover*4 + 30000;
+		assertEquals(totalTurnover, market.getTotalTurnover(), 0);
+		
+		assertEquals(25, player[0].getData().lastElement().getMarketshare(), 0);
+		
+		//Cash prüfen => cash = Kredit tilgen + Kreditzinsen zurückzahlen 
+		double cash0 = turnover - kredit0 - (kredit0*0.15)/4;
+		assertEquals(cash0, player[0].getCash(), 0);
+		double cash1 = turnover - kredit1 - (kredit1*0.15)/4;
+		assertEquals(cash1, player[1].getCash(), 0);
+		double cash2 = turnover - kredit2 - (kredit2*0.15)/4;
+		assertEquals(cash2, player[2].getCash(), 0);
+		assertEquals(cash2, player[3].getCash(), 0);
+		
 	}
 	
 	@Test
