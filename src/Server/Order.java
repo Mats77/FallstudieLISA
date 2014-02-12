@@ -5,7 +5,7 @@ public class Order {
 	private final String [] AIRLINENAMES = {"China Eastern Airlines", "Lufthansa" , "United Airlines",	"Delta Air Lines",
 			"Southwest Airlines", "American Airlines", "US Airways", "Ryanair", "China Southern Airlines", "Air China"};
 	private static int orderCount = 0;
-	private final int orderId;
+	private int orderId; //Eigentlich final, wegen Tests kein final
 	private int totalQuantity; // bis zu 1/4 der totalQuantity sind optionale Orders, der Rest sind fixedOrders
 	private int fixedQuantity=0;
 	private int optionalQuantity=0;
@@ -141,5 +141,9 @@ public class Order {
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	public void setId(int orderId){
+		this.orderId = orderId;
 	}
 }

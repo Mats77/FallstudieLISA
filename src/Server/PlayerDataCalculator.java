@@ -52,7 +52,6 @@ public class PlayerDataCalculator {
 			
 			researchData[playerCtr] = research;
 			marketingData[playerCtr] = marketing;
-			player.spendMoney(research+marketing);
 			playerCtr++;
 		}//äußere Schleife Spieler
 		
@@ -104,13 +103,17 @@ public class PlayerDataCalculator {
 	public void setTurnover (Player[] players) {
 		for (Player player : players) {
 			double turnover = 0;
+			int maxCapacity = player.getData().lastElement().getCapacity();
 			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
 				turnover += order.getPricePerAirplane()*order.getQuantityLeft();
+				maxCapacity -= order.getQuantityLeft();
+				//Stellt sicher dass Aufträge, die angefangen werden zu produzieren nicht voll ausgezahlt werden, sondern nur teilweise. 
+				if(maxCapacity<0){
+					turnover+=Math.abs(maxCapacity*order.getPricePerAirplane());
+				}
 			}			
 			player.getPlayerOrderPool().refreshData();
 			player.insertNewTurnover(turnover);
-			//player.getData().add(new PlayerData(player.getId(),mechanics.getQuartal(),turnover));	//Hier muss Chris das einbauen, dass die Spieler Geld für Ihre Aufträge bekommen
-
 			player.addCash(turnover);//geld erhöhen
 		}
 	}
@@ -125,7 +128,6 @@ public class PlayerDataCalculator {
 			{
 				productionInvestment = quartalData.getProduction() - player.getData().elementAt(player.getData().size()-2).getProduction();
 			}
-			player.spendMoney(productionInvestment);
 			player.setCapacityLeft(quartalData.getCapacity());
 			int ctr = 0;
 			for (Order order : player.getPlayerOrderPool().getOrdersToProduce()) {
@@ -148,9 +150,12 @@ public class PlayerDataCalculator {
 			} else if (tmp == 2) {
 				quartalData.setVarCosts(120);
 			}
+			
+			double tmpCosts = quartalData.getFixCosts() + quartalData.getVarCosts()*quartalData.getAirplanes();
+			player.spendMoney(tmpCosts);
 			double interests = calcInterestCosts(player);
-			quartalData.setCosts(quartalData.getFixCosts() + quartalData.getVarCosts()*quartalData.getAirplanes() + interests);
-			player.spendMoney(quartalData.getCosts());
+			player.spendMoney(interests);
+			quartalData.setCosts(tmpCosts + interests);
 		}
 	}
 	

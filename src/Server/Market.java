@@ -83,6 +83,23 @@ public class Market {
 		// Verteilt die Orders nach Rangreihenfolge, bis alle aufgeteilt sind.
 		int playerCount = 0;
 		Order order = orderPool.getBestOrder();
+		
+		//Median Berechnen
+		double costList [] = new double[playerOrdered.length];
+		for (int i = 0; i < playerOrdered.length; i++) {
+			costList[i]= playerOrdered[i].getData().lastElement().getPricePerAirplane();
+		}
+		
+		double median = getMedian(costList);
+		
+		// Schaut, ob der Flugzeugpreis von manchen Spielern 1.8mal so hoch wie der Median aller Flugzeugpreise liegt.
+		boolean playerPriceTooHigh [] = new boolean[playerOrdered.length];
+		for (int i = 0; i < playerOrdered.length; i++) {
+			if(playerOrdered[i].getData().lastElement().getPricePerAirplane()/median>1.8){
+				playerPriceTooHigh[i]=true;
+			}
+		}
+		
 		while (true) {
 			if (order != null) {
 
@@ -105,8 +122,11 @@ public class Market {
 				// Zuteilung
 				// zu
 				// erhalten.
+				
 
-				if (Math.random() >= (1 - anteilVonGesPlayerValue)) {
+				
+				//Nur unter der Wahrscheinlichkeit der proz Company Value und wenn der Flugzeigpreis nicht 1.8mal höher ist als der Median
+				if (Math.random() >= (1 - anteilVonGesPlayerValue) && !playerPriceTooHigh[playerCount % playerOrdered.length]) {
 					playerOrdered[playerCount % playerOrdered.length]
 							.addNewOrder(order); // Verteilung der Orders nach
 													// Rangreihenfolge
@@ -118,6 +138,22 @@ public class Market {
 		}
 	}
 
+
+	public double getMedian(double[] numberList) {
+	  Arrays.sort(numberList);
+	  
+	  //Gerade anzahl des Arrays
+	  if(numberList.length%2==0){
+		 return ((numberList[(numberList.length/2-1)]+numberList[(numberList.length/2)])/2);
+	  }
+	//Ungerade anzahl des Arrays
+	  else{
+		  return numberList[(int)(numberList.length/2)];
+	  }
+
+	  
+	}
+	
 	private void calcDev() {
 
 	}

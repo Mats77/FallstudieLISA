@@ -20,7 +20,7 @@ public class PlayerData {
 	private int capacity;
 	private int qualityOfMaterial;
 	private double profit;
-	private double costs;
+	private double costs; //Wird gesetzt vom PlayerDataCalculater und enthält(FixCosts, varCosts * anzFlugzeuge, interestCosts)
 
 	public PlayerData(int pid, int quartal, double money, double marketshare, double production, double research,
 			double marketing, double turnover, int airplanes, double pricePerAirplane) {
@@ -44,6 +44,8 @@ public class PlayerData {
 		this.profit = turnover - fixCosts - varCosts - marketing - production - research;
 		this.cash += profit;
 
+		
+		
 	}//Konstruktor init
 
 	public PlayerData(int id, int production, int marketing, int research, int quartal, int qualityOfMaterial, int pricePerAirplane) {	//
@@ -171,6 +173,11 @@ public class PlayerData {
 
 	public void setTurnover(double turnover) {
 		this.turnover = turnover;
+	} 
+	
+	//Für Tests
+	public void setPricePerAirplane(double pricePerAirplane) {
+		this.pricePerAirplane = pricePerAirplane;
 	} 
 	
 	
