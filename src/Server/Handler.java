@@ -29,7 +29,6 @@ public class Handler {
 	public Handler(int gameID) {
 		mechanics = new Mechanics(this);
 		this.gameID = gameID;
-		System.out.println("Handler lebt!");
 		ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 	}
 
@@ -49,13 +48,9 @@ public class Handler {
 		// AUTHORIZEME
 		if (command.equals("AUTHORIZEME")) {
 			// Dem Client muss die Game-ID und die Player-ID zugewiesen werden
-			System.out.println("Start Athorization");
 			connections.add(new Conn(this));
 			connections.lastElement().setId(
 					this.getID(connections.lastElement()));
-			System.out.println("ID gesetzt");
-			System.out.println(connections.lastElement().getId() + " "
-					+ this.gameID);
 			result = connections.lastElement().getId() + " " + this.gameID;
 			if (connections.size() == 4) {
 				// start game
@@ -116,7 +111,6 @@ public class Handler {
 					for (Conn conn : connections) {
 						if (conn.getReady()) {
 							newRound = true;
-							System.out.println("Spieler bereit : " + conn.getId() + getCurrentTimeAsString());
 						} else {
 							newRound = false;
 							break;
@@ -162,7 +156,6 @@ public class Handler {
 			mechanics.creditOfferAccepted(txt.substring(18),
 					activePlayer.getNick());
 		} else if (command.equals("GETPRODUCEORDERS")) {
-			System.out.println("Get Orders");
 			refreshPlayerProduceOrderPool();
 			CopyOnWriteArrayList<Order> acceptedOrders = activePlayer
 					.getAcceptedOrders();
@@ -225,7 +218,6 @@ public class Handler {
 		} else if (command.equals("STARTGAME")) {
 			String[] clientdata;
 			String answer = "ERROR";
-			System.out.println(content);
 			clientdata = content.split(":");
 			try {
 				// 1. Nutzername überprüfen
@@ -297,7 +289,6 @@ public class Handler {
 			loans.setValue(Double.toString(player.getShortTimeCredit()
 					.getAmount()));
 		} catch (Exception e) {
-			System.out.println("Keine Kredite vorhanden");
 			loans.setValue("0");
 		}
 		Vector<DashboardIcon> dashboard = new Vector<DashboardIcon>();
@@ -423,7 +414,6 @@ public class Handler {
 
 	private int setOrdersToProduce() {
 		String[] tmp = content.split(";");
-		System.out.println("Array Produce: " + Arrays.toString(tmp));
 		return mechanics.produceOrder(activePlayer.getId(), Integer.parseInt(tmp[1]));
 	}
 
@@ -436,10 +426,8 @@ public class Handler {
 	private String chatSendService() {
 		String time = getCurrentTimeAsString();
 		String[] clientdata;
-		// System.out.println(content);
 		clientdata = content.split(":");
 		String message = clientdata[0];
-		// System.out.println("Nachricht: " + clientdata[0]);
 		String avatar = clientdata[1];
 		String direction;
 		for (Conn con : connections) {
@@ -475,14 +463,11 @@ public class Handler {
 			// get hole content!
 			try {
 				content = txt.substring(1, tmpend);
-				System.out.println(content);
 			} catch (Exception e) {
 				System.out.println("Kein Inhalt vorhanden");
 			}
-			System.out.println("Content = " + content);
 			// if active player found: set active player
 			try {
-				System.out.println("Player-ID = " + gamePlayerId.charAt(0));
 				getactivePlayer(gamePlayerId);
 			} catch (Exception e) {
 				System.out.println("Player not found");
@@ -497,7 +482,6 @@ public class Handler {
 			int end = mes.indexOf("$");
 			String message = "";
 			message = mes.substring(0, end);
-			System.out.println("Reason = " + message);
 			return message;
 		}
 		return result;
@@ -505,11 +489,8 @@ public class Handler {
 
 	private void getactivePlayer(String gamePlayerId) {
 		for (Conn conn : connections) {
-			System.out.println(conn.getId() + " Id empfangen: "
-					+ gamePlayerId.substring(0, 1));
 			if (conn.getId() == Integer.parseInt(gamePlayerId.substring(0, 1))) {
 				activePlayer = conn;
-				System.out.println("AktivPlayer gesetzt!");
 				break;
 			}
 		}
@@ -522,7 +503,6 @@ public class Handler {
 
 		try {
 			answer = ow.writeValueAsString(tmp);
-			System.out.println(answer);
 		} catch (Exception e) {
 			answer = "NONEWS";
 		}
@@ -540,17 +520,8 @@ public class Handler {
 	}
 
 	public int getID(Conn connection) {
-		System.out.println("Get Player ID!");
 		int toReturn = -1;
-		System.out.println(connections.indexOf(connections.lastElement()));
 		toReturn = connections.indexOf(connections.lastElement()) + 1;
-		// for (Conn con : connections) {
-		// System.out.println(con.getId());
-		// if (con.equals(connection)) {
-		// toReturn = connections.indexOf(con) + 1;
-		// }
-		// }
-		System.out.println("Return PlayerID: " + toReturn);
 		return toReturn;
 	}
 
@@ -565,7 +536,6 @@ public class Handler {
 	}
 
 	public void setPlayerOrderPoolActivOrders(Conn conn) {
-		System.out.println(content);
 		int index = content.indexOf(";");
 		String produce = content.substring(index + 1);
 		int produceId = Integer.parseInt(produce);
@@ -605,7 +575,6 @@ public class Handler {
 	// Aktualisiert den PlayerOrderPool der Spieler mit den neu angenommen und
 	// den kommend produzierenden Orders
 	private void refreshPlayerAcceptedOrderPool() {
-		System.out.println(content); // 8
 		String accepted = content.substring(9);
 		int orderId = Integer.parseInt(accepted);
 		mechanics.acceptOrder(activePlayer.getId(), orderId);
@@ -704,7 +673,6 @@ public class Handler {
 		Boolean answer = false;
 		for (Conn conn : connections) {
 			if (conn.getNick().equals(name)) {
-				System.out.println("Nickname in Use");
 				answer = false;
 			} else {
 				answer = true;
