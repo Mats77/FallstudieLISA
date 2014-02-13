@@ -87,10 +87,9 @@ public class MarketTest {
 		
 		market.splitOrders(players);
 		
-		assertEquals("Eine Abweichung von <= -3 ist zulässig -> bedingt durch Zufall", 50, mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().size());
-		assertEquals("Eine Abweichung von <= -3 ist zulässig -> bedingt durch Zufall", 50, mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().size());
-		assertEquals(0, mechanics.getPlayers()[2].getPlayerOrderPool().getNewOrders().size());
-		assertEquals(0, mechanics.getPlayers()[3].getPlayerOrderPool().getNewOrders().size());
+		assertEquals("Eine Abweichung von <= -3 ist zulässig -> bedingt durch Zufall", 50, mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().size(), 3);
+		assertEquals("Eine Abweichung von <= -3 ist zulässig -> bedingt durch Zufall", 50, mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().size(), 3);
+
 		
 		assertEquals(order[0], mechanics.getPlayers()[0].getPlayerOrderPool().getNewOrders().get(0));
 		assertEquals(order[1], mechanics.getPlayers()[1].getPlayerOrderPool().getNewOrders().get(0));
