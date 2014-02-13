@@ -56,7 +56,7 @@ public class Mechanics {
 		cash.setColor("green");
 		cash.setIcon("usd");
 		try {
-			cash.setValue(Double.toString(player.getCash()) + " in mio.");
+			cash.setValue(Double.toString(player.getCash()+player.getDebtCapital()) + " in mio.");
 		} catch (Exception e) {
 			return "PLAYERDONTEXIST";
 		}
@@ -281,7 +281,7 @@ public class Mechanics {
 		cash.setTitle("Cash");
 		cash.setIcon("money");
 		cash.setColor("green");
-		cash.setValue(Double.toString(player.getData().lastElement().getCash()));
+		cash.setValue(Double.toString(player.getData().lastElement().getCash()+ player.getDebtCapital()));
 
 		DashboardIcon revenue = new DashboardIcon();
 		revenue.setTitle("Revenue");
